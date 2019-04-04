@@ -4,7 +4,7 @@ import { Connection } from 'typeorm';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
+import { UserModule } from './users/users.module';
 
 @Module({
   imports: [
