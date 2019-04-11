@@ -9,12 +9,14 @@ services:
       - ./:/yarilog-back
       # node_modukes は volumes 管理にしたいが typescript だとホスト側にも実態が無いと import エラーとかが editer で出てしまう
       # - node-modules-data:/yarilog-front/node_modules
-    command: sh -c "yarn && yarn run start:dev"
+    command: sh -c "yarn && yarn run start:debug"
     links:
       - db
     tty: true
     ports:
       - 8080:3000
+      - 9229:9229
+
     working_dir: /yarilog-back
   db:
     image: mysql:5.7
