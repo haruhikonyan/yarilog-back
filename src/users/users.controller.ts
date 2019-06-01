@@ -18,7 +18,6 @@ export class UsersController {
 
   @Post()
   async create(@Body() userData: User): Promise<User> {
-    console.log(userData);
     return await this.usersService.save(userData);
   }
 }
