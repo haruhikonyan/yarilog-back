@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Tune } from './tunes/tunes.entity';
+import { User } from 'src/users/users.entity';
 
 /**
  * 演奏記録
@@ -17,4 +18,10 @@ export class PlayingLog {
    */
   @ManyToOne(type => Tune, tune => tune.playingLogs)
   tune: Tune;
+
+  /**
+   * 演奏記録は一人のユーザを持つ
+   */
+  @ManyToOne(type => User, user => user.playingLogs)
+  user: User;
 }

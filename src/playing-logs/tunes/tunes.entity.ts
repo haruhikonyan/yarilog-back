@@ -19,7 +19,7 @@ export class Tune {
   /**
    * 楽曲には複数の演奏記録が紐づく
    */
-  @OneToMany(type => Tune, tune => tune.playingLogs)
+  @OneToMany(type => PlayingLog, playingLog => playingLog.tune)
   playingLogs: PlayingLog[];
 
   /**
