@@ -11,11 +11,11 @@ export class TunesService {
 	) {}
 
 	async findAll(): Promise<Tune[]> {
-		return await this.tunesRepository.find();
+		return await this.tunesRepository.find({relations: ['composer']});
 	}
 
   async findById(id: string): Promise<Tune> {
-    return await this.tunesRepository.findOne(id);
+    return await this.tunesRepository.findOne(id, {relations: ['composer']});
   }
 
   async save(tune: Tune): Promise<Tune> {
