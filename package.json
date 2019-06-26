@@ -49,6 +49,9 @@
     "tslint": "5.12.1",
     "typescript": "^3.2.4"
   },
+  "resolutions": {
+    "typeorm-seeding/typeorm": "^0.2.17"
+  },
   "jest": {
     "moduleFileExtensions": [
       "js",
