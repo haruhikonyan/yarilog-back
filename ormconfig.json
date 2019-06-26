@@ -7,5 +7,6 @@
     "database": "yarilog",
     "entities": ["src/**/*.entity{.ts,.js}"],
     "charset": "utf8mb4",
-    "synchronize": true
+    "synchronize": true,
+    "seeds": ["seeds/**/*.seed.ts"]
   }
