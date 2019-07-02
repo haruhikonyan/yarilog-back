@@ -11,11 +11,11 @@ export class PlayingLogsService {
 	) {}
 
 	async findAll(): Promise<PlayingLog[]> {
-		return await this.countriesRepository.find({relations: ['tune']});
+		return await this.countriesRepository.find({relations: ['tune', 'tune.composer']});
 	}
 
   async findById(id: string): Promise<PlayingLog> {
-    return await this.countriesRepository.findOne(id, {relations: ['tune']});
+    return await this.countriesRepository.findOne(id, {relations: ['tune', 'tune.composer']});
   }
 
   async save(playingLog: PlayingLog): Promise<PlayingLog> {

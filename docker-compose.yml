@@ -26,6 +26,12 @@ services:
       MYSQL_DATABASE: "yarilog"
     ports:
       - 3306:3306
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8000:80
+    links:
+      - db:db
 volumes:
   mysql-data:
     driver: local
