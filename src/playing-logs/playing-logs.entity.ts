@@ -7,8 +7,8 @@ import { User } from 'src/users/users.entity';
  */
 @Entity()
 export class PlayingLog {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column('text')
   description: string;
