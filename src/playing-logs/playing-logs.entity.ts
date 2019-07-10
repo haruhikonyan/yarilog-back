@@ -13,6 +13,22 @@ export class PlayingLog {
   @Column('text')
   description: string;
 
+  // 演奏日 :Date
+  // 自分の演奏レベル 初心者とか
+
+  // 担当パート :楽器
+  // ポジション :string 1stとかバンダとか
+
+  // 難易度 :number
+  // 体力 :number
+  // 面白さ :number
+
+  // 自分のパートの感想 :string
+  // 他のパートや全体について :string
+  // 非公開のメモ
+
+  //　下書きフラグ
+
   /**
    * 演奏記録は一つの楽曲を持つ
    */
