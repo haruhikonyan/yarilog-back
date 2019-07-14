@@ -13,7 +13,7 @@ import { AuthController } from './auth.controller';
     JwtModule.register({
       secretOrPrivateKey: 'secretKey',
       signOptions: {
-        expiresIn: 3600,
+        expiresIn: '30 days',
       },
     }),
     UsersModule,

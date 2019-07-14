@@ -19,10 +19,8 @@ export class AuthService {
     const loggedInUser: User = await this.usersService.findByUsernameOrMailAddressAndPasswordForLogin(loginObject);
     // 該当のユーザがいなかった場合とりあえず null を返す
     if (loggedInUser == null) {
-      console.log(loggedInUser + 'hoege')
       return null;
     }
-    console.log(loggedInUser + 'gagaga')
     const payload: JwtPayload = { userId: loggedInUser.id };
     return this.jwtService.sign(payload);
   }
