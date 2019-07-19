@@ -1,12 +1,23 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>登録ユーザ一覧</title>
-  </head>
-  <body>
-  {{#each users}}
-    <p>{{ username }}</p>
-  {{/each}}
-  </body>
-</html>
+<h1>{{ title }}</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">ユーザ名</th>
+      <th scope="col">メールアドレス</th>
+      <th scope="col">ニックネーム</th>
+      <th scope="col">詳細</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each users}}
+      <tr>
+        <th scope="row">{{ id }}</th>
+        <td>{{ username }}</td>
+        <td>{{ mailAddress }}</td>
+        <td>{{ nickname }}</td>
+        <td>{{ description }}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
