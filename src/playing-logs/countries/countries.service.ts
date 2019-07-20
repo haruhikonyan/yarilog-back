@@ -18,6 +18,10 @@ export class CountriesService {
     return await this.countriesRepository.findOne(id);
   }
 
+  async createInstance(): Promise<Country> {
+    return await this.countriesRepository.create();
+  }
+
   async save(country: Country): Promise<Country> {
     return await this.countriesRepository.save(country);
   }

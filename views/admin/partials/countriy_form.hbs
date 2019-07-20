@@ -1,2 +1,11 @@
-<p>form</p>
-<p>{{countries}}</p>
+<form>
+  <div class="form-group">
+    <label for="name">国名</label>
+    <input type="text" class="form-control" id="name" name="name" placeholder="ドイツ" value="{{ country.name }}">
+  </div>
+  <div class="form-group">
+    <label for="description">詳細</label>
+    <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+  </div>
+  <button type="submit" formaction="save" formmethod="POST" class="btn btn-primary">保存</button>
+</form>
