@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { Country } from './countries.entity';
 
 @Injectable()
@@ -24,6 +24,10 @@ export class CountriesService {
 
   async save(country: Country): Promise<Country> {
     return await this.countriesRepository.save(country);
+  }
+
+  async update(country: Country): Promise<UpdateResult> {
+    return await this.countriesRepository.update(country.id, country);
   }
 
 }

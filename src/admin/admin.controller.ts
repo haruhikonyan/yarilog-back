@@ -1,4 +1,4 @@
-import { Get, Controller, Render, Res, Body, Post } from '@nestjs/common';
+import { Get, Controller, Render, Res, Body, Post, Param } from '@nestjs/common';
 import { Response } from 'express';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/users.entity';
@@ -35,13 +35,20 @@ export class AdminController {
     const country: Country = await this.countriesService.createInstance();
     return { country: country, title: '国新規作成' };
   }
+  @Get("countries/:id/edit")
+  @Render('admin/countries/editor')
+  async editCountry(@Param('id') id: string) {
+    const country: Country = await this.countriesService.findById(id);
+    return { country: country, title: `${country.name}編集` };
+  }
   @Post("countries/save")
   async saveCountry(@Res() res: Response, @Body() countryData: Country) {
-    await this.countriesService.save(countryData);
+    await countryData.id ? this.countriesService.update(countryData)
+                         : this.countriesService.save(countryData);
 
     // TODO 作成を続けるかどうかで遷移先を分ける
     const redirectPath: string = '.';
-    await res.redirect(redirectPath);
+    res.redirect(redirectPath);
   }
   @Get("composers")
   @Render('admin/composers')
