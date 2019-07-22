@@ -1,7 +1,4 @@
 <form>
-  {{#if country.id}}
-    <input type="hidden" class="form-control" id="id" name="id" value="{{ country.id }}">
-  {{/if}}
   <div class="form-group">
     <label for="name">国名</label>
     <input type="text" class="form-control" id="name" name="name" placeholder="ドイツ" value="{{ country.name }}">
@@ -10,5 +7,5 @@
     <label for="description">詳細</label>
     <textarea class="form-control" id="description" name="description" rows="3">{{ country.description }}</textarea>
   </div>
-  <button type="submit" formaction="/admin/countries/save" formmethod="POST" class="btn btn-primary">保存</button>
+  <button type="submit" formaction="{{formaction}}" formmethod="POST" class="btn btn-primary">保存</button>
 </form>

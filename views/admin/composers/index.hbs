@@ -15,7 +15,11 @@
         <th scope="row">{{ id }}</th>
         <td>{{ lastName }}</td>
         <td>{{ fullName }}</td>
-        <td>{{ countries }}</td>
+        <td>
+          {{#each countries}}
+            {{name}}, 
+          {{/each}}
+        </td>
         <td>{{ description }}</td>
       </tr>
     {{/each}}

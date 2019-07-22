@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { AppModule } from './app.module';
-import * as hbs from 'hbs';
+import * as methodOverride from 'method-override';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(
@@ -18,6 +18,8 @@ async function bootstrap() {
     origin: '*',
     allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
   });
+  // override with POST having ?_method=DELETE
+  app.use(methodOverride('_method'))
 
   await app.listen(3000);
 }
