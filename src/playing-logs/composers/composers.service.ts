@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Composer } from './composers.entity';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository } from 'typeorm';
+import { SaveComposerDto } from './save-composer.dto';
 
 @Injectable()
 export class ComposersService {
@@ -14,32 +15,18 @@ export class ComposersService {
     return await this.composerRepository.find({relations: ['countries']});
   }
 
-  async findById(id: string): Promise<Composer> {
+  async findById(id: number): Promise<Composer> {
     return await this.composerRepository.findOne(id, {relations: ['countries']});
   }
 
-  async createInstance(): Promise<Composer> {
-    return await this.composerRepository.create();
-  }
-
-  async save(composer: Composer): Promise<Composer> {
+  async create(composerData: SaveComposerDto): Promise<Composer> {
+    console.log(composerData)
+    const composer = await this.composerRepository.create(composerData);
     return await this.composerRepository.save(composer);
   }
 
-  async update(composerData: any) {
-    const composer = await this.findById(composerData.id)
-    await this.composerRepository.merge(composer, composerData);
-    console.log(composer)
-    return await this.composerRepository.save(composer)
-    // this.composerRepository.createQueryBuilder()
-    //   .relation(Composer, "countries")
-    //   .of(composer)
-    //   .add(composer.countries)
-    // return this.composerRepository.createQueryBuilder()
-    //   .update(Composer)
-    //   .set(composer)
-    //   .where("id = :id", { id: composer.id })
-    //   .execute();
-    // return await this.composerRepository.update(composer.id, composer);
+  async update(composerData: SaveComposerDto): Promise<Composer> {
+    const composer = await this.composerRepository.preload(composerData);
+    return await this.composerRepository.save(composer);
   }
 }

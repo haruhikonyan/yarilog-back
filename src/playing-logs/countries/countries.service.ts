@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Country } from './countries.entity';
 import { SaveCountryDto } from './save-country.dto';
 
@@ -24,8 +24,8 @@ export class CountriesService {
     return await this.countriesRepository.save(country);
   }
 
-  async update(id:number, countryData: SaveCountryDto): Promise<Country> {
-    const country = await this.countriesRepository.findOne(id);
+  async update(id: number, countryData: SaveCountryDto): Promise<Country> {
+    const country = await this.findById(id);
     await this.countriesRepository.merge(country, countryData);
     return await this.countriesRepository.save(country);
   }

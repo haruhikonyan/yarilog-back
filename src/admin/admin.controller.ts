@@ -9,6 +9,7 @@ import { Composer } from 'src/playing-logs/composers/composers.entity';
 import * as hbs from 'hbs';
 import { join } from 'path';
 import { SaveCountryDto } from 'src/playing-logs/countries/save-country.dto';
+import { SaveComposerDto } from 'src/playing-logs/composers/save-composer.dto';
 
 @Controller('admin')
 export class AdminController {
@@ -42,7 +43,6 @@ export class AdminController {
     const country: Country = await this.countriesService.findById(id);
     return { country: country, title: `${country.name}編集`, formaction: `/admin/countries/${id}?_method=PUT`}
   }
-
   @Post("countries")
   async createCountry(@Res() res: Response, @Body() countryData: SaveCountryDto) {
     await this.countriesService.create(countryData);
@@ -67,26 +67,36 @@ export class AdminController {
   @Get("composers/new")
   @Render('admin/composers/editor')
   async newComposer() {
-    const composer: Composer = await this.composersService.createInstance();
+    const composer: SaveComposerDto = new SaveComposerDto();
     const countries: Country[] = await this.countriesService.findAll();
-    return { composer: composer, countries: countries, title: '作曲家新規作成' };
+    return { composer: composer, countries: countries, title: '作曲家新規作成', formaction: '/admin/composers/'};
   }
   @Get("composers/:id/edit")
   @Render('admin/composers/editor')
   async editComposer(@Param('id') id: string) {
-    const composer: Composer = await this.composersService.findById(id);
-    console.log(composer);
+    const composer: Composer = await this.composersService.findById(Number(id));
     const countries: Country[] = await this.countriesService.findAll();
-    return { composer: composer, countries: countries, title: `${composer.lastName}編集` };
+    return { composer: composer, countries: countries, title: `${composer.lastName}編集`, formaction: `/admin/composers/${id}?_method=PUT`};
   }
-  @Post("composers/save")
-  async saveComposer(@Res() res: Response, @Body() composerData: Composer) {
-    console.log(composerData)
-    composerData.countries = [await this.countriesService.findById(2)];
-    console.log(composerData)
-    await composerData.id ? this.composersService.update(composerData)
-                          : this.composersService.save(composerData);
-
+  @Post("composers")
+  async createComposer(@Res() res: Response, @Body() composerData: SaveComposerDto) {
+    composerData.countries = (composerData.countryIds).map((countryId: string) => {
+      return {id: Number(countryId)}
+    });
+    await this.composersService.create(composerData);
+    // TODO 作成を続けるかどうかで遷移先を分ける
+    const redirectPath: string = '.';
+    res.redirect(redirectPath);
+  }
+  @Put("composers/:id")
+  async updateComposer(@Res() res: Response, @Param('id') id: string, @Body() composerData: SaveComposerDto) {
+    composerData.id = Number(id);
+    composerData.countries = Array.isArray(composerData.countryIds) ? 
+      composerData.countries = composerData.countryIds.map((countryId: string) => {
+        return {id: Number(countryId)}
+      })
+      : [];
+    await this.composersService.update(composerData);
     // TODO 作成を続けるかどうかで遷移先を分ける
     const redirectPath: string = '.';
     res.redirect(redirectPath);
@@ -95,6 +105,6 @@ export class AdminController {
   @Render('admin/users')
   async users() {
     const users: User[] = await this.usersService.findAll();
-    return { users: users, title: 'ユーザ一覧'  };
+    return { users: users, title: 'ユーザ一覧' };
   }
 }
