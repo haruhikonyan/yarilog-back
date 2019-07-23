@@ -74,7 +74,7 @@ export class AdminController {
   @Get("composers/:id/edit")
   @Render('admin/composers/editor')
   async editComposer(@Param('id') id: string) {
-    const composer: Composer = await this.composersService.findById(Number(id));
+    const composer: Composer = await this.composersService.findById(id);
     const countries: Country[] = await this.countriesService.findAll();
     return { composer: composer, countries: countries, title: `${composer.lastName}編集`, formaction: `/admin/composers/${id}?_method=PUT`};
   }

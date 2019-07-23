@@ -15,7 +15,7 @@ export class CountriesService {
 		return await this.countriesRepository.find();
 	}
 
-  async findById(id: number): Promise<Country> {
+  async findById(id: number | string): Promise<Country> {
     return await this.countriesRepository.findOne(id);
   }
 

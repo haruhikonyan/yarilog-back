@@ -32,6 +32,7 @@ export class UsersService {
 
   async save(user: User): Promise<User> {
     // TODO user.password は暗号化して保存する
+    console.log(user)
     return await this.usersRepository.save(user);
   }
 }

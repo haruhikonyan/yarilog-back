@@ -15,7 +15,7 @@ export class ComposersService {
     return await this.composerRepository.find({relations: ['countries']});
   }
 
-  async findById(id: number): Promise<Composer> {
+  async findById(id: number | string): Promise<Composer> {
     return await this.composerRepository.findOne(id, {relations: ['countries']});
   }
 

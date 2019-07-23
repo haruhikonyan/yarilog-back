@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { Composer } from './composers.entity';
 import { ComposersService } from './composers.service';
+import { SaveComposerDto } from './save-composer.dto';
 
 @Controller('composers')
 export class ComposersController {
@@ -17,8 +18,8 @@ export class ComposersController {
     }
   
     @Post()
-    async create(@Body() composerData: Composer): Promise<Composer> {
+    async create(@Body() composerData: SaveComposerDto): Promise<Composer> {
       console.log(composerData);
-      return await this.composersService.save(composerData);
+      return await this.composersService.create(composerData);
     }
 }

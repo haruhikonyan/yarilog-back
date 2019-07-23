@@ -7,18 +7,18 @@ import { PlayingLog } from './playing-logs.entity';
 export class PlayingLogsService {
 	constructor(
 		@InjectRepository(PlayingLog)
-		private readonly countriesRepository: Repository<PlayingLog>,
+		private readonly playingLogRepository: Repository<PlayingLog>,
 	) {}
 
 	async findAll(): Promise<PlayingLog[]> {
-		return await this.countriesRepository.find({relations: ['tune', 'tune.composer']});
+		return await this.playingLogRepository.find({relations: ['tune', 'tune.composer']});
 	}
 
   async findById(id: string): Promise<PlayingLog> {
-    return await this.countriesRepository.findOne(id, {relations: ['tune', 'tune.composer']});
+    return await this.playingLogRepository.findOne(id, {relations: ['tune', 'tune.composer']});
   }
 
   async save(playingLog: PlayingLog): Promise<PlayingLog> {
-    return await this.countriesRepository.save(playingLog);
+    return await this.playingLogRepository.save(playingLog);
   }
 }

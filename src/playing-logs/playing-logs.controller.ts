@@ -1,24 +1,28 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Request } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+
 import { PlayingLogsService } from './playing-logs.service';
 import { PlayingLog } from './playing-logs.entity';
 
 @Controller('playing-logs')
 export class PlayingLogsController {
-  constructor(private readonly countriesService: PlayingLogsService) {}
+  constructor(private readonly playingLogService: PlayingLogsService) {}
 
   @Get()
   async findAll(): Promise<PlayingLog[]> {
-    return await this.countriesService.findAll();
+    return await this.playingLogService.findAll();
   }
 
   @Get(':id')
   async findById(@Param('id') id: string): Promise<PlayingLog | null> {
-    return await this.countriesService.findById(id);
+    return await this.playingLogService.findById(id);
   }
 
   @Post()
-  async create(@Body() countryData: PlayingLog): Promise<PlayingLog> {
-    return await this.countriesService.save(countryData);
+  @UseGuards(AuthGuard('jwt'))
+  async create(@Body() playingLogData: PlayingLog, @Request() req): Promise<PlayingLog> {
+    playingLogData.user = req.user;
+    return await this.playingLogService.save(playingLogData);
   }
 
 }
