@@ -1,4 +1,5 @@
 <h1>{{ title }}</h1>
+<a href="new" class="btn btn-primary" role="button" aria-disabled="true">新規作成</a>
 <table class="table">
   <thead>
     <tr>
@@ -7,6 +8,7 @@
       <th scope="col">フルネーム</th>
       <th scope="col">国</th>
       <th scope="col">詳細</th>
+      <th scope="col">操作</th>
     </tr>
   </thead>
   <tbody>
@@ -21,6 +23,9 @@
           {{/each}}
         </td>
         <td>{{ description }}</td>
+        <td>
+          <a href="{{ id }}/edit" class="btn btn-secondary" role="button" aria-disabled="true">編集</a>
+        </td>
       </tr>
     {{/each}}
   </tbody>
