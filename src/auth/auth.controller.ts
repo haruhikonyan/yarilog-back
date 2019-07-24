@@ -22,12 +22,9 @@ export class AuthController {
     return token;
   }
 
-  @Get('data')
+  @Get('me')
   @UseGuards(AuthGuard())
   findAll(@Request() req) {
-    // this route is restricted by AuthGuard
-    // JWT strategy
-    console.log(req.user)
-    return 'hoge'
+    return req.user
   }
 }
