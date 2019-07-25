@@ -18,6 +18,16 @@ export class PlayingLogsController {
     return await this.playingLogService.findById(id);
   }
 
+  @Get('composers/:id')
+  async findAllByComposerId(@Param('id') composerId: string): Promise<PlayingLog[] | null> {
+    return await this.playingLogService.findAllByComposerId(composerId);
+  }
+
+  @Get('countries/:id')
+  async findAllByCountryId(@Param('id') countryId: string): Promise<PlayingLog[] | null> {
+    return await this.playingLogService.findAllByCountryId(countryId);
+  }
+
   @Post()
   @UseGuards(AuthGuard('jwt'))
   async create(@Body() playingLogData: PlayingLog, @Request() req): Promise<PlayingLog> {
