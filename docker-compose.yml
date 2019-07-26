@@ -16,6 +16,10 @@ services:
     ports:
       - 8080:3000
     working_dir: /yarilog-back
+    environment:
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      TYPEORM_ENTITIES: src/**/*.entity{.ts,.js}
   db:
     image: mysql:5.7
     command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
