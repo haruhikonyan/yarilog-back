@@ -1,15 +1,15 @@
 import { Get, Controller, Render, Res, Body, Post, Param, Put } from '@nestjs/common';
 import { Response } from 'express';
-import { UsersService } from 'src/users/users.service';
-import { User } from 'src/users/users.entity';
-import { ComposersService } from 'src/playing-logs/composers/composers.service';
-import { CountriesService } from 'src/playing-logs/countries/countries.service';
-import { Country } from 'src/playing-logs/countries/countries.entity';
-import { Composer } from 'src/playing-logs/composers/composers.entity';
+import { UsersService } from '../users/users.service';
+import { User } from '../users/users.entity';
+import { ComposersService } from '../playing-logs/composers/composers.service';
+import { CountriesService } from '../playing-logs/countries/countries.service';
+import { Country } from '../playing-logs/countries/countries.entity';
+import { Composer } from '../playing-logs/composers/composers.entity';
 import * as hbs from 'hbs';
 import { join } from 'path';
-import { SaveCountryDto } from 'src/playing-logs/countries/save-country.dto';
-import { SaveComposerDto } from 'src/playing-logs/composers/save-composer.dto';
+import { SaveCountryDto } from '../playing-logs/countries/save-country.dto';
+import { SaveComposerDto } from '../playing-logs/composers/save-composer.dto';
 
 @Controller('admin')
 export class AdminController {

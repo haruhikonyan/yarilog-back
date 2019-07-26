@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Tune } from './tunes/tunes.entity';
-import { User } from 'src/users/users.entity';
+import { User } from '../users/users.entity';
 
 /**
  * 演奏記録
