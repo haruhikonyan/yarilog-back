@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tune } from './tunes.entity';
+import { SaveTuneDto } from './save-tune.dto';
 
 @Injectable()
 export class TunesService {
@@ -14,11 +15,18 @@ export class TunesService {
 		return await this.tunesRepository.find({relations: ['composer']});
 	}
 
-  async findById(id: string): Promise<Tune> {
+  async findById(id: number | string): Promise<Tune> {
     return await this.tunesRepository.findOne(id, {relations: ['composer']});
   }
 
-  async save(tune: Tune): Promise<Tune> {
+  async create(tuneData: SaveTuneDto): Promise<Tune> {
+    const country = await this.tunesRepository.create(tuneData);
+    return await this.tunesRepository.save(country);
+  }
+
+  async update(id: number, tuneData: SaveTuneDto): Promise<Tune> {
+    const tune = await this.findById(id);
+    await this.tunesRepository.merge(tune, tuneData);
     return await this.tunesRepository.save(tune);
   }
 

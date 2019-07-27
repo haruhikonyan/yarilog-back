@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { TunesService } from './tunes.service';
 import { Tune } from './tunes.entity';
+import { SaveTuneDto } from './save-tune.dto';
 
 @Controller('tunes')
 export class TunesController {
@@ -17,8 +18,8 @@ export class TunesController {
   }
 
   @Post()
-  async create(@Body() countryData: Tune): Promise<Tune> {
-    return await this.tuneService.save(countryData);
+  async create(@Body() tuneData: SaveTuneDto): Promise<Tune> {
+    return await this.tuneService.create(tuneData);
   }
 
 }

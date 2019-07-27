@@ -1,0 +1,19 @@
+<form>
+  <div class="form-group">
+    <label for="composer">作曲者</label>
+    <select class="form-control" id="composer" name='composerId'>
+      {{#each composers}}
+        <option value="{{ id }}" {{isSelectedComposer this}}>{{ fullName }}</option>
+      {{/each}}
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="title">曲名</label>
+    <input type="text" class="form-control" id="title" name="title" placeholder="交響曲第1番 ニ長調「巨人」" value="{{ tune.title }}">
+  </div>
+  <div class="form-group">
+    <label for="description">詳細</label>
+    <textarea class="form-control" id="description" name="description" rows="3">{{ tune.description }}</textarea>
+  </div>
+  <button type="submit" formaction="{{formaction}}" formmethod="POST" class="btn btn-primary">保存</button>
+</form>

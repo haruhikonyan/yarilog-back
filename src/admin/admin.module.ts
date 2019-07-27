@@ -5,6 +5,7 @@ import { PlayingLogsModule } from '../playing-logs/playing-logs.module';
 import { UsersService } from '../users/users.service';
 import { CountriesService } from '../playing-logs/countries/countries.service';
 import { ComposersService } from '../playing-logs/composers/composers.service';
+import { TunesService } from '../playing-logs/tunes/tunes.service';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { ComposersService } from '../playing-logs/composers/composers.service';
   providers: [
     UsersService,
     CountriesService,
-    ComposersService
+    ComposersService,
+    TunesService,
   ],
 })
 export class AdminModule {}

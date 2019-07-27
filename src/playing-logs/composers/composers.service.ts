@@ -20,7 +20,6 @@ export class ComposersService {
   }
 
   async create(composerData: SaveComposerDto): Promise<Composer> {
-    console.log(composerData)
     const composer = await this.composerRepository.create(composerData);
     return await this.composerRepository.save(composer);
   }

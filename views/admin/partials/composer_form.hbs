@@ -8,10 +8,10 @@
     <input type="text" class="form-control" id="fullName" name="fullName" placeholder="ルードヴィヒ・ヴァン・ベートーヴェン" value="{{ composer.fullName }}">
   </div>
   <div class="form-group">
-    <label for="countries">Example multiple select</label>
+    <label for="countries">出身国</label>
     <select multiple class="form-control" id="countries" name='countryIds[]'>
       {{#each countries}}
-        <option value="{{ id }}">{{ name }}</option>
+        <option value="{{ id }}" {{isSelectedCountrty this}}>{{ name }}</option>
       {{/each}}
     </select>
   </div>
