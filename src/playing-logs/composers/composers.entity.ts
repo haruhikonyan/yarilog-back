@@ -13,7 +13,7 @@ export class Composer {
   @Column({ length: 50 })
   lastName: string;
 
-  @Column({ length: 50 })
+  @Column({ length: 50, unique: true })
   fullName: string;
 
   @Column('text')

@@ -9,7 +9,7 @@ export class Country {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 50 })
+  @Column({ length: 50, unique: true })
   name: string;
 
   @Column('text')
