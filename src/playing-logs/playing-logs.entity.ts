@@ -18,9 +18,6 @@ export class PlayingLog {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('text')
-  description: string;
-
   // 演奏日
   @Column('date')
   playDate: Date;
@@ -37,18 +34,18 @@ export class PlayingLog {
   @ManyToOne(type => Instrument, instrument => instrument.playingLogs)
   instrument: Instrument;
 
-  // ポジション :string 1stとかバンダとか
+  // ポジション 1stとかバンダとか
   @Column()
   position: string;
 
-  // 難易度 5段階
-  @Column()
+  // 難易度 0~5 小数点第１位
+  @Column('double')
   difficulty: number;
-  // 体力 5段階
-  @Column()
+  // 体力 0~5 小数点第１位
+  @Column('double')
   physicality: number;
-  // 面白さ 5段階
-  @Column()
+  // 面白さ 0~5 小数点第１位
+  @Column('double')
   interesting: number;
 
   // 自分のパートの感想
