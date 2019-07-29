@@ -1,4 +1,4 @@
-import { Get, Controller, Render, Res, Body, Post, Param, Put } from '@nestjs/common';
+import { Get, Controller, Render, Res, Body, Post, Param, Put, Query } from '@nestjs/common';
 import { Response } from 'express';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/users.entity';
@@ -51,7 +51,7 @@ export class AdminController {
   @Render('admin/countries/editor')
   async newCountry() {
     const country: SaveCountryDto = new SaveCountryDto();
-    return { country: country, title: '国新規作成', formaction: '/admin/countries/'};
+    return { country: country, title: '国新規作成', formaction: '/admin/countries/', showContinueButton: true };
   }
   @Get("countries/:id/edit")
   @Render('admin/countries/editor')
@@ -60,18 +60,15 @@ export class AdminController {
     return { country: country, title: `${country.name}編集`, formaction: `/admin/countries/${id}?_method=PUT`}
   }
   @Post("countries")
-  async createCountry(@Res() res: Response, @Body() countryData: SaveCountryDto) {
+  async createCountry(@Res() res: Response, @Body() countryData: SaveCountryDto, @Query('isContinue') isContinue: string) {
     await this.countriesService.create(countryData);
-    // TODO 作成を続けるかどうかで遷移先を分ける
-    const redirectPath: string = '.';
+    const redirectPath: string = isContinue === 'true' ? '/admin/countries/new' : '.';
     res.redirect(redirectPath);
   }
   @Put("countries/:id")
-  async updateCountry(@Res() res: Response, @Param('id') id: number, @Body() countryData: SaveCountryDto) {
+  @Render('admin/countries')
+  async updateCountry(@Param('id') id: number, @Body() countryData: SaveCountryDto) {
     await this.countriesService.update(id, countryData);
-    // TODO 作成を続けるかどうかで遷移先を分ける
-    const redirectPath: string = '.';
-    res.redirect(redirectPath);
   }
 
   @Get("composers")
@@ -85,7 +82,7 @@ export class AdminController {
   async newComposer() {
     const composer: SaveComposerDto = new SaveComposerDto();
     const countries: Country[] = await this.countriesService.findAll();
-    return { composer: composer, countries: countries, title: '作曲家新規作成', formaction: '/admin/composers/'};
+    return { composer: composer, countries: countries, title: '作曲家新規作成', formaction: '/admin/composers/', showContinueButton: true };
   }
   @Get("composers/:id/edit")
   @Render('admin/composers/editor')
@@ -95,17 +92,17 @@ export class AdminController {
     return { composer: composer, countries: countries, title: `${composer.lastName}編集`, formaction: `/admin/composers/${id}?_method=PUT`};
   }
   @Post("composers")
-  async createComposer(@Res() res: Response, @Body() composerData: SaveComposerDto) {
+  async createComposer(@Res() res: Response, @Body() composerData: SaveComposerDto, @Query('isContinue') isContinue: string) {
     composerData.countries = (composerData.countryIds).map((countryId: string) => {
       return {id: Number(countryId)}
     });
     await this.composersService.create(composerData);
-    // TODO 作成を続けるかどうかで遷移先を分ける
-    const redirectPath: string = '.';
+    const redirectPath: string = isContinue === 'true' ? '/admin/composers/new' : '.';
     res.redirect(redirectPath);
   }
   @Put("composers/:id")
-  async updateComposer(@Res() res: Response, @Param('id') id: string, @Body() composerData: SaveComposerDto) {
+  @Render('admin/composers')
+  async updateComposer(@Param('id') id: string, @Body() composerData: SaveComposerDto) {
     composerData.id = Number(id);
     composerData.countries = Array.isArray(composerData.countryIds) ? 
       composerData.countries = composerData.countryIds.map((countryId: string) => {
@@ -113,9 +110,6 @@ export class AdminController {
       })
       : [];
     await this.composersService.update(composerData);
-    // TODO 作成を続けるかどうかで遷移先を分ける
-    const redirectPath: string = '.';
-    res.redirect(redirectPath);
   }
 
   @Get("tunes")
@@ -129,7 +123,7 @@ export class AdminController {
   async newTune() {
     const tune: SaveTuneDto = new SaveTuneDto();
     const composers: Composer[] = await this.composersService.findAll();
-    return { tune: tune, composers: composers, title: '曲新規作成', formaction: '/admin/tunes/'};
+    return { tune: tune, composers: composers, title: '曲新規作成', formaction: '/admin/tunes/', showContinueButton: true };
   }
   @Get("tunes/:id/edit")
   @Render('admin/tunes/editor')
@@ -139,33 +133,30 @@ export class AdminController {
     return { tune: tune, composers: composers, title: `${tune.title}編集`, formaction: `/admin/tunes/${id}?_method=PUT`}
   }
   @Post("tunes")
-  async createTune(@Res() res: Response, @Body() tuneData: SaveTuneDto) {
+  async createTune(@Res() res: Response, @Body() tuneData: SaveTuneDto, @Query('isContinue') isContinue: string) {
     tuneData.composer = { id: tuneData.composerId }
     await this.tunesService.create(tuneData);
-    // TODO 作成を続けるかどうかで遷移先を分ける
-    const redirectPath: string = '.';
+    const redirectPath: string = isContinue === 'true' ? '/admin/tunes/new' : '.';
     res.redirect(redirectPath);
   }
   @Put("tunes/:id")
-  async updateTune(@Res() res: Response, @Param('id') id: number, @Body() tuneData: SaveTuneDto) {
+  @Render('admin/tunes')
+  async updateTune(@Param('id') id: number, @Body() tuneData: SaveTuneDto) {
     tuneData.composer = { id: tuneData.composerId }
     await this.tunesService.update(id, tuneData);
-    // TODO 作成を続けるかどうかで遷移先を分ける
-    const redirectPath: string = '.';
-    res.redirect(redirectPath);
   }
 
   @Get("instruments")
   @Render('admin/instruments')
   async instruments() {
     const instruments: Instrument[] = await this.instrumentsService.findAll();
-    return { instruments: instruments, title: '曲一覧' };
+    return { instruments: instruments, title: '楽器一覧' };
   }
   @Get("instruments/new")
   @Render('admin/instruments/editor')
   async newInstrument() {
     const instrument: SaveInstrumentDto = new SaveInstrumentDto();
-    return { instrument: instrument, title: '曲新規作成', formaction: '/admin/instruments/'};
+    return { instrument: instrument, title: '楽器新規作成', formaction: '/admin/instruments/', showContinueButton: true };
   }
   @Get("instruments/:id/edit")
   @Render('admin/instruments/editor')
@@ -174,18 +165,15 @@ export class AdminController {
     return { instrument: instrument, title: `${instrument.name}編集`, formaction: `/admin/instruments/${id}?_method=PUT`}
   }
   @Post("instruments")
-  async createInstrument(@Res() res: Response, @Body() instrumentData: SaveInstrumentDto) {
+  async createInstrument(@Res() res: Response, @Body() instrumentData: SaveInstrumentDto, @Query('isContinue') isContinue: string) {
     await this.instrumentsService.create(instrumentData);
-    // TODO 作成を続けるかどうかで遷移先を分ける
-    const redirectPath: string = '.';
+    const redirectPath: string = isContinue === 'true' ? '/admin/instruments/new' : '.';
     res.redirect(redirectPath);
   }
   @Put("instruments/:id")
-  async updateInstrument(@Res() res: Response, @Param('id') id: number, @Body() instrumentData: SaveInstrumentDto) {
+  @Render('admin/instruments')
+  async updateInstrument(@Param('id') id: number, @Body() instrumentData: SaveInstrumentDto) {
     await this.instrumentsService.update(id, instrumentData);
-    // TODO 作成を続けるかどうかで遷移先を分ける
-    const redirectPath: string = '.';
-    res.redirect(redirectPath);
   }
 
   @Get("users")
