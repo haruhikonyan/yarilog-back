@@ -1,0 +1,21 @@
+<h1>{{ title }}</h1>
+<a href="/admin/instruments/new" class="btn btn-primary" role="button" aria-disabled="true">新規作成</a>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">楽器名</th>
+      <th scope="col">略記</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each instruments}}
+      <tr>
+        <th scope="row">{{ id }}</th>
+        <td>{{ name }}</td>
+        <td>{{ shortName }}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

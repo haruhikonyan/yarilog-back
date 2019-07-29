@@ -14,9 +14,10 @@ import { Composer } from './composers/composers.entity';
 import { Tune } from './tunes/tunes.entity';
 import { InstrumentsController } from './instruments/instruments.controller';
 import { InstrumentsService } from './instruments/instruments.service';
+import { Instrument } from './instruments/instruments.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PlayingLog, Country, Composer, Tune])],
+  imports: [TypeOrmModule.forFeature([PlayingLog, Country, Composer, Tune, Instrument])],
   controllers: [PlayingLogsController, CountriesController, ComposersController, TunesController, InstrumentsController],
   providers: [PlayingLogsService, CountriesService, ComposersService, TunesService, InstrumentsService]
 })

@@ -1,0 +1,14 @@
+<form>
+  <div class="form-group">
+    <label for="composer">楽器</label>
+  </div>
+  <div class="form-group">
+    <label for="name">楽器名</label>
+    <input type="text" class="form-control" id="name" name="name" placeholder="トランペット" value="{{ instrument.name}}">
+  </div>
+  <div class="form-group">
+    <label for="shortName">略記</label>
+    <input type="text" class="form-control" id="shortName" name="shortName" placeholder="Tp" value="{{ instrument.shortName}}">
+  </div>
+  <button type="submit" formaction="{{formaction}}" formmethod="POST" class="btn btn-primary">保存</button>
+</form>

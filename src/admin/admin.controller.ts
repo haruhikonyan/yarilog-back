@@ -13,6 +13,9 @@ import { SaveComposerDto } from '../playing-logs/composers/save-composer.dto';
 import { Tune } from '../playing-logs/tunes/tunes.entity';
 import { SaveTuneDto } from '../playing-logs/tunes/save-tune.dto';
 import { TunesService } from '../playing-logs/tunes/tunes.service';
+import { Instrument } from '../playing-logs/instruments/instruments.entity';
+import { SaveInstrumentDto } from '../playing-logs/instruments/save-instrument.dto';
+import { InstrumentsService } from 'src/playing-logs/instruments/instruments.service';
 
 @Controller('admin')
 export class AdminController {
@@ -21,6 +24,7 @@ export class AdminController {
     private readonly composersService: ComposersService,
     private readonly countriesService: CountriesService,
     private readonly tunesService: TunesService,
+    private readonly instrumentsService: InstrumentsService,
   ) {
     hbs.registerPartials(join(__dirname, '../..', 'views/admin/partials'));
   }
@@ -141,6 +145,39 @@ export class AdminController {
   @Put("tunes/:id")
   async updateTune(@Res() res: Response, @Param('id') id: number, @Body() tuneData: SaveTuneDto) {
     await this.tunesService.update(id, tuneData);
+    // TODO 作成を続けるかどうかで遷移先を分ける
+    const redirectPath: string = '.';
+    res.redirect(redirectPath);
+  }
+
+  @Get("instruments")
+  @Render('admin/instruments')
+  async instruments() {
+    const instruments: Instrument[] = await this.instrumentsService.findAll();
+    return { instruments: instruments, title: '曲一覧' };
+  }
+  @Get("instruments/new")
+  @Render('admin/instruments/editor')
+  async newInstrument() {
+    const instrument: SaveInstrumentDto = new SaveInstrumentDto();
+    return { instrument: instrument, title: '曲新規作成', formaction: '/admin/instruments/'};
+  }
+  @Get("instruments/:id/edit")
+  @Render('admin/instruments/editor')
+  async editInstrument(@Param('id') id: number) {
+    const instrument: Instrument = await this.instrumentsService.findById(id);
+    return { instrument: instrument, title: `${instrument.name}編集`, formaction: `/admin/instruments/${id}?_method=PUT`}
+  }
+  @Post("instruments")
+  async createInstrument(@Res() res: Response, @Body() instrumentData: SaveInstrumentDto) {
+    await this.instrumentsService.create(instrumentData);
+    // TODO 作成を続けるかどうかで遷移先を分ける
+    const redirectPath: string = '.';
+    res.redirect(redirectPath);
+  }
+  @Put("instruments/:id")
+  async updateInstrument(@Res() res: Response, @Param('id') id: number, @Body() instrumentData: SaveInstrumentDto) {
+    await this.instrumentsService.update(id, instrumentData);
     // TODO 作成を続けるかどうかで遷移先を分ける
     const redirectPath: string = '.';
     res.redirect(redirectPath);
