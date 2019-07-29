@@ -140,6 +140,7 @@ export class AdminController {
   }
   @Post("tunes")
   async createTune(@Res() res: Response, @Body() tuneData: SaveTuneDto) {
+    tuneData.composer = { id: tuneData.composerId }
     await this.tunesService.create(tuneData);
     // TODO 作成を続けるかどうかで遷移先を分ける
     const redirectPath: string = '.';
@@ -147,6 +148,7 @@ export class AdminController {
   }
   @Put("tunes/:id")
   async updateTune(@Res() res: Response, @Param('id') id: number, @Body() tuneData: SaveTuneDto) {
+    tuneData.composer = { id: tuneData.composerId }
     await this.tunesService.update(id, tuneData);
     // TODO 作成を続けるかどうかで遷移先を分ける
     const redirectPath: string = '.';

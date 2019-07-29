@@ -15,8 +15,8 @@
     {{#each tunes}}
       <tr>
         <th scope="row">{{ id }}</th>
+        <td>{{ composer.fullName  }}</td>
         <td>{{ title }}</td>
-        <td>{{ composer.fullName }}</td>
         <td>{{ description }}</td>
         <td>
           <a href="/admin/tunes/{{ id }}/edit" class="btn btn-secondary" role="button" aria-disabled="true">編集</a>
