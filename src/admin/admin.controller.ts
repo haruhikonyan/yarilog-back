@@ -27,6 +27,14 @@ export class AdminController {
     private readonly instrumentsService: InstrumentsService,
   ) {
     hbs.registerPartials(join(__dirname, '../..', 'views/admin/partials'));
+    hbs.registerHelper('isSelectedCountrty', (country: Country, composer: Composer) => {
+      return composer.countries.some((countrySelector: Country) => countrySelector.id === country.id) ? 'selected' : null;
+    })
+    hbs.registerHelper('isSelectedComposer', (composer: Composer, tune: Tune) => {
+      // tune がなければ null を返す(new の時)
+      if (!tune.composer) { return null }
+      return composer.id === tune.composer.id ? 'selected' : null;
+    })
   }
   @Get()
   @Render('admin/index')
@@ -84,9 +92,6 @@ export class AdminController {
   async editComposer(@Param('id') id: string) {
     const composer: Composer = await this.composersService.findById(id);
     const countries: Country[] = await this.countriesService.findAll();
-    hbs.registerHelper('isSelectedCountrty', (country: Country) => {
-      return composer.countries.some((countrySelector: Country) => countrySelector.id === country.id) ? 'selected' : null;
-    })
     return { composer: composer, countries: countries, title: `${composer.lastName}編集`, formaction: `/admin/composers/${id}?_method=PUT`};
   }
   @Post("composers")
@@ -123,16 +128,14 @@ export class AdminController {
   @Render('admin/tunes/editor')
   async newTune() {
     const tune: SaveTuneDto = new SaveTuneDto();
-    return { tune: tune, title: '曲新規作成', formaction: '/admin/tunes/'};
+    const composers: Composer[] = await this.composersService.findAll();
+    return { tune: tune, composers: composers, title: '曲新規作成', formaction: '/admin/tunes/'};
   }
   @Get("tunes/:id/edit")
   @Render('admin/tunes/editor')
   async editTune(@Param('id') id: number) {
     const tune: Tune = await this.tunesService.findById(id);
     const composers: Composer[] = await this.composersService.findAll();
-    hbs.registerHelper('isSelectedComposer', (composer: Composer) => {
-      return composer.id === tune.composer.id ? 'selected' : null;
-    })
     return { tune: tune, composers: composers, title: `${tune.title}編集`, formaction: `/admin/tunes/${id}?_method=PUT`}
   }
   @Post("tunes")

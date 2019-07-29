@@ -11,7 +11,7 @@
     <label for="countries">出身国</label>
     <select multiple class="form-control" id="countries" name='countryIds[]'>
       {{#each countries}}
-        <option value="{{ id }}" {{isSelectedCountrty this}}>{{ name }}</option>
+        <option value="{{ id }}" {{isSelectedCountrty this ../composer }}>{{ name }}</option>
       {{/each}}
     </select>
   </div>

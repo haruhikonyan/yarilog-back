@@ -6,5 +6,5 @@ export class SaveComposerDto {
   readonly fullName: string;
   readonly description: string;
   readonly countryIds: string[] = [];
-  countries: object[];
+  countries: object[] = [];
 }

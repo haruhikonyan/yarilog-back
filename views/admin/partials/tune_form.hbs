@@ -3,7 +3,7 @@
     <label for="composer">作曲者</label>
     <select class="form-control" id="composer" name='composerId'>
       {{#each composers}}
-        <option value="{{ id }}" {{isSelectedComposer this}}>{{ fullName }}</option>
+        <option value="{{ id }}" {{isSelectedComposer this ../tune}}>{{ fullName }}</option>
       {{/each}}
     </select>
   </div>
