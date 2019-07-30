@@ -89,7 +89,7 @@ export class AdminController {
   async editComposer(@Param('id') id: string) {
     const composer: Composer = await this.composersService.findById(id);
     const countries: Country[] = await this.countriesService.findAll();
-    return { composer: composer, countries: countries, title: `${composer.lastName}編集`, formaction: `/admin/composers/${id}?_method=PUT`};
+    return { composer: composer, countries: countries, title: `${composer.displayName}編集`, formaction: `/admin/composers/${id}?_method=PUT`};
   }
   @Post("composers")
   async createComposer(@Res() res: Response, @Body() composerData: SaveComposerDto, @Query('isContinue') isContinue: string) {

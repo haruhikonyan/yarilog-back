@@ -11,7 +11,7 @@ export class Composer {
   id: number;
 
   @Column({ length: 50 })
-  lastName: string;
+  displayName: string;
 
   @Column({ length: 50, unique: true })
   fullName: string;
