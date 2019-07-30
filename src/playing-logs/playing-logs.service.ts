@@ -11,11 +11,11 @@ export class PlayingLogsService {
 	) {}
 
 	async findAll(): Promise<PlayingLog[]> {
-	  return await this.playingLogRepository.find({relations: ['tune', 'tune.composer', 'tune.composer.countries', 'user']});
+	  return await this.playingLogRepository.find({relations: ['tune', 'tune.composer', 'tune.composer.countries', 'user', 'instrument']});
 	}
 
   async findById(id: string): Promise<PlayingLog> {
-    return await this.playingLogRepository.findOne(id, {relations: ['tune', 'tune.composer', 'tune.composer.countries', 'user']});
+    return await this.playingLogRepository.findOne(id, {relations: ['tune', 'tune.composer', 'tune.composer.countries', 'user', 'instrument']});
   }
 
   async findAllByComposerId(composerId: string): Promise<PlayingLog[]> {
@@ -24,6 +24,7 @@ export class PlayingLogsService {
       .innerJoinAndSelect("tune.composer", "composer", "composer.id = :id", { id: composerId })
       .innerJoinAndSelect("composer.countries", "country")
       .innerJoinAndSelect("playingLog.user", "user")
+      .innerJoinAndSelect("playingLog.instrument", "instrument")
       .getMany();
   }
 
@@ -33,6 +34,7 @@ export class PlayingLogsService {
       .innerJoinAndSelect("tune.composer", "composer")
       .innerJoinAndSelect("composer.countries", "country", "composer.id = :id", { id: countryId })
       .innerJoinAndSelect("playingLog.user", "user")
+      .innerJoinAndSelect("playingLog.instrument", "instrument")
       .getMany();
   }
 
