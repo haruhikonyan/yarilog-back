@@ -15,7 +15,7 @@ import { SaveTuneDto } from '../playing-logs/tunes/save-tune.dto';
 import { TunesService } from '../playing-logs/tunes/tunes.service';
 import { Instrument } from '../playing-logs/instruments/instruments.entity';
 import { SaveInstrumentDto } from '../playing-logs/instruments/save-instrument.dto';
-import { InstrumentsService } from 'src/playing-logs/instruments/instruments.service';
+import { InstrumentsService } from '../playing-logs/instruments/instruments.service';
 
 @Controller('admin')
 export class AdminController {
