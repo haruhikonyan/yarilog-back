@@ -7,7 +7,8 @@ import { Instrument } from './instruments/instruments.entity';
 export enum PlayerLevel {
   BEGINNER = "初心者",
   INTERMEDIATE = "中級者",
-  SENIOR = "上級者"
+  SENIOR = "上級者",
+  PRO = "プロ"
 }
 
 /**
@@ -19,8 +20,12 @@ export class PlayingLog {
   id: string;
 
   // 演奏日
-  @Column('date')
+  @Column({ type: 'date', nullable: true })
   playDate: Date;
+
+  // 演奏団体
+  @Column({ nullable: true })
+  team: string;
 
   // 自分の演奏レベル
   @Column({
@@ -35,7 +40,7 @@ export class PlayingLog {
   instrument: Instrument;
 
   // ポジション 1stとかバンダとか
-  @Column()
+  @Column({ nullable: true })
   position: string;
 
   // 難易度 0~5 小数点第１位
@@ -49,13 +54,13 @@ export class PlayingLog {
   interesting: number;
 
   // 自分のパートの感想
-  @Column('text')
+  @Column({ type: 'text', nullable: true })
   inpression: string;
   // 他のパートや全体について
-  @Column('text')
+  @Column({ type: 'text', nullable: true })
   otherPartInpression: string;
   // 非公開のメモ
-  @Column('text')
+  @Column({ type: 'text', nullable: true })
   secretMemo: string;
   //　下書きフラグ
   @Column()

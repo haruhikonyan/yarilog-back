@@ -13,7 +13,7 @@ export class Tune {
   @Column({ length: 50 })
   title: string;
 
-  @Column('text')
+  @Column({ type: 'text', nullable: true })
   description: string;
 
   /**

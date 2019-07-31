@@ -12,7 +12,7 @@ export class Country {
   @Column({ length: 50, unique: true })
   name: string;
 
-  @Column('text')
+  @Column({ type: 'text', nullable: true })
   description: string;
 
   /**

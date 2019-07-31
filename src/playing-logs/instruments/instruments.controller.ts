@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { InstrumentsService } from './instruments.service';
 import { Instrument } from './instruments.entity';
 
@@ -8,5 +8,10 @@ export class InstrumentsController {
   @Get()
   async findAll(): Promise<Instrument[]> {
     return await this.instrumentsService.findAll();
+  }
+
+  @Get(':id')
+  async findById(@Param('id') id: string): Promise<Instrument | null> {
+    return await this.instrumentsService.findById(id);
   }
 }

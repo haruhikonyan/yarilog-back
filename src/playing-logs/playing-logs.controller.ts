@@ -28,6 +28,11 @@ export class PlayingLogsController {
     return await this.playingLogService.findAllByCountryId(countryId);
   }
 
+  @Get('instruments/:id')
+  async findAllByInstrumentId(@Param('id') instrumentId: string): Promise<PlayingLog[] | null> {
+    return await this.playingLogService.findAllByInstrumentId(instrumentId);
+  }
+
   @Post()
   @UseGuards(AuthGuard('jwt'))
   async create(@Body() playingLogData: PlayingLog, @Request() req): Promise<PlayingLog> {
