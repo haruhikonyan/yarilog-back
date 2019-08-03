@@ -48,6 +48,16 @@ export class PlayingLogsService {
       .getMany();
   }
 
+  async findAllByUserId(userId: string): Promise<PlayingLog[]> {
+    return await this.playingLogRepository.createQueryBuilder("playingLog")
+      .innerJoinAndSelect("playingLog.tune", "tune")
+      .innerJoinAndSelect("tune.composer", "composer")
+      .innerJoinAndSelect("composer.countries", "country")
+      .innerJoinAndSelect("playingLog.user", "user", "user.id = :id", { id: userId })
+      .innerJoinAndSelect("playingLog.instrument", "instrument")
+      .getMany();
+  }
+
   async save(playingLog: PlayingLog): Promise<PlayingLog> {
     return await this.playingLogRepository.save(playingLog);
   }

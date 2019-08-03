@@ -3,10 +3,15 @@ import { AuthGuard } from '@nestjs/passport';
 
 import { PlayingLogsService } from './playing-logs.service';
 import { PlayingLog } from './playing-logs.entity';
+import { AuthService } from 'src/auth/auth.service';
+import { User } from 'src/users/users.entity';
 
 @Controller('playing-logs')
 export class PlayingLogsController {
-  constructor(private readonly playingLogService: PlayingLogsService) {}
+  constructor(
+    private readonly playingLogService: PlayingLogsService,
+    private readonly authService: AuthService,
+    ) {}
 
   @Get()
   async findAll(): Promise<PlayingLog[]> {
@@ -31,6 +36,17 @@ export class PlayingLogsController {
   @Get('instruments/:id')
   async findAllByInstrumentId(@Param('id') instrumentId: string): Promise<PlayingLog[] | null> {
     return await this.playingLogService.findAllByInstrumentId(instrumentId);
+  }
+
+  @Get('users/:id')
+  async findAllByUserId(@Param('id') userId: string, @Request() req): Promise<PlayingLog[] | null> {
+    const me: User = await this.authService.getMeByAuthorizationHeaderToken(req.headers['authorization']);
+    if (me.id === userId) {
+      // TODO ログイン中の id と一致した場合は非公開情報などを付与する
+      return await this.playingLogService.findAllByUserId(userId);
+    }
+    // TODO デフォルトでは非公開情報を付与しないようにする
+    return await this.playingLogService.findAllByUserId(userId);
   }
 
   @Post()

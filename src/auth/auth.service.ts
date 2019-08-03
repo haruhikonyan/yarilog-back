@@ -1,5 +1,5 @@
 import { JwtService } from '@nestjs/jwt';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtPayload } from './jwt-payload.interface';
 import { User } from '../users/users.entity';
@@ -25,7 +25,19 @@ export class AuthService {
     return this.jwtService.sign(payload);
   }
 
-  async validateUser(payload: JwtPayload): Promise<any> {
+  async validateUser(payload: JwtPayload): Promise<User> {
     return await this.usersService.findById(payload.userId);
+  }
+
+  async getMeByAuthorizationHeaderToken(authorizationHeaderToken: string): Promise<User> | null {
+    // authorizationHeaderToken が存在してない場合は未ログインなので null を返す
+    if (authorizationHeaderToken == null) { return null; }
+    const token = authorizationHeaderToken.replace(/Bearer\s/, '')
+    const payload: JwtPayload = this.jwtService.decode(token) as JwtPayload;
+    // token が存在して payload が取得できなければ不正なアクセスとして 401 を返す
+    if (!payload) {
+      throw new UnauthorizedException();
+    }
+    return await this.validateUser(payload);
   }
 }
