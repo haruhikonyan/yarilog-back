@@ -17,6 +17,11 @@ export class TunesController {
     return await this.tuneService.findById(id);
   }
 
+  @Get('composers/:id')
+  async findAllByComposerId(@Param('id') composerId: string): Promise<Tune[] | null> {
+    return await this.tuneService.findAllByComposerId(composerId);
+  }
+
   @Post()
   async create(@Body() tuneData: SaveTuneDto): Promise<Tune> {
     return await this.tuneService.create(tuneData);

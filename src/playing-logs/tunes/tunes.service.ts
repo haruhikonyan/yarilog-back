@@ -24,6 +24,12 @@ export class TunesService {
     return await this.tunesRepository.save(country);
   }
 
+  async findAllByComposerId(composerId: string): Promise<Tune[]> {
+    return await this.tunesRepository.createQueryBuilder("tune")
+      .innerJoinAndSelect("tune.composer", "composer", "composer.id = :id", { id: composerId })
+      .getMany();
+  }
+
   async update(id: number, tuneData: SaveTuneDto): Promise<Tune> {
     const tune = await this.findById(id);
     await this.tunesRepository.merge(tune, tuneData);
