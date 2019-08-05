@@ -61,4 +61,10 @@ export class PlayingLogsService {
   async save(playingLog: PlayingLog): Promise<PlayingLog> {
     return await this.playingLogRepository.save(playingLog);
   }
+
+  async update(id: string, playingLogData: PlayingLog): Promise<PlayingLog> {
+    const playingLog = await this.findById(id);
+    await this.playingLogRepository.merge(playingLog, playingLogData);
+    return await this.playingLogRepository.save(playingLog);
+  }
 }

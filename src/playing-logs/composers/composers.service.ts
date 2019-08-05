@@ -24,6 +24,7 @@ export class ComposersService {
     return await this.composerRepository.save(composer);
   }
 
+  // many to many を保存するには preload を使わなきゃなので id は取らない(composerData には id を含むこと)
   async update(composerData: SaveComposerDto): Promise<Composer> {
     const composer = await this.composerRepository.preload(composerData);
     return await this.composerRepository.save(composer);

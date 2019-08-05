@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Request, Put, HttpException, HttpStatus } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 import { PlayingLogsService } from './playing-logs.service';
@@ -54,6 +54,16 @@ export class PlayingLogsController {
   async create(@Body() playingLogData: PlayingLog, @Request() req): Promise<PlayingLog> {
     playingLogData.user = req.user;
     return await this.playingLogService.save(playingLogData);
+  }
+
+
+  @Put(":id")
+  @UseGuards(AuthGuard('jwt'))
+  async update(@Body() playingLogData: PlayingLog, @Param('id') id: string, @Request() req): Promise<PlayingLog> {
+    if (playingLogData.user.id !== req.user.id) {
+      throw new HttpException('更新ユーザ不一致', HttpStatus.UNAUTHORIZED);
+    }
+    return await this.playingLogService.update(id, playingLogData);
   }
 
 }
