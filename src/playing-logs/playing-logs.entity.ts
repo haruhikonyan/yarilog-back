@@ -53,15 +53,22 @@ export class PlayingLog {
   @Column('double')
   interesting: number;
 
-  // 自分のパートの感想
+  // 面白かったところ
   @Column({ type: 'text', nullable: true })
-  inpression: string;
+  impressionOfInteresting: string;
+  // 難しかったところ
+  @Column({ type: 'text', nullable: true })
+  impressionOfDifficulty: string;
+  // 次への反省
+  @Column({ type: 'text', nullable: true })
+  reflectionForNext: string;
   // 他のパートや全体について
   @Column({ type: 'text', nullable: true })
   otherPartInpression: string;
   // 非公開のメモ
   @Column({ type: 'text', nullable: true })
   secretMemo: string;
+  
   //　下書きフラグ
   @Column()
   isDraft: boolean;
