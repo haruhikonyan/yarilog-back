@@ -3,8 +3,8 @@ import { AuthGuard } from '@nestjs/passport';
 
 import { PlayingLogsService } from './playing-logs.service';
 import { PlayingLog } from './playing-logs.entity';
-import { AuthService } from 'src/auth/auth.service';
-import { User } from 'src/users/users.entity';
+import { AuthService } from '../auth/auth.service';
+import { User } from '../users/users.entity';
 
 @Controller('playing-logs')
 export class PlayingLogsController {

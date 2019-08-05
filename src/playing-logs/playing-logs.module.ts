@@ -15,7 +15,7 @@ import { Tune } from './tunes/tunes.entity';
 import { InstrumentsController } from './instruments/instruments.controller';
 import { InstrumentsService } from './instruments/instruments.service';
 import { Instrument } from './instruments/instruments.entity';
-import { AuthModule } from 'src/auth/auth.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
