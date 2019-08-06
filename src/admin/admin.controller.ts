@@ -135,6 +135,8 @@ export class AdminController {
   @Post("tunes")
   async createTune(@Res() res: Response, @Body() tuneData: SaveTuneDto, @Query('isContinue') isContinue: string) {
     tuneData.composer = { id: tuneData.composerId }
+    // ここのエンドポイントには admin 以外ありえない
+    tuneData.author = 'admin';
     await this.tunesService.create(tuneData);
     const redirectPath: string = isContinue === 'true' ? '/admin/tunes/new' : '.';
     res.redirect(redirectPath);

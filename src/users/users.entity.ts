@@ -1,10 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { PlayingLog } from '../playing-logs/playing-logs.entity';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @CreateDateColumn()
+  readonly createdAt?: Date;
+  @UpdateDateColumn()
+  readonly updatedAt?: Date;
 
   @Column({
     length: 30,

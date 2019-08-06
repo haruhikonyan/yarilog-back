@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { PlayingLog } from '../playing-logs.entity';
 import { Composer } from '../composers/composers.entity';
 
@@ -10,8 +10,16 @@ export class Tune {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @CreateDateColumn()
+  readonly createdAt?: Date;
+  @UpdateDateColumn()
+  readonly updatedAt?: Date;
+
   @Column({ length: 50 })
   title: string;
+
+  @Column()
+  author: string;
 
   @Column({ type: 'text', nullable: true })
   description: string;

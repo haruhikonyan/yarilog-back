@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Tune } from './tunes/tunes.entity';
 import { User } from '../users/users.entity';
 import { Instrument } from './instruments/instruments.entity';
@@ -18,6 +18,11 @@ export enum PlayerLevel {
 export class PlayingLog {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @CreateDateColumn()
+  readonly createdAt?: Date;
+  @UpdateDateColumn()
+  readonly updatedAt?: Date;
 
   // 演奏日
   @Column({ type: 'date', nullable: true })
