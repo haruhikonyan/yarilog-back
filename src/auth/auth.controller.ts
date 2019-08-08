@@ -1,6 +1,6 @@
 import { Controller, Get, UseGuards, Post, Body, HttpStatus, HttpException, Request } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthService } from './auth.service';
+import { AuthService, LoginResultObject } from './auth.service';
 
 export interface LoginObject {
   // mailAddress or username
@@ -14,12 +14,12 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  async login(@Body() loginObject: LoginObject): Promise<any> {
-    const token: string = await this.authService.login(loginObject)
-    if (token == null) {
+  async login(@Body() loginObject: LoginObject): Promise<LoginResultObject> {
+    const loginResultObject = await this.authService.login(loginObject)
+    if (loginResultObject.token == null || loginResultObject.user == null) {
       throw new HttpException('feild login', HttpStatus.UNAUTHORIZED);
     }
-    return token;
+    return loginResultObject;
   }
 
   @Get('me')

@@ -5,6 +5,11 @@ import { JwtPayload } from './jwt-payload.interface';
 import { User } from '../users/users.entity';
 import { LoginObject } from './auth.controller';
 
+export interface LoginResultObject {
+  token: string;
+  user: User;
+}
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -12,7 +17,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async login(loginObject: LoginObject): Promise<string> {
+  async login(loginObject: LoginObject): Promise<LoginResultObject> {
     // In the real-world app you shouldn't expose this method publicly
     // instead, return a token once you verify user credentials
 
@@ -22,7 +27,7 @@ export class AuthService {
       return null;
     }
     const payload: JwtPayload = { userId: loggedInUser.id };
-    return this.jwtService.sign(payload);
+    return {token: this.jwtService.sign(payload), user: loggedInUser};
   }
 
   async validateUser(payload: JwtPayload): Promise<User> {
