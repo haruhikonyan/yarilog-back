@@ -16,7 +16,7 @@ export class AuthController {
   @Post('login')
   async login(@Body() loginObject: LoginObject): Promise<LoginResultObject> {
     const loginResultObject = await this.authService.login(loginObject)
-    if (loginResultObject.token == null || loginResultObject.user == null) {
+    if (loginResultObject == null) {
       throw new HttpException('feild login', HttpStatus.UNAUTHORIZED);
     }
     return loginResultObject;
