@@ -11,7 +11,7 @@ export class PlayingLogsService {
 	) {}
 
 	async findAll(): Promise<PlayingLog[]> {
-	  return await this.playingLogRepository.find({relations: ['tune', 'tune.composer', 'tune.composer.countries', 'user', 'instrument']});
+	  return await this.playingLogRepository.find({relations: ['tune', 'tune.composer', 'tune.composer.countries', 'user', 'instrument'], order: {createdAt: "DESC"}});
 	}
 
   async findById(id: string): Promise<PlayingLog> {
@@ -25,6 +25,7 @@ export class PlayingLogsService {
       .innerJoinAndSelect("composer.countries", "country")
       .innerJoinAndSelect("playingLog.user", "user")
       .innerJoinAndSelect("playingLog.instrument", "instrument")
+      .orderBy("playingLog.createdAt", "DESC")
       .getMany();
   }
 
@@ -35,6 +36,7 @@ export class PlayingLogsService {
       .innerJoinAndSelect("composer.countries", "country", "country.id = :id", { id: countryId })
       .innerJoinAndSelect("playingLog.user", "user")
       .innerJoinAndSelect("playingLog.instrument", "instrument")
+      .orderBy("playingLog.createdAt", "DESC")
       .getMany();
   }
 
@@ -45,6 +47,7 @@ export class PlayingLogsService {
       .innerJoinAndSelect("composer.countries", "country")
       .innerJoinAndSelect("playingLog.user", "user")
       .innerJoinAndSelect("playingLog.instrument", "instrument", "instrument.id = :id", { id: instrumentId })
+      .orderBy("playingLog.createdAt", "DESC")
       .getMany();
   }
 
@@ -55,6 +58,8 @@ export class PlayingLogsService {
       .innerJoinAndSelect("composer.countries", "country")
       .innerJoinAndSelect("playingLog.user", "user", "user.id = :id", { id: userId })
       .innerJoinAndSelect("playingLog.instrument", "instrument")
+      // 人で見る場合は更新順にしてみる
+      .orderBy("playingLog.updatedAt", "DESC")
       .getMany();
   }
 

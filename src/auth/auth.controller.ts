@@ -8,7 +8,6 @@ export interface LoginObject {
   password: string;
 }
 
-
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
