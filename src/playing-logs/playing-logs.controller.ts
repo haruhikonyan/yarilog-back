@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Request, Put, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Request, Put, HttpException, HttpStatus, Query } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 import { PlayingLogsService } from './playing-logs.service';
@@ -14,8 +14,8 @@ export class PlayingLogsController {
     ) {}
 
   @Get()
-  async findAll(): Promise<PlayingLog[]> {
-    return await this.playingLogService.findAll();
+  async findAll(@Query('limit') limit: string, @Query('offset') offset: string): Promise<PlayingLog[]> {
+    return await this.playingLogService.findAll(Number(limit), Number(offset));
   }
 
   @Get(':id')
