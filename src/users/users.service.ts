@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './users.entity';
 import { LoginObject } from '../auth/auth.controller';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -19,20 +20,17 @@ export class UsersService {
     return await this.usersRepository.findOne(id);
   }
 
-  async findByUsernameOrMailAddressAndPasswordForLogin(loginObject: LoginObject): Promise<User> {
-    // TODO パスワード暗号化対応
-    return await this.usersRepository.findOne({
+  async findByUsernameOrMailAddressAndPasswordForLogin(loginObject: LoginObject): Promise<User | null> {
+    const user = await this.usersRepository.findOne({
       where: [
-        // password && (username || mailAddreee) 的な感じで書きたい
-        { password: loginObject.password, username: loginObject.loginId },
-        { password: loginObject.password, mailAddress: loginObject.loginId }
+        { username: loginObject.loginId },
+        { mailAddress: loginObject.loginId }
       ]
     });
+    return bcrypt.compare(loginObject.password, user.password) ? user : null;
   }
 
   async save(user: User): Promise<User> {
-    // TODO user.password は暗号化して保存する
-    console.log(user)
     return await this.usersRepository.save(user);
   }
 }

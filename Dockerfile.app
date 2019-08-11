@@ -3,7 +3,8 @@ ENV LANG C.UTF-8
 
 WORKDIR /yarilog-back
 COPY . /yarilog-back
-RUN echo "PWD: $PWD" && \
+RUN apk --no-cache add --virtual builds-deps build-base python && \
+  echo "PWD: $PWD" && \
   echo "ls: $(ls -la)" && \
   echo "PATH: $(echo $PATH)" && \
   echo "node version: $(node -v)" && \
