@@ -1,3 +1,5 @@
+// TODO @types/passport-jwt いれる
+// @ts-ignore: Could not find a declaration file for module
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AuthService } from './auth.service';
 import { PassportStrategy } from '@nestjs/passport';

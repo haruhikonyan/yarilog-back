@@ -8,31 +8,31 @@ import { Composer } from '../composers/composers.entity';
 @Entity()
 export class Tune {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @CreateDateColumn()
-  readonly createdAt: Date;
+  readonly createdAt!: Date;
   @UpdateDateColumn()
-  readonly updatedAt: Date;
+  readonly updatedAt!: Date;
 
   @Column({ length: 50 })
-  title: string;
+  title!: string;
 
   @Column()
-  author: string;
+  author!: string;
 
   @Column({ type: 'text', nullable: true })
-  description: string;
+  description: string | null = null;
 
   /**
    * 楽曲には複数の演奏記録が紐づく
    */
   @OneToMany(type => PlayingLog, playingLog => playingLog.tune)
-  playingLogs: PlayingLog[];
+  playingLogs!: PlayingLog[];
 
   /**
    * 楽曲は一人の作曲家を持つ
    */
   @ManyToOne(type => Composer, composer => composer.tunes)
-  composer: Composer;
+  composer!: Composer;
 }

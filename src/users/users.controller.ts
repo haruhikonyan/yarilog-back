@@ -13,7 +13,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  async findById(@Param('id') id: string): Promise<User | null> {
+  async findById(@Param('id') id: string): Promise<User | undefined> {
     // 自分自身の取得は auth#me を使うので isMine は false 固定
     return await this.usersService.findById(id, false);
   }

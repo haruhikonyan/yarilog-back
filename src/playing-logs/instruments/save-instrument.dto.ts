@@ -1,4 +1,4 @@
 export class SaveInstrumentDto {
-  readonly name: string;
-  readonly shortName: string;
+  readonly name!: string;
+  readonly shortName!: string;
 }

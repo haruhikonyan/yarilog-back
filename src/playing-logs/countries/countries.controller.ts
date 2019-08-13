@@ -13,7 +13,7 @@ export class CountriesController {
   }
 
   @Get(':id')
-  async findById(@Param('id') id: string): Promise<Country | null> {
+  async findById(@Param('id') id: string): Promise<Country | undefined> {
     return await this.countriesService.findById(id);
   }
 

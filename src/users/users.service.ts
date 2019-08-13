@@ -22,7 +22,7 @@ export class UsersService {
     }
   }
 
-  async findById(id: string, isMine: boolean = false): Promise<User | null> {
+  async findById(id: string, isMine: boolean = false): Promise<User | undefined> {
     console.log(isMine)
     if (isMine) {
       return await this.usersRepository.createQueryBuilder('user')
@@ -40,7 +40,7 @@ export class UsersService {
    * password もくっつける
    * @param loginObject 
    */
-  async findByUsernameOrMailAddressWithPassword(loginObject: LoginObject): Promise<User | null> {
+  async findByUsernameOrMailAddressWithPassword(loginObject: LoginObject): Promise<User | undefined> {
     return await this.usersRepository.createQueryBuilder('user')
       .where(
         [

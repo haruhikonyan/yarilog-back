@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DeepPartial } from 'typeorm';
 import { Tune } from './tunes.entity';
 import { SaveTuneDto } from './save-tune.dto';
 
@@ -15,12 +15,12 @@ export class TunesService {
 		return await this.tunesRepository.find({relations: ['composer']});
 	}
 
-  async findById(id: number | string): Promise<Tune> {
+  async findById(id: number | string): Promise<Tune | undefined> {
     return await this.tunesRepository.findOne(id, {relations: ['composer']});
   }
 
   async create(tuneData: SaveTuneDto): Promise<Tune> {
-    const country = await this.tunesRepository.create(tuneData);
+    const country = await this.tunesRepository.create(tuneData as DeepPartial<Tune>);
     return await this.tunesRepository.save(country);
   }
 
@@ -30,9 +30,14 @@ export class TunesService {
       .getMany();
   }
 
-  async update(id: number, tuneData: SaveTuneDto): Promise<Tune> {
+  async update(id: number, tuneData: SaveTuneDto): Promise<Tune | undefined> {
     const tune = await this.findById(id);
-    await this.tunesRepository.merge(tune, tuneData);
+    // 存在しなければ undefined を返す
+    if (tune == null) {
+      return undefined;
+    }
+    // 型エラー回避のための as DeepPartial<Tune>
+    await this.tunesRepository.merge(tune, tuneData as DeepPartial<Tune>);
     return await this.tunesRepository.save(tune);
   }
 

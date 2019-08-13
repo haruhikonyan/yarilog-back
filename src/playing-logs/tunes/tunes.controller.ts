@@ -18,7 +18,7 @@ export class TunesController {
   }
 
   @Get(':id')
-  async findById(@Param('id') id: string): Promise<Tune | null> {
+  async findById(@Param('id') id: string): Promise<Tune | undefined> {
     return await this.tuneService.findById(id);
   }
 
@@ -28,8 +28,8 @@ export class TunesController {
   }
 
   @Post()
-  async create(@Body() tuneData: SaveTuneDto, @Request() req): Promise<Tune> {
-    const me: User = await this.authService.getMeByAuthorizationHeaderToken(req.headers['authorization']);
+  async create(@Body() tuneData: SaveTuneDto, @Request() req: any): Promise<Tune> {
+    const me: User | undefined = await this.authService.getMeByAuthorizationHeaderToken(req.headers['authorization']);
     tuneData.author = me ? me.id : 'guest';
     return await this.tuneService.create(tuneData);
   }

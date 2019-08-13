@@ -6,6 +6,8 @@ import { ComposersService } from '../playing-logs/composers/composers.service';
 import { CountriesService } from '../playing-logs/countries/countries.service';
 import { Country } from '../playing-logs/countries/countries.entity';
 import { Composer } from '../playing-logs/composers/composers.entity';
+// TODO 本家 handlebars.js には types があるのでそれが対応するの待ち？
+// @ts-ignore: Could not find a declaration file for module
 import * as hbs from 'hbs';
 import { join } from 'path';
 import { SaveCountryDto } from '../playing-logs/countries/save-country.dto';
@@ -56,8 +58,8 @@ export class AdminController {
   @Get("countries/:id/edit")
   @Render('admin/countries/editor')
   async editCountry(@Param('id') id: number) {
-    const country: Country = await this.countriesService.findById(id);
-    return { country: country, title: `${country.name}編集`, formaction: `/admin/countries/${id}?_method=PUT`}
+    const country: Country | undefined = await this.countriesService.findById(id);
+    return { country: country, title: `${country!.name}編集`, formaction: `/admin/countries/${id}?_method=PUT`}
   }
   @Post("countries")
   async createCountry(@Res() res: Response, @Body() countryData: SaveCountryDto, @Query('isContinue') isContinue: string) {
@@ -87,9 +89,9 @@ export class AdminController {
   @Get("composers/:id/edit")
   @Render('admin/composers/editor')
   async editComposer(@Param('id') id: string) {
-    const composer: Composer = await this.composersService.findById(id);
+    const composer: Composer | undefined = await this.composersService.findById(id);
     const countries: Country[] = await this.countriesService.findAll();
-    return { composer: composer, countries: countries, title: `${composer.displayName}編集`, formaction: `/admin/composers/${id}?_method=PUT`};
+    return { composer: composer, countries: countries, title: `${composer!.displayName}編集`, formaction: `/admin/composers/${id}?_method=PUT`};
   }
   @Post("composers")
   async createComposer(@Res() res: Response, @Body() composerData: SaveComposerDto, @Query('isContinue') isContinue: string) {
@@ -128,9 +130,9 @@ export class AdminController {
   @Get("tunes/:id/edit")
   @Render('admin/tunes/editor')
   async editTune(@Param('id') id: number) {
-    const tune: Tune = await this.tunesService.findById(id);
+    const tune: Tune | undefined = await this.tunesService.findById(id);
     const composers: Composer[] = await this.composersService.findAll();
-    return { tune: tune, composers: composers, title: `${tune.title}編集`, formaction: `/admin/tunes/${id}?_method=PUT`}
+    return { tune: tune, composers: composers, title: `${tune!.title}編集`, formaction: `/admin/tunes/${id}?_method=PUT`}
   }
   @Post("tunes")
   async createTune(@Res() res: Response, @Body() tuneData: SaveTuneDto, @Query('isContinue') isContinue: string) {
@@ -163,8 +165,8 @@ export class AdminController {
   @Get("instruments/:id/edit")
   @Render('admin/instruments/editor')
   async editInstrument(@Param('id') id: number) {
-    const instrument: Instrument = await this.instrumentsService.findById(id);
-    return { instrument: instrument, title: `${instrument.name}編集`, formaction: `/admin/instruments/${id}?_method=PUT`}
+    const instrument: Instrument | undefined = await this.instrumentsService.findById(id);
+    return { instrument: instrument, title: `${instrument!.name}編集`, formaction: `/admin/instruments/${id}?_method=PUT`}
   }
   @Post("instruments")
   async createInstrument(@Res() res: Response, @Body() instrumentData: SaveInstrumentDto, @Query('isContinue') isContinue: string) {

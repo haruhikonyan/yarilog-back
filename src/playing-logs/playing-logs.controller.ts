@@ -24,11 +24,15 @@ export class PlayingLogsController {
   }
 
   @Get(':id')
-  async findById(@Param('id') id: string, @Request() req): Promise<PlayingLog | null> {
+  async findById(@Param('id') id: string, @Request() req: any): Promise<PlayingLog | undefined> {
     // この時点では自分の PlayingLog かはわからないのですべてのカラムを持ったものを取得する
     const allColmunPlayingLog = await this.playingLogService.findById(id, true);
 
-    const me: User = await this.authService.getMeByAuthorizationHeaderToken(req.headers['authorization']);
+    if (allColmunPlayingLog == null) {
+      return undefined;
+    }
+
+    const me: User | undefined = await this.authService.getMeByAuthorizationHeaderToken(req.headers['authorization']);
 
     // userId が一致すればそのまま返す
     if (me && me.id === allColmunPlayingLog.user.id) {
@@ -57,8 +61,8 @@ export class PlayingLogsController {
   }
 
   @Get('users/:id')
-  async findAllByUserId(@Param('id') userId: string, @Request() req): Promise<PlayingLog[]> {
-    const me: User = await this.authService.getMeByAuthorizationHeaderToken(req.headers['authorization']);
+  async findAllByUserId(@Param('id') userId: string, @Request() req: any): Promise<PlayingLog[]> {
+    const me: User | undefined = await this.authService.getMeByAuthorizationHeaderToken(req.headers['authorization']);
     if (me && me.id === userId) {
       // TODO ログイン中の id と一致した場合は非公開情報などを付与する
       return await this.playingLogService.findAllByUserId(userId);
@@ -69,7 +73,7 @@ export class PlayingLogsController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
-  async create(@Body() playingLogData: PlayingLog, @Request() req): Promise<PlayingLog> {
+  async create(@Body() playingLogData: PlayingLog, @Request() req: any): Promise<PlayingLog> {
     playingLogData.user = req.user;
     return await this.playingLogService.save(playingLogData);
   }
@@ -77,7 +81,7 @@ export class PlayingLogsController {
 
   @Put(":id")
   @UseGuards(AuthGuard('jwt'))
-  async update(@Body() playingLogData: PlayingLog, @Param('id') id: string, @Request() req): Promise<PlayingLog> {
+  async update(@Body() playingLogData: PlayingLog, @Param('id') id: string, @Request() req: any): Promise<PlayingLog | undefined> {
     if (playingLogData.user.id !== req.user.id) {
       throw new HttpException('更新ユーザ不一致', HttpStatus.UNAUTHORIZED);
     }

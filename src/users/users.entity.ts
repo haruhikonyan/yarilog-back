@@ -4,45 +4,39 @@ import { PlayingLog } from '../playing-logs/playing-logs.entity';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @CreateDateColumn()
-  readonly createdAt: Date;
+  readonly createdAt!: Date;
   @UpdateDateColumn()
-  readonly updatedAt: Date;
+  readonly updatedAt!: Date;
 
   @Column({
     length: 30,
     unique: true,
     select: false
   })
-  username: string;
+  username!: string;
 
   @Column({
     length: 50,
     unique: true,
     select: false
   })
-  mailAddress: string;
+  mailAddress!: string;
 
   @Column({select: false})
-  password: string;
+  password!: string;
 
   @Column({length: 50})
-  nickname: string;
+  nickname!: string;
 
   @Column({
     type: 'text',
     nullable: true
   })
-  description: string;
+  description: string | null = null;
 
   @OneToMany(type => PlayingLog, playingLog => playingLog.user)
-  playingLogs: PlayingLog[];
-
-  // 表に出したくないパスワードフィールド削除
-  deletePasswordColmun(): User {
-    delete this.password;
-    return this;
-  }
+  playingLogs!: PlayingLog[];
 }

@@ -15,7 +15,7 @@ export class ComposersService {
     return await this.composerRepository.find({relations: ['countries']});
   }
 
-  async findById(id: number | string): Promise<Composer> {
+  async findById(id: number | string): Promise<Composer | undefined> {
     return await this.composerRepository.findOne(id, {relations: ['countries']});
   }
 
@@ -25,8 +25,12 @@ export class ComposersService {
   }
 
   // many to many を保存するには preload を使わなきゃなので id は取らない(composerData には id を含むこと)
-  async update(composerData: SaveComposerDto): Promise<Composer> {
+  async update(composerData: SaveComposerDto): Promise<Composer | undefined> {
     const composer = await this.composerRepository.preload(composerData);
+    // 存在しなければ undefined を返す
+    if (composer == null) {
+      return undefined;
+    }
     return await this.composerRepository.save(composer);
   }
 }

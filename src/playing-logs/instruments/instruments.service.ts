@@ -15,7 +15,7 @@ export class InstrumentsService {
 		return await this.instrumentsRepository.find();
 	}
 
-  async findById(id: number | string): Promise<Instrument> {
+  async findById(id: number | string): Promise<Instrument | undefined> {
     return await this.instrumentsRepository.findOne(id);
   }
 
@@ -24,8 +24,12 @@ export class InstrumentsService {
     return await this.instrumentsRepository.save(instrument);
   }
 
-  async update(id: number, instrumentData: SaveInstrumentDto): Promise<Instrument> {
+  async update(id: number, instrumentData: SaveInstrumentDto): Promise<Instrument | undefined> {
     const instrument = await this.findById(id);
+    // 存在しなければ undefined を返す
+    if (instrument == null) {
+      return undefined;
+    }
     await this.instrumentsRepository.merge(instrument, instrumentData);
     return await this.instrumentsRepository.save(instrument);
   }

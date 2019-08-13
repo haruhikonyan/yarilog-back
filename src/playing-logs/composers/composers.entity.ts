@@ -8,27 +8,27 @@ import { Country } from '../countries/countries.entity';
 @Entity()
 export class Composer {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column({ length: 50 })
-  displayName: string;
+  displayName!: string;
 
   @Column({ length: 50, unique: true })
-  fullName: string;
+  fullName!: string;
 
   @Column({ type: 'text', nullable: true })
-  description: string;
+  description: string | null = null;
 
   /**
-   * 作曲家には複数の楽曲が紐づく
+   * 作曲家には複数の楽曲が紐づく]
    */
   @OneToMany(type => Tune, tune => tune.composer)
-  tunes: Tune[];
+  tunes!: Tune[];
 
   /**
    * 作曲家は複数の出身国を持てる
    */
   @ManyToMany(type => Country, country => country.composers)
   @JoinTable()
-  countries: Country[];
+  countries!: Country[];
 }

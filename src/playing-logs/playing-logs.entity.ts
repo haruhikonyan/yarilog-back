@@ -18,20 +18,20 @@ export enum PlayerLevel {
 @Entity()
 export class PlayingLog {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @CreateDateColumn()
-  readonly createdAt: Date;
+  readonly createdAt!: Date;
   @UpdateDateColumn()
-  readonly updatedAt: Date;
+  readonly updatedAt!: Date;
 
   // 演奏日
   @Column({ type: 'date', nullable: true })
-  playDate: Date;
+  playDate: Date | null = null;
 
   // 演奏団体
-  @Column({ nullable: true })
-  team: string;
+  @Column({ type: 'text', nullable: true })
+  team: string | null = null;
 
   // 自分の演奏レベル
   @Column({
@@ -39,55 +39,55 @@ export class PlayingLog {
     enum: PlayerLevel,
     default: PlayerLevel.BEGINNER
   })
-  playerLevel: PlayerLevel;
+  playerLevel!: PlayerLevel;
 
   // 担当パート
   @ManyToOne(type => Instrument, instrument => instrument.playingLogs)
-  instrument: Instrument;
+  instrument!: Instrument;
 
   // ポジション 1stとかバンダとか
-  @Column({ nullable: true })
-  position: string;
+  @Column({ type: 'text', nullable: true })
+  position: string | null = null;
 
   // 難易度 0~5 小数点第１位
   @Column('double')
-  difficulty: number;
+  difficulty!: number;
   // 体力 0~5 小数点第１位
   @Column('double')
-  physicality: number;
+  physicality!: number;
   // 面白さ 0~5 小数点第１位
   @Column('double')
-  interesting: number;
+  interesting!: number;
 
   // 面白かったところ
   @Column({ type: 'text', nullable: true })
-  impressionOfInteresting: string;
+  impressionOfInteresting: string | null = null;
   // 難しかったところ
   @Column({ type: 'text', nullable: true })
-  impressionOfDifficulty: string;
+  impressionOfDifficulty: string | null = null;
   // 次への反省
   @Column({ type: 'text', nullable: true })
-  reflectionForNext: string;
+  reflectionForNext: string | null = null;
   // 他のパートや全体について
   @Column({ type: 'text', nullable: true })
-  otherPartInpression: string;
+  otherPartInpression: string | null = null;
   // 非公開のメモ
   @Column({ type: 'text', nullable: true, select: false })
-  secretMemo: string;
+  secretMemo: string | null = null;
   
   //　下書きフラグ
-  @Column()
-  isDraft: boolean;
+  @Column({default: false})
+  isDraft: boolean = false;
 
   /**
    * 演奏記録は一つの楽曲を持つ
    */
   @ManyToOne(type => Tune, tune => tune.playingLogs)
-  tune: Tune;
+  tune!: Tune;
 
   /**
    * 演奏記録は一人のユーザを持つ
    */
   @ManyToOne(type => User, user => user.playingLogs)
-  user: User;
+  user!: User;
 }
