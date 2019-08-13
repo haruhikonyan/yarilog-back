@@ -14,12 +14,14 @@ export class User {
   @Column({
     length: 30,
     unique: true,
+    select: false
   })
   username: string;
 
   @Column({
     length: 50,
     unique: true,
+    select: false
   })
   mailAddress: string;
 

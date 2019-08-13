@@ -181,7 +181,7 @@ export class AdminController {
   @Get("users")
   @Render('admin/users')
   async users() {
-    const users: User[] = await this.usersService.findAll();
+    const users: User[] = await this.usersService.findAll(true);
     return { users: users, title: 'ユーザ一覧' };
   }
 }

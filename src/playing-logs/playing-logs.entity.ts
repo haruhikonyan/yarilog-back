@@ -8,6 +8,7 @@ export enum PlayerLevel {
   BEGINNER = "初心者",
   INTERMEDIATE = "中級者",
   SENIOR = "上級者",
+  UNIVERSITY_OF_MUSIC = "音大生",
   PRO = "プロ"
 }
 
@@ -71,7 +72,7 @@ export class PlayingLog {
   @Column({ type: 'text', nullable: true })
   otherPartInpression: string;
   // 非公開のメモ
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', nullable: true, select: false })
   secretMemo: string;
   
   //　下書きフラグ

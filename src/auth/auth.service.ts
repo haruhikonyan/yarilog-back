@@ -4,6 +4,7 @@ import { UsersService } from '../users/users.service';
 import { JwtPayload } from './jwt-payload.interface';
 import { User } from '../users/users.entity';
 import { LoginObject } from './auth.controller';
+import * as bcrypt from 'bcrypt';
 
 export interface LoginResultObject {
   token: string;
@@ -18,20 +19,25 @@ export class AuthService {
   ) {}
 
   async login(loginObject: LoginObject): Promise<LoginResultObject> {
-    // In the real-world app you shouldn't expose this method publicly
-    // instead, return a token once you verify user credentials
+    const user: User = await this.usersService.findByUsernameOrMailAddressWithPassword(loginObject);
 
-    const loggedInUser: User = await this.usersService.findByUsernameOrMailAddressAndPasswordForLogin(loginObject);
-    // 該当のユーザがいなかった場合とりあえず null を返す
-    if (loggedInUser == null) {
+    // 該当のユーザがいないもしくは、パスワードが一致しない場合は null を返して 401 にする
+    if (user == null) {
       return null;
     }
-    const payload: JwtPayload = { userId: loggedInUser.id };
-    return {token: this.jwtService.sign(payload), user: loggedInUser};
+    console.log(loginObject.password)
+    console.log(user)
+    if (!(await bcrypt.compare(loginObject.password, user.password))) {
+      return null;
+    }
+ 　　 
+    const payload: JwtPayload = { userId: user.id };
+    return {token: this.jwtService.sign(payload), user: user};
   }
 
   async validateUser(payload: JwtPayload): Promise<User> {
-    return await this.usersService.findById(payload.userId);
+    // ここに来るときは必ず自分自身なので isMine は true
+    return await this.usersService.findById(payload.userId, true);
   }
 
   async getMeByAuthorizationHeaderToken(authorizationHeaderToken: string): Promise<User> | null {

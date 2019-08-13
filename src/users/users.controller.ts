@@ -9,12 +9,13 @@ export class UsersController {
 
   @Get()
   async findAll(): Promise<User[]> {
-    return await this.usersService.findAll();
+    return await this.usersService.findAll(false);
   }
 
   @Get(':id')
   async findById(@Param('id') id: string): Promise<User | null> {
-    return await this.usersService.findById(id);
+    // 自分自身の取得は auth#me を使うので isMine は false 固定
+    return await this.usersService.findById(id, false);
   }
 
   @Post()
