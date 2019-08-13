@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './users.entity';
@@ -21,13 +21,18 @@ export class UsersService {
   }
 
   async findByUsernameOrMailAddressAndPasswordForLogin(loginObject: LoginObject): Promise<User | null> {
-    const user = await this.usersRepository.findOne({
-      where: [
-        { username: loginObject.loginId },
-        { mailAddress: loginObject.loginId }
-      ]
-    });
-    return bcrypt.compare(loginObject.password, user.password) ? user : null;
+    const user = await this.usersRepository.createQueryBuilder('user')
+      .where(
+        [
+          { username: loginObject.loginId },
+          { mailAddress: loginObject.loginId }
+        ]
+      ).addSelect('user.password')
+      .getOne();
+      if (user == null) {
+        throw new HttpException('feild login', HttpStatus.UNAUTHORIZED);
+      }
+    return await bcrypt.compare(loginObject.password, user.password) ? user : null;
   }
 
   async save(user: User): Promise<User> {

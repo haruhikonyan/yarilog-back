@@ -23,7 +23,7 @@ export class User {
   })
   mailAddress: string;
 
-  @Column()
+  @Column({select: false})
   password: string;
 
   @Column({length: 50})
@@ -37,4 +37,10 @@ export class User {
 
   @OneToMany(type => PlayingLog, playingLog => playingLog.user)
   playingLogs: PlayingLog[];
+
+  // 表に出したくないパスワードフィールド削除
+  deletePasswordColmun(): User {
+    delete this.password;
+    return this;
+  }
 }
