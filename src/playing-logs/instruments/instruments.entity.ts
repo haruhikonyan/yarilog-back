@@ -19,5 +19,5 @@ export class Instrument {
    * 楽器は1つの演奏記録に紐づく
    */
   @OneToMany(type => PlayingLog, playingLog => playingLog.instrument)
-  playingLogs: PlayingLog[] = [];
+  playingLogs!: PlayingLog[];
 }

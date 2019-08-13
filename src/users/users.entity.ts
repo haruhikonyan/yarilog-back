@@ -38,5 +38,5 @@ export class User {
   description: string | null = null;
 
   @OneToMany(type => PlayingLog, playingLog => playingLog.user)
-  playingLogs: PlayingLog[] = [];
+  playingLogs!: PlayingLog[];
 }

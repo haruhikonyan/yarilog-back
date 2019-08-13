@@ -19,5 +19,5 @@ export class Country {
    * 国は複数の作曲家を持つ
    */
   @ManyToMany(type => Composer, composer => composer.countries)
-  composers: Composer[] = [];
+  composers!: Composer[];
 }

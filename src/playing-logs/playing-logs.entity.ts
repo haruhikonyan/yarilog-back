@@ -30,7 +30,7 @@ export class PlayingLog {
   playDate: Date | null = null;
 
   // 演奏団体
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   team: string | null = null;
 
   // 自分の演奏レベル
@@ -46,7 +46,7 @@ export class PlayingLog {
   instrument!: Instrument;
 
   // ポジション 1stとかバンダとか
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   position: string | null = null;
 
   // 難易度 0~5 小数点第１位
