@@ -21,12 +21,11 @@ export class AuthService {
   async login(loginObject: LoginObject): Promise<LoginResultObject> {
     const user: User = await this.usersService.findByUsernameOrMailAddressWithPassword(loginObject);
 
-    // 該当のユーザがいないもしくは、パスワードが一致しない場合は null を返して 401 にする
+    // 該当のユーザがいない場合は null を返して 401 にする
     if (user == null) {
       return null;
     }
-    console.log(loginObject.password)
-    console.log(user)
+    // user がいてもパスワードが一致しなければ null を返して 401 にする
     if (!(await bcrypt.compare(loginObject.password, user.password))) {
       return null;
     }
@@ -35,7 +34,7 @@ export class AuthService {
     return {token: this.jwtService.sign(payload), user: user};
   }
 
-  async validateUser(payload: JwtPayload): Promise<User> {
+  async validateUser(payload: JwtPayload): Promise<User | null> {
     // ここに来るときは必ず自分自身なので isMine は true
     return await this.usersService.findById(payload.userId, true);
   }

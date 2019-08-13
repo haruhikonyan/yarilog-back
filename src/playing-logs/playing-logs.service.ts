@@ -21,7 +21,6 @@ export class PlayingLogsService {
   
   // TODO ES とか使ってちゃんと全文検索したい
   async findAllBySearchWord(searchWord: string, limit: number = 20, offset: number = 0) {
-    const a = 'sasa';
     let sqb: SelectQueryBuilder<PlayingLog> = this.playingLogRepository.createQueryBuilder("playingLog")
       .innerJoinAndSelect("playingLog.tune", "tune")
       .innerJoinAndSelect("tune.composer", "composer")
@@ -55,9 +54,21 @@ export class PlayingLogsService {
     return searchWord.split(/\s+/);
   }
   
-
-  async findById(id: string): Promise<PlayingLog> {
-    return await this.playingLogRepository.findOne(id, {relations: ['tune', 'tune.composer', 'tune.composer.countries', 'user', 'instrument']});
+  async findById(id: string, isMine: boolean = false): Promise<PlayingLog> {
+    if (isMine) {
+      return await this.playingLogRepository.createQueryBuilder("playingLog")
+        .innerJoinAndSelect("playingLog.tune", "tune")
+        .innerJoinAndSelect("tune.composer", "composer")
+        .innerJoinAndSelect("composer.countries", "country")
+        .innerJoinAndSelect("playingLog.user", "user")
+        .innerJoinAndSelect("playingLog.instrument", "instrument")
+        .addSelect("playingLog.secretMemo")
+        .where({id: id})
+        .getOne();
+    }
+    else {
+      return await this.playingLogRepository.findOne(id, {relations: ['tune', 'tune.composer', 'tune.composer.countries', 'user', 'instrument']});
+    }
   }
 
   async findAllByComposerId(composerId: string, limit: number = 20, offset: number = 0): Promise<PlayingLog[]> {
@@ -118,7 +129,7 @@ export class PlayingLogsService {
   }
 
   async update(id: string, playingLogData: PlayingLog): Promise<PlayingLog> {
-    const playingLog = await this.findById(id);
+    const playingLog = await this.findById(id, true);
     await this.playingLogRepository.merge(playingLog, playingLogData);
     return await this.playingLogRepository.save(playingLog);
   }

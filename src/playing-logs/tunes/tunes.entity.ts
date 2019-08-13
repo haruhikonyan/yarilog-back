@@ -11,9 +11,9 @@ export class Tune {
   id: number;
 
   @CreateDateColumn()
-  readonly createdAt?: Date;
+  readonly createdAt: Date;
   @UpdateDateColumn()
-  readonly updatedAt?: Date;
+  readonly updatedAt: Date;
 
   @Column({ length: 50 })
   title: string;

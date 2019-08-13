@@ -21,9 +21,9 @@ export class PlayingLog {
   id: string;
 
   @CreateDateColumn()
-  readonly createdAt?: Date;
+  readonly createdAt: Date;
   @UpdateDateColumn()
-  readonly updatedAt?: Date;
+  readonly updatedAt: Date;
 
   // 演奏日
   @Column({ type: 'date', nullable: true })

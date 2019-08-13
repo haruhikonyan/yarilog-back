@@ -22,7 +22,7 @@ export class UsersService {
     }
   }
 
-  async findById(id: string, isMine: boolean = false): Promise<User> {
+  async findById(id: string, isMine: boolean = false): Promise<User | null> {
     console.log(isMine)
     if (isMine) {
       return await this.usersRepository.createQueryBuilder('user')

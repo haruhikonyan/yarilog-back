@@ -24,8 +24,21 @@ export class PlayingLogsController {
   }
 
   @Get(':id')
-  async findById(@Param('id') id: string): Promise<PlayingLog | null> {
-    return await this.playingLogService.findById(id);
+  async findById(@Param('id') id: string, @Request() req): Promise<PlayingLog | null> {
+    // この時点では自分の PlayingLog かはわからないのですべてのカラムを持ったものを取得する
+    const allColmunPlayingLog = await this.playingLogService.findById(id, true);
+
+    const me: User = await this.authService.getMeByAuthorizationHeaderToken(req.headers['authorization']);
+
+    // userId が一致すればそのまま返す
+    if (me && me.id === allColmunPlayingLog.user.id) {
+      return allColmunPlayingLog
+    }
+    // 一致しなければ 非公開情報を削除して返す
+    else {
+      delete allColmunPlayingLog.secretMemo;
+      return allColmunPlayingLog;
+    }
   }
 
   @Get('composers/:id')
@@ -44,9 +57,9 @@ export class PlayingLogsController {
   }
 
   @Get('users/:id')
-  async findAllByUserId(@Param('id') userId: string, @Request() req): Promise<PlayingLog[] | null> {
+  async findAllByUserId(@Param('id') userId: string, @Request() req): Promise<PlayingLog[]> {
     const me: User = await this.authService.getMeByAuthorizationHeaderToken(req.headers['authorization']);
-    if (me.id === userId) {
+    if (me && me.id === userId) {
       // TODO ログイン中の id と一致した場合は非公開情報などを付与する
       return await this.playingLogService.findAllByUserId(userId);
     }

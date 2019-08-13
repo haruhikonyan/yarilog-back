@@ -7,9 +7,9 @@ export class User {
   id: string;
 
   @CreateDateColumn()
-  readonly createdAt?: Date;
+  readonly createdAt: Date;
   @UpdateDateColumn()
-  readonly updatedAt?: Date;
+  readonly updatedAt: Date;
 
   @Column({
     length: 30,
