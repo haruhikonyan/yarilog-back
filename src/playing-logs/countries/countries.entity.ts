@@ -7,17 +7,17 @@ import { Composer } from '../composers/composers.entity';
 @Entity()
 export class Country {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column({ length: 50, unique: true })
-  name: string;
+  name!: string;
 
   @Column({ type: 'text', nullable: true })
-  description: string;
+  description: string | null = null;
 
   /**
    * 国は複数の作曲家を持つ
    */
   @ManyToMany(type => Composer, composer => composer.countries)
-  composers: Composer[];
+  composers: Composer[] = [];
 }

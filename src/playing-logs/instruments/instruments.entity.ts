@@ -7,17 +7,17 @@ import { PlayingLog } from '../playing-logs.entity';
 @Entity()
 export class Instrument {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column({ unique: true })
-  name: string;
+  name!: string;
 
   @Column()
-  shortName: string;
+  shortName!: string;
 
   /**
    * 楽器は1つの演奏記録に紐づく
    */
   @OneToMany(type => PlayingLog, playingLog => playingLog.instrument)
-  playingLogs: PlayingLog[];
+  playingLogs: PlayingLog[] = [];
 }
