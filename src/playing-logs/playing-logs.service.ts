@@ -54,7 +54,7 @@ export class PlayingLogsService {
     return searchWord.split(/\s+/);
   }
   
-  async findById(id: string, isMine: boolean = false): Promise<PlayingLog> {
+  async findById(id: string, isMine: boolean = false): Promise<PlayingLog | undefined> {
     if (isMine) {
       return await this.playingLogRepository.createQueryBuilder("playingLog")
         .innerJoinAndSelect("playingLog.tune", "tune")
@@ -128,8 +128,12 @@ export class PlayingLogsService {
     return await this.playingLogRepository.save(playingLog);
   }
 
-  async update(id: string, playingLogData: PlayingLog): Promise<PlayingLog> {
+  async update(id: string, playingLogData: PlayingLog): Promise<PlayingLog | undefined> {
     const playingLog = await this.findById(id, true);
+    // 存在しなければ undefined を返す
+    if (playingLog == null) {
+      return undefined;
+    }
     await this.playingLogRepository.merge(playingLog, playingLogData);
     return await this.playingLogRepository.save(playingLog);
   }

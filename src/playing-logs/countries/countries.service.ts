@@ -15,7 +15,7 @@ export class CountriesService {
 		return await this.countriesRepository.find();
 	}
 
-  async findById(id: number | string): Promise<Country> {
+  async findById(id: number | string): Promise<Country | undefined> {
     return await this.countriesRepository.findOne(id);
   }
 
@@ -24,8 +24,12 @@ export class CountriesService {
     return await this.countriesRepository.save(country);
   }
 
-  async update(id: number, countryData: SaveCountryDto): Promise<Country> {
+  async update(id: number, countryData: SaveCountryDto): Promise<Country | undefined> {
     const country = await this.findById(id);
+    // 存在しなければ undefined を返す
+    if (country == null) {
+      return undefined;
+    }
     await this.countriesRepository.merge(country, countryData);
     return await this.countriesRepository.save(country);
   }
