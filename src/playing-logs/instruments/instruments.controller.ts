@@ -11,7 +11,7 @@ export class InstrumentsController {
   }
 
   @Get(':id')
-  async findById(@Param('id') id: string): Promise<Instrument | null> {
+  async findById(@Param('id') id: string): Promise<Instrument | undefined> {
     return await this.instrumentsService.findById(id);
   }
 }

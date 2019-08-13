@@ -23,7 +23,7 @@ export class AuthController {
 
   @Get('me')
   @UseGuards(AuthGuard())
-  findAll(@Request() req) {
-    return req.user
+  findAll(@Request() req: any) {
+    return req.user;
   }
 }

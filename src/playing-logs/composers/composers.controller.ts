@@ -13,7 +13,7 @@ export class ComposersController {
     }
   
     @Get(':id')
-    async findById(@Param('id') id: string): Promise<Composer | null> {
+    async findById(@Param('id') id: string): Promise<Composer | undefined> {
       return await this.composersService.findById(id);
     }
   

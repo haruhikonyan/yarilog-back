@@ -19,7 +19,7 @@ export class AuthService {
   ) {}
 
   async login(loginObject: LoginObject): Promise<LoginResultObject | null> {
-    const user: User = await this.usersService.findByUsernameOrMailAddressWithPassword(loginObject);
+    const user: User | undefined = await this.usersService.findByUsernameOrMailAddressWithPassword(loginObject);
 
     // 該当のユーザがいない場合は null を返して 401 にする
     if (user == null) {
