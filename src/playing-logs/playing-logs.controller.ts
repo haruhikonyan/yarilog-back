@@ -38,6 +38,10 @@ export class PlayingLogsController {
     if (me && me.id === allColmunPlayingLog.user.id) {
       return allColmunPlayingLog
     }
+    // 下書きであれば undefined を返す
+    else if (allColmunPlayingLog.isDraft) {
+      return undefined;
+    }
     // 一致しなければ 非公開情報を削除して返す
     else {
       delete allColmunPlayingLog.secretMemo;
@@ -63,12 +67,9 @@ export class PlayingLogsController {
   @Get('users/:id')
   async findAllByUserId(@Param('id') userId: string, @Request() req: any): Promise<PlayingLog[]> {
     const me: User | undefined = await this.authService.getMeByAuthorizationHeaderToken(req.headers['authorization']);
-    if (me && me.id === userId) {
-      // TODO ログイン中の id と一致した場合は非公開情報などを付与する
-      return await this.playingLogService.findAllByUserId(userId);
-    }
-    // TODO デフォルトでは非公開情報を付与しないようにする
-    return await this.playingLogService.findAllByUserId(userId);
+
+    const isMine: boolean = me != null && me.id === userId;
+    return await this.playingLogService.findAllByUserId(userId, isMine);
   }
 
   @Post()

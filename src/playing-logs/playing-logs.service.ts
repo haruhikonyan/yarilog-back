@@ -13,6 +13,7 @@ export class PlayingLogsService {
 	async findAll(limit: number = 20, offset: number = 0): Promise<PlayingLog[]> {
 	  return await this.playingLogRepository.find({
       relations: ['tune', 'tune.composer', 'tune.composer.countries', 'user', 'instrument'],
+      where: {isDraft: false},
       order: {createdAt: "DESC"},
       skip: offset,
       take: limit,
@@ -27,6 +28,7 @@ export class PlayingLogsService {
       .innerJoinAndSelect("composer.countries", "country")
       .innerJoinAndSelect("playingLog.user", "user")
       .innerJoinAndSelect("playingLog.instrument", "instrument")
+      .where({isDraft: false})
       .orderBy("playingLog.createdAt", "DESC")
       .limit(limit)
       .offset(offset)
@@ -67,7 +69,10 @@ export class PlayingLogsService {
         .getOne();
     }
     else {
-      return await this.playingLogRepository.findOne(id, {relations: ['tune', 'tune.composer', 'tune.composer.countries', 'user', 'instrument']});
+      return await this.playingLogRepository.findOne({
+        relations: ['tune', 'tune.composer', 'tune.composer.countries', 'user', 'instrument'],
+        where: {id: id, isDraft: false}
+      });
     }
   }
 
@@ -77,6 +82,7 @@ export class PlayingLogsService {
       .innerJoinAndSelect("tune.composer", "composer", "composer.id = :id", { id: composerId })
       .innerJoinAndSelect("composer.countries", "country")
       .innerJoinAndSelect("playingLog.user", "user")
+      .where({isDraft: false})
       .innerJoinAndSelect("playingLog.instrument", "instrument")
       .orderBy("playingLog.createdAt", "DESC")
       .limit(limit)
@@ -91,6 +97,7 @@ export class PlayingLogsService {
       .innerJoinAndSelect("composer.countries", "country", "country.id = :id", { id: countryId })
       .innerJoinAndSelect("playingLog.user", "user")
       .innerJoinAndSelect("playingLog.instrument", "instrument")
+      .where({isDraft: false})
       .orderBy("playingLog.createdAt", "DESC")
       .limit(limit)
       .offset(offset)
@@ -104,14 +111,15 @@ export class PlayingLogsService {
       .innerJoinAndSelect("composer.countries", "country")
       .innerJoinAndSelect("playingLog.user", "user")
       .innerJoinAndSelect("playingLog.instrument", "instrument", "instrument.id = :id", { id: instrumentId })
+      .where({isDraft: false})
       .orderBy("playingLog.createdAt", "DESC")
       .limit(limit)
       .offset(offset)
       .getMany();
   }
 
-  async findAllByUserId(userId: string, limit: number = 20, offset: number = 0): Promise<PlayingLog[]> {
-    return await this.playingLogRepository.createQueryBuilder("playingLog")
+  async findAllByUserId(userId: string, isMine: boolean = false, limit: number = 20, offset: number = 0): Promise<PlayingLog[]> {
+    const sqb = this.playingLogRepository.createQueryBuilder("playingLog")
       .innerJoinAndSelect("playingLog.tune", "tune")
       .innerJoinAndSelect("tune.composer", "composer")
       .innerJoinAndSelect("composer.countries", "country")
@@ -121,7 +129,13 @@ export class PlayingLogsService {
       .orderBy("playingLog.updatedAt", "DESC")
       .limit(limit)
       .offset(offset)
-      .getMany();
+
+    if (isMine) {
+      return await sqb.addSelect("playingLog.secretMemo").getMany()
+    }
+    else {
+      return await sqb.where({isDraft: false}).getMany()
+    }
   }
 
   async save(playingLog: PlayingLog): Promise<PlayingLog> {
@@ -129,6 +143,7 @@ export class PlayingLogsService {
   }
 
   async update(id: string, playingLogData: PlayingLog): Promise<PlayingLog | undefined> {
+    // 絶対に自分のものなので true
     const playingLog = await this.findById(id, true);
     // 存在しなければ undefined を返す
     if (playingLog == null) {
