@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like, SelectQueryBuilder, Brackets } from 'typeorm';
 import { PlayingLog } from './playing-logs.entity';
+import { PlayingLogsWithCount } from './PlayingLogsWithCount';
 
 @Injectable()
 export class PlayingLogsService {
@@ -21,7 +22,7 @@ export class PlayingLogsService {
   }
   
   // TODO ES とか使ってちゃんと全文検索したい
-  async findAllBySearchWord(searchWord: string, limit: number = 20, offset: number = 0) {
+  async findAllBySearchWord(searchWord: string, limit: number = 20, offset: number = 0): Promise<PlayingLogsWithCount> {
     let sqb: SelectQueryBuilder<PlayingLog> = this.playingLogRepository.createQueryBuilder("playingLog")
       .innerJoinAndSelect("playingLog.tune", "tune")
       .innerJoinAndSelect("tune.composer", "composer")
@@ -36,7 +37,7 @@ export class PlayingLogsService {
       this.searchWordParser(searchWord).forEach(w => {
         sqb = this.searchWord(sqb, w);
       });
-      return await sqb.getMany();
+      return new PlayingLogsWithCount(await sqb.getManyAndCount());
   }
 
   private searchWord(sqb: SelectQueryBuilder<PlayingLog>, word: string): SelectQueryBuilder<PlayingLog> {

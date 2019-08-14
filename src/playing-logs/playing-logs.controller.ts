@@ -5,6 +5,7 @@ import { PlayingLogsService } from './playing-logs.service';
 import { PlayingLog } from './playing-logs.entity';
 import { AuthService } from '../auth/auth.service';
 import { User } from '../users/users.entity';
+import { PlayingLogsWithCount } from './PlayingLogsWithCount';
 
 @Controller('playing-logs')
 export class PlayingLogsController {
@@ -19,7 +20,7 @@ export class PlayingLogsController {
   }
 
   @Get('search')
-  async findAllBySearchWord(@Query('searchWord') searchWord: string, @Query('limit') limit: number, @Query('offset') offset: number): Promise<PlayingLog[]> {
+  async findAllBySearchWord(@Query('searchWord') searchWord: string, @Query('limit') limit: number, @Query('offset') offset: number): Promise<PlayingLogsWithCount> {
     return await this.playingLogService.findAllBySearchWord(searchWord, limit, offset);
   }
 
