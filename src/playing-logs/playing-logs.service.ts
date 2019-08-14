@@ -53,7 +53,7 @@ export class PlayingLogsService {
   }
 
   private searchWordParser(searchWord: string): string[] {
-    return searchWord.split(/\s+/);
+    return searchWord != null ? searchWord.split(/\s+/) : [];
   }
   
   async findById(id: string, isMine: boolean = false): Promise<PlayingLog | undefined> {
@@ -82,8 +82,8 @@ export class PlayingLogsService {
       .innerJoinAndSelect("tune.composer", "composer", "composer.id = :id", { id: composerId })
       .innerJoinAndSelect("composer.countries", "country")
       .innerJoinAndSelect("playingLog.user", "user")
-      .where({isDraft: false})
       .innerJoinAndSelect("playingLog.instrument", "instrument")
+      .where("playingLog.isDraft = :isDraft", { isDraft: false })
       .orderBy("playingLog.createdAt", "DESC")
       .limit(limit)
       .offset(offset)
@@ -97,7 +97,7 @@ export class PlayingLogsService {
       .innerJoinAndSelect("composer.countries", "country", "country.id = :id", { id: countryId })
       .innerJoinAndSelect("playingLog.user", "user")
       .innerJoinAndSelect("playingLog.instrument", "instrument")
-      .where({isDraft: false})
+      .where("playingLog.isDraft = :isDraft", { isDraft: false })
       .orderBy("playingLog.createdAt", "DESC")
       .limit(limit)
       .offset(offset)
@@ -111,7 +111,7 @@ export class PlayingLogsService {
       .innerJoinAndSelect("composer.countries", "country")
       .innerJoinAndSelect("playingLog.user", "user")
       .innerJoinAndSelect("playingLog.instrument", "instrument", "instrument.id = :id", { id: instrumentId })
-      .where({isDraft: false})
+      .where("playingLog.isDraft = :isDraft", { isDraft: false })
       .orderBy("playingLog.createdAt", "DESC")
       .limit(limit)
       .offset(offset)

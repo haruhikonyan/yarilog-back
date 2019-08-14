@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Request, Put, HttpException, HttpStatus, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Request, Put, HttpException, HttpStatus, Query, NotFoundException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 import { PlayingLogsService } from './playing-logs.service';
@@ -24,23 +24,23 @@ export class PlayingLogsController {
   }
 
   @Get(':id')
-  async findById(@Param('id') id: string, @Request() req: any): Promise<PlayingLog | undefined> {
+  async findById(@Param('id') id: string, @Request() req: any): Promise<PlayingLog> {
     // この時点では自分の PlayingLog かはわからないのですべてのカラムを持ったものを取得する
     const allColmunPlayingLog = await this.playingLogService.findById(id, true);
 
     if (allColmunPlayingLog == null) {
-      return undefined;
+      throw new NotFoundException();
     }
 
     const me: User | undefined = await this.authService.getMeByAuthorizationHeaderToken(req.headers['authorization']);
 
     // userId が一致すればそのまま返す
     if (me && me.id === allColmunPlayingLog.user.id) {
-      return allColmunPlayingLog
+      return allColmunPlayingLog;
     }
-    // 下書きであれば undefined を返す
+    // 下書きであれば 404 を返す
     else if (allColmunPlayingLog.isDraft) {
-      return undefined;
+      throw new NotFoundException();      
     }
     // 一致しなければ 非公開情報を削除して返す
     else {
