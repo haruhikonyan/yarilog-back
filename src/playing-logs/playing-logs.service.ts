@@ -22,7 +22,7 @@ export class PlayingLogsService {
   }
   
   // TODO ES とか使ってちゃんと全文検索したい
-  async findAllBySearchWord(searchWord: string, limit: number = 20, offset: number = 0): Promise<PlayingLogsWithCount> {
+  async findAllBySearchWord(searchWord: string, instrumentId: string | null = null, limit: number = 20, offset: number = 0): Promise<PlayingLogsWithCount> {
     let sqb: SelectQueryBuilder<PlayingLog> = this.playingLogRepository.createQueryBuilder("playingLog")
       .innerJoinAndSelect("playingLog.tune", "tune")
       .innerJoinAndSelect("tune.composer", "composer")
@@ -37,6 +37,10 @@ export class PlayingLogsService {
       this.searchWordParser(searchWord).forEach(w => {
         sqb = this.searchWord(sqb, w);
       });
+      // instrumentId があれば楽器で絞り込む
+      if (instrumentId) {
+        sqb = sqb.andWhere("instrument.id = :instrumentId", { instrumentId: instrumentId })
+      }
       return new PlayingLogsWithCount(await sqb.getManyAndCount());
   }
 

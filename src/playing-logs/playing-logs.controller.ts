@@ -20,8 +20,13 @@ export class PlayingLogsController {
   }
 
   @Get('search')
-  async findAllBySearchWord(@Query('searchWord') searchWord: string, @Query('limit') limit: number, @Query('offset') offset: number): Promise<PlayingLogsWithCount> {
-    return await this.playingLogService.findAllBySearchWord(searchWord, limit, offset);
+  async findAllBySearchWord(
+    @Query('searchWord') searchWord: string,
+    @Query('instrumentId') instrumentId: string,
+    @Query('limit') limit: number,
+    @Query('offset') offset: number
+  ): Promise<PlayingLogsWithCount> {
+    return await this.playingLogService.findAllBySearchWord(searchWord, instrumentId, limit, offset);
   }
 
   @Get(':id')
