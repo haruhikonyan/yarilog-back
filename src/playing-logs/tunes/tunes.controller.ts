@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Request, Query } from '@nestjs/common';
 import { TunesService } from './tunes.service';
 import { Tune } from './tunes.entity';
 import { SaveTuneDto } from './save-tune.dto';
@@ -15,6 +15,16 @@ export class TunesController {
   @Get()
   async findAll(): Promise<Tune[]> {
     return await this.tuneService.findAll();
+  }
+
+  @Get('search')
+  async search(
+    @Query('searchWord') searchWord: string,
+    @Query('instrumentId') instrumentId: string,
+    @Query('limit') limit: number,
+    @Query('offset') offset: number
+  ): Promise<Tune[]> {
+    return await this.tuneService.search(searchWord, instrumentId, limit, offset);
   }
 
   @Get(':id')

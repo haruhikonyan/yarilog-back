@@ -35,7 +35,7 @@ export class PlayingLogsService {
       .offset(offset)
       // 区切られてるであろう検索文字列をパースしてその分 and 検索
       this.searchWordParser(searchWord).forEach(w => {
-        sqb = this.searchWord(sqb, w);
+        sqb = this.searchWord<PlayingLog>(sqb, w);
       });
       // instrumentId があれば楽器で絞り込む
       if (instrumentId) {
@@ -44,7 +44,8 @@ export class PlayingLogsService {
       return new PlayingLogsWithCount(await sqb.getManyAndCount());
   }
 
-  private searchWord(sqb: SelectQueryBuilder<PlayingLog>, word: string): SelectQueryBuilder<PlayingLog> {
+  // playingLogs を join された他モデルからも使用される
+  searchWord<T>(sqb: SelectQueryBuilder<T>, word: string): SelectQueryBuilder<T> {
     return sqb.andWhere(new Brackets(qb => {
       qb.where(`playingLog.impressionOfInteresting LIKE '%${word}%'`)
         .orWhere(`playingLog.impressionOfDifficulty LIKE '%${word}%'`)
@@ -53,11 +54,10 @@ export class PlayingLogsService {
         .orWhere(`tune.title LIKE '%${word}%'`)
         .orWhere(`composer.fullName LIKE '%${word}%'`)
         .orWhere(`instrument.name LIKE '%${word}%'`)
-        .orWhere(`user.nickname LIKE '%${word}%'`)
     }))
   }
 
-  private searchWordParser(searchWord: string): string[] {
+  searchWordParser(searchWord: string): string[] {
     return searchWord != null ? searchWord.split(/\s+/) : [];
   }
   
