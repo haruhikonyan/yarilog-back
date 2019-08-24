@@ -123,6 +123,20 @@ export class PlayingLogsService {
       .getMany();
   }
 
+  async findAllByTuneId(tuneId: string, limit: number = 20, offset: number = 0): Promise<PlayingLog[]> {
+    return await this.playingLogRepository.createQueryBuilder("playingLog")
+      .innerJoinAndSelect("playingLog.tune", "tune", "tune.id = :id", { id: tuneId })
+      .innerJoinAndSelect("tune.composer", "composer")
+      .innerJoinAndSelect("composer.countries", "country")
+      .innerJoinAndSelect("playingLog.user", "user")
+      .innerJoinAndSelect("playingLog.instrument", "instrument")
+      .where("playingLog.isDraft = :isDraft", { isDraft: false })
+      .orderBy("playingLog.createdAt", "DESC")
+      .limit(limit)
+      .offset(offset)
+      .getMany();
+  }
+
   async findAllByUserId(userId: string, isMine: boolean = false, limit: number = 20, offset: number = 0): Promise<PlayingLog[]> {
     const sqb = this.playingLogRepository.createQueryBuilder("playingLog")
       .innerJoinAndSelect("playingLog.tune", "tune")

@@ -56,18 +56,23 @@ export class PlayingLogsController {
   }
 
   @Get('composers/:id')
-  async findAllByComposerId(@Param('id') composerId: string): Promise<PlayingLog[] | null> {
-    return await this.playingLogService.findAllByComposerId(composerId);
+  async findAllByComposerId(@Param('id') composerId: string, @Query('limit') limit: number, @Query('offset') offset: number): Promise<PlayingLog[] | null> {
+    return await this.playingLogService.findAllByComposerId(composerId, limit, offset);
   }
 
   @Get('countries/:id')
-  async findAllByCountryId(@Param('id') countryId: string): Promise<PlayingLog[] | null> {
-    return await this.playingLogService.findAllByCountryId(countryId);
+  async findAllByCountryId(@Param('id') countryId: string, @Query('limit') limit: number, @Query('offset') offset: number): Promise<PlayingLog[] | null> {
+    return await this.playingLogService.findAllByCountryId(countryId, limit, offset);
   }
 
   @Get('instruments/:id')
-  async findAllByInstrumentId(@Param('id') instrumentId: string): Promise<PlayingLog[] | null> {
-    return await this.playingLogService.findAllByInstrumentId(instrumentId);
+  async findAllByInstrumentId(@Param('id') instrumentId: string, @Query('limit') limit: number, @Query('offset') offset: number): Promise<PlayingLog[] | null> {
+    return await this.playingLogService.findAllByInstrumentId(instrumentId, limit, offset);
+  }
+
+  @Get('tunes/:id')
+  async findAllByTuneId(@Param('id') tuneId: string, @Query('limit') limit: number, @Query('offset') offset: number): Promise<PlayingLog[] | null> {
+    return await this.playingLogService.findAllByTuneId(tuneId, limit, offset);
   }
 
   @Get('users/:id')
