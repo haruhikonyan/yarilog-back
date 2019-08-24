@@ -23,9 +23,10 @@ export class TunesController {
     @Query('searchWord') searchWord: string,
     @Query('instrumentId') instrumentId: string,
     @Query('limit') limit: number,
-    @Query('offset') offset: number
+    @Query('offset') offset: number,
+    @Query('playingLogLimit') playingLogLimit: number
   ): Promise<TunesWithCount> {
-    return await this.tuneService.search(searchWord, instrumentId, limit, offset);
+    return await this.tuneService.search(searchWord, instrumentId, limit, offset, playingLogLimit);
   }
 
   @Get(':id')

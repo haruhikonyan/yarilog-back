@@ -33,7 +33,7 @@ export class TunesService {
       .getMany();
   }
 
-  async search(searchWord: string, instrumentId: string | null = null, limit: number = 20, offset: number = 0): Promise<TunesWithCount> {
+  async search(searchWord: string, instrumentId: string | null = null, limit: number = 20, offset: number = 0, playingLogLimit: number = 5): Promise<TunesWithCount> {
     let sqb: SelectQueryBuilder<Tune> = this.tunesRepository.createQueryBuilder("tune")
       .leftJoinAndSelect("tune.playingLogs", "playingLog", "playingLog.isDraft = :isDraft", { isDraft: false })
       .innerJoinAndSelect("playingLog.user", "user")
@@ -52,10 +52,12 @@ export class TunesService {
       }
       // 検索結果総数と結果オブジェクト生成
       const tunesWithCount = new TunesWithCount(await sqb.getManyAndCount());
-      // 曲1件あたりの演奏記録を5つに絞る
-      tunesWithCount.tunes.forEach(t => {
-        t.playingLogs = t.playingLogs.slice(0, 4)
-      })
+      // 曲1件あたりの演奏記録を絞る(0の場合は絞り込まない)
+      if (playingLogLimit != 0) {
+        tunesWithCount.tunes.forEach(t => {
+          t.playingLogs = t.playingLogs.slice(0, playingLogLimit)
+        })
+      }
       return tunesWithCount;
   }
 
