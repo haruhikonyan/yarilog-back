@@ -4,6 +4,7 @@ import { Repository, DeepPartial, SelectQueryBuilder } from 'typeorm';
 import { Tune } from './tunes.entity';
 import { SaveTuneDto } from './save-tune.dto';
 import { PlayingLogsService } from '../playing-logs.service';
+import { TunesWithCount } from './TunesWithCount';
 
 @Injectable()
 export class TunesService {
@@ -32,7 +33,7 @@ export class TunesService {
       .getMany();
   }
 
-  async search(searchWord: string, instrumentId: string | null = null, limit: number = 20, offset: number = 0): Promise<Tune[]> {
+  async search(searchWord: string, instrumentId: string | null = null, limit: number = 20, offset: number = 0): Promise<TunesWithCount> {
     let sqb: SelectQueryBuilder<Tune> = this.tunesRepository.createQueryBuilder("tune")
       .leftJoinAndSelect("tune.playingLogs", "playingLog", "playingLog.isDraft = :isDraft", { isDraft: false })
       .innerJoinAndSelect("playingLog.user", "user")
@@ -49,12 +50,13 @@ export class TunesService {
       if (instrumentId) {
         sqb = sqb.andWhere("instrument.id = :instrumentId", { instrumentId: instrumentId })
       }
-      const tunes = await sqb.getMany();
-      // 曲1件あたりの演奏記録を5つに絞って返す
-      return tunes.map(t => {
+      // 検索結果総数と結果オブジェクト生成
+      const tunesWithCount = new TunesWithCount(await sqb.getManyAndCount());
+      // 曲1件あたりの演奏記録を5つに絞る
+      tunesWithCount.tunes.forEach(t => {
         t.playingLogs = t.playingLogs.slice(0, 4)
-        return t;
       })
+      return tunesWithCount;
   }
 
   async update(id: number, tuneData: SaveTuneDto): Promise<Tune | undefined> {

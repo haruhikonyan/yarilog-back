@@ -4,6 +4,7 @@ import { Tune } from './tunes.entity';
 import { SaveTuneDto } from './save-tune.dto';
 import { User } from '../../users/users.entity';
 import { AuthService } from '../../auth/auth.service';
+import { TunesWithCount } from './TunesWithCount';
 
 @Controller('tunes')
 export class TunesController {
@@ -23,7 +24,7 @@ export class TunesController {
     @Query('instrumentId') instrumentId: string,
     @Query('limit') limit: number,
     @Query('offset') offset: number
-  ): Promise<Tune[]> {
+  ): Promise<TunesWithCount> {
     return await this.tuneService.search(searchWord, instrumentId, limit, offset);
   }
 
