@@ -24,6 +24,20 @@ export class Tune {
   @Column({ type: 'text', nullable: true })
   description: string | null = null;
 
+  // 難易度 0~5 小数点第１位
+  @Column({ type: 'double', default: 0 })
+  averageDifficulty!: number;
+  // 体力 0~5 小数点第１位
+  @Column({ type: 'double', default: 0 })
+  averagePhysicality!: number;
+  // 面白さ 0~5 小数点第１位
+  @Column({ type: 'double', default: 0 })
+  averageInteresting!: number;
+
+  // 演奏記録の総数
+  @Column({ default: 0 })
+  countPlayingLogs!: number;
+
   /**
    * 楽曲には複数の演奏記録が紐づく
    */
