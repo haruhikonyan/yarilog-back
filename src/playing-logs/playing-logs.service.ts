@@ -207,9 +207,10 @@ export class PlayingLogsService {
    */
   aggrAveragePoint(playingLogs: PlayingLog[]): PlayingLogAveragePoint {
     return {
-      averageDifficulty: meanBy(playingLogs, 'difficulty'),
-      averagePhysicality: meanBy(playingLogs, 'physicality'),
-      averageInteresting: meanBy(playingLogs, 'interesting'),
+      // 小数点第１位で四捨五入
+      averageDifficulty: Math.round(meanBy(playingLogs, 'difficulty') * 10) / 10,
+      averagePhysicality: Math.round(meanBy(playingLogs, 'physicality') * 10) / 10,
+      averageInteresting: Math.round(meanBy(playingLogs, 'interesting') * 10) / 10,
     }
   }
 

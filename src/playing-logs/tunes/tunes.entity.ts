@@ -24,13 +24,13 @@ export class Tune {
   @Column({ type: 'text', nullable: true })
   description: string | null = null;
 
-  // 難易度 0~5 小数点第１位
+  // 平均難易度 0~5 小数点第１位
   @Column({ type: 'double', default: 0 })
   averageDifficulty!: number;
-  // 体力 0~5 小数点第１位
+  // 平均体力 0~5 小数点第１位
   @Column({ type: 'double', default: 0 })
   averagePhysicality!: number;
-  // 面白さ 0~5 小数点第１位
+  // 平均面白さ 0~5 小数点第１位
   @Column({ type: 'double', default: 0 })
   averageInteresting!: number;
 
