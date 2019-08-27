@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DeepPartial, SelectQueryBuilder } from 'typeorm';
+
 import { Tune } from './tunes.entity';
 import { SaveTuneDto } from './save-tune.dto';
 import { PlayingLogsService } from '../playing-logs.service';
@@ -11,6 +12,7 @@ export class TunesService {
 	constructor(
 		@InjectRepository(Tune)
 		private readonly tunesRepository: Repository<Tune>,
+    @Inject(forwardRef(() => PlayingLogsService))
     private readonly playingLogService: PlayingLogsService,
 	) {}
 
@@ -61,15 +63,30 @@ export class TunesService {
       return tunesWithCount;
   }
 
-  async update(id: number, tuneData: SaveTuneDto): Promise<Tune | undefined> {
+  async update(id: number, tuneData: SaveTuneDto): Promise<Tune> {
     const tune = await this.findById(id);
-    // 存在しなければ undefined を返す
+    // 存在しなければ エラー を返す
     if (tune == null) {
-      return undefined;
+      // TODO ちゃんとしたエラー
+      throw Error();
     }
     // 型エラー回避のための as DeepPartial<Tune>
     await this.tunesRepository.merge(tune, tuneData as DeepPartial<Tune>);
     return await this.tunesRepository.save(tune);
   }
 
+  /**
+   * 曲に紐づく演奏記録のポイントの平均を計算し、保存する
+   * @param tuneId 
+   */
+  async aggrAveragePointAndSave(tuneId: number): Promise<Tune> {
+    const pointsPlayingLogs = await this.playingLogService.findAllPoints(tuneId);
+    const playingLogAveragePoint = this.playingLogService.aggrAveragePoint(pointsPlayingLogs);
+    const saveTuneDto = new SaveTuneDto();
+    saveTuneDto.averageDifficulty = playingLogAveragePoint.averageDifficulty
+    saveTuneDto.averagePhysicality = playingLogAveragePoint.averagePhysicality
+    saveTuneDto.averageInteresting = playingLogAveragePoint.averageInteresting
+    console.log(saveTuneDto)
+    return await this.update(tuneId, saveTuneDto);
+  }
 }

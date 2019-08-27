@@ -1,14 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like, SelectQueryBuilder, Brackets } from 'typeorm';
+import { Repository, SelectQueryBuilder, Brackets } from 'typeorm';
+import meanBy = require('lodash.meanby');
+
 import { PlayingLog } from './playing-logs.entity';
 import { PlayingLogsWithCount } from './PlayingLogsWithCount';
+import { Tune } from './tunes/tunes.entity';
+import { TunesService } from './tunes/tunes.service';
+
+// 演奏記録のポイントの平均をセットにした型定義
+export interface PlayingLogAveragePoint {
+  averageDifficulty: number;
+  averagePhysicality: number;
+  averageInteresting: number;
+
+}
 
 @Injectable()
 export class PlayingLogsService {
 	constructor(
 		@InjectRepository(PlayingLog)
-		private readonly playingLogRepository: Repository<PlayingLog>,
+    private readonly playingLogRepository: Repository<PlayingLog>,
+    @Inject(forwardRef(() => TunesService))
+    private readonly tunesService: TunesService,
 	) {}
 
 	async findAll(limit: number = 20, offset: number = 0): Promise<PlayingLog[]> {
@@ -136,6 +150,36 @@ export class PlayingLogsService {
       .offset(offset)
       .getMany();
   }
+  /**
+   * 与えられたパラメータの演奏記録(各種ポイントのみ)を取得する
+   * @param tuneId 
+   * @param instrumentId 
+   * @param composerId 
+   * @param countryId 
+   */
+  async findAllPoints(tuneId?: number, instrumentId?: number, composerId?: number, countryId?: number): Promise<PlayingLog[]> {
+    let sqb = this.playingLogRepository.createQueryBuilder("playingLog")
+      .where("playingLog.isDraft = :isDraft", { isDraft: false })
+      .select(['playingLog.difficulty', 'playingLog.physicality', 'playingLog.interesting'])
+
+      if (tuneId) {
+        sqb = sqb.innerJoin("playingLog.tune", "tune", "tune.id = :id", { id: tuneId })
+      }
+      if (instrumentId) {
+        sqb = sqb.innerJoin("playingLog.insturment", "insturment", "insturment.id = :id", { id: instrumentId })
+      }
+      if (composerId) {
+        sqb = sqb.innerJoin("playingLog.tune", "tune")
+        . innerJoin("tune.composer", "composer", "composer.id = :id", { id: composerId })
+      }
+      if (countryId) {
+        sqb = sqb.innerJoin("playingLog.tune", "tune")
+          .innerJoin("tune.composer", "composer")
+          .innerJoin("composer.countries", "country", "country.id = :id", { id: countryId })
+      }
+
+      return sqb.getMany();
+  }
 
   async findAllByUserId(userId: string, isMine: boolean = false, limit: number = 20, offset: number = 0): Promise<PlayingLog[]> {
     const sqb = this.playingLogRepository.createQueryBuilder("playingLog")
@@ -157,8 +201,25 @@ export class PlayingLogsService {
     }
   }
 
+  /**
+   * 与えられた演奏記録のポイントの平均を計算して返す
+   * @param playingLogs 
+   */
+  aggrAveragePoint(playingLogs: PlayingLog[]): PlayingLogAveragePoint {
+    return {
+      averageDifficulty: meanBy(playingLogs, 'difficulty'),
+      averagePhysicality: meanBy(playingLogs, 'physicality'),
+      averageInteresting: meanBy(playingLogs, 'interesting'),
+    }
+  }
+
   async save(playingLog: PlayingLog): Promise<PlayingLog> {
-    return await this.playingLogRepository.save(playingLog);
+    const savedPlayingLog = await this.playingLogRepository.save(playingLog);
+    // 下書きでないものは平均の再計算を行う
+    if (!savedPlayingLog.isDraft) {
+      this.tunesService.aggrAveragePointAndSave(savedPlayingLog.tune.id);
+    }
+    return savedPlayingLog;
   }
 
   async update(id: string, playingLogData: PlayingLog): Promise<PlayingLog | undefined> {
@@ -169,6 +230,11 @@ export class PlayingLogsService {
       return undefined;
     }
     await this.playingLogRepository.merge(playingLog, playingLogData);
-    return await this.playingLogRepository.save(playingLog);
+    const savedPlayingLog = await this.playingLogRepository.save(playingLog);
+    // 下書きでないものは平均の再計算を行う
+    if (!savedPlayingLog.isDraft) {
+      this.tunesService.aggrAveragePointAndSave(savedPlayingLog.tune.id);
+    }
+    return savedPlayingLog;
   }
 }
