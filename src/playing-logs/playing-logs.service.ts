@@ -217,7 +217,7 @@ export class PlayingLogsService {
     const savedPlayingLog = await this.playingLogRepository.save(playingLog);
     // 下書きでないものは平均の再計算を行う
     if (!savedPlayingLog.isDraft) {
-      this.tunesService.aggrAveragePointAndSave(savedPlayingLog.tune.id);
+      this.tunesService.aggrAveragePointAndSave(savedPlayingLog.tune);
     }
     return savedPlayingLog;
   }
@@ -233,7 +233,7 @@ export class PlayingLogsService {
     const savedPlayingLog = await this.playingLogRepository.save(playingLog);
     // 下書きでないものは平均の再計算を行う
     if (!savedPlayingLog.isDraft) {
-      this.tunesService.aggrAveragePointAndSave(savedPlayingLog.tune.id);
+      this.tunesService.aggrAveragePointAndSave(savedPlayingLog.tune);
     }
     return savedPlayingLog;
   }

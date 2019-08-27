@@ -186,4 +186,13 @@ export class AdminController {
     const users: User[] = await this.usersService.findAll(true);
     return { users: users, title: 'ユーザ一覧' };
   }
+  @Get("aggrAveragePoint/tunes/all")
+  async aggrAveragePointAllTunes(@Res() res: Response) {
+    await this.tunesService.allAgrAveragePointAndSave();
+    res.redirect('/admin/tunes');
+  }
+  // TODO 実装
+  // @Get("aggrAveragePoint/tunes/:id")
+  // async aggrAveragePointTune() {
+  // }
 }

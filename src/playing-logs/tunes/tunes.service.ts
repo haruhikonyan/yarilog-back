@@ -77,16 +77,26 @@ export class TunesService {
 
   /**
    * 曲に紐づく演奏記録のポイントの平均を計算し、保存する
-   * @param tuneId 
+   * @param tune
    */
-  async aggrAveragePointAndSave(tuneId: number): Promise<Tune> {
-    const pointsPlayingLogs = await this.playingLogService.findAllPoints(tuneId);
+  async aggrAveragePointAndSave(tune: Tune): Promise<Tune> {
+    const pointsPlayingLogs = await this.playingLogService.findAllPoints(tune.id);
+    // 紐づく演奏記録が無ければ何もせず Tune を返す
+    if(pointsPlayingLogs.length == 0) {
+      return tune;
+    }
     const playingLogAveragePoint = this.playingLogService.aggrAveragePoint(pointsPlayingLogs);
     const saveTuneDto = new SaveTuneDto();
     saveTuneDto.averageDifficulty = playingLogAveragePoint.averageDifficulty
     saveTuneDto.averagePhysicality = playingLogAveragePoint.averagePhysicality
     saveTuneDto.averageInteresting = playingLogAveragePoint.averageInteresting
-    console.log(saveTuneDto)
-    return await this.update(tuneId, saveTuneDto);
+    return await this.update(tune.id, saveTuneDto);
+  }
+  /**
+   * すべての曲に対して、演奏記録のポイントの平均を計算し、保存する
+   */
+  async allAgrAveragePointAndSave(): Promise<Tune[]> {
+    const tunes: Tune[] = await this.findAll();
+    return await Promise.all(tunes.map((t) => this.aggrAveragePointAndSave(t)));
   }
 }
