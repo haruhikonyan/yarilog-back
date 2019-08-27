@@ -9,11 +9,11 @@ import { Tune } from './tunes/tunes.entity';
 import { TunesService } from './tunes/tunes.service';
 
 // 演奏記録のポイントの平均をセットにした型定義
-export interface PlayingLogAveragePoint {
+export interface PlayingLogAveragePointAndCount {
   averageDifficulty: number;
   averagePhysicality: number;
   averageInteresting: number;
-
+  countPlayingLogs: number;
 }
 
 @Injectable()
@@ -205,12 +205,13 @@ export class PlayingLogsService {
    * 与えられた演奏記録のポイントの平均を計算して返す
    * @param playingLogs 
    */
-  aggrAveragePoint(playingLogs: PlayingLog[]): PlayingLogAveragePoint {
+  aggrAveragePoint(playingLogs: PlayingLog[]): PlayingLogAveragePointAndCount {
     return {
       // 小数点第１位で四捨五入
       averageDifficulty: Math.round(meanBy(playingLogs, 'difficulty') * 10) / 10,
       averagePhysicality: Math.round(meanBy(playingLogs, 'physicality') * 10) / 10,
       averageInteresting: Math.round(meanBy(playingLogs, 'interesting') * 10) / 10,
+      countPlayingLogs: playingLogs.length
     }
   }
 

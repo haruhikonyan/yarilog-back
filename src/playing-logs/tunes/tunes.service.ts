@@ -85,11 +85,12 @@ export class TunesService {
     if(pointsPlayingLogs.length == 0) {
       return tune;
     }
-    const playingLogAveragePoint = this.playingLogService.aggrAveragePoint(pointsPlayingLogs);
+    const playingLogAveragePointAndCount = this.playingLogService.aggrAveragePoint(pointsPlayingLogs);
     const saveTuneDto = new SaveTuneDto();
-    saveTuneDto.averageDifficulty = playingLogAveragePoint.averageDifficulty
-    saveTuneDto.averagePhysicality = playingLogAveragePoint.averagePhysicality
-    saveTuneDto.averageInteresting = playingLogAveragePoint.averageInteresting
+    saveTuneDto.averageDifficulty = playingLogAveragePointAndCount.averageDifficulty;
+    saveTuneDto.averagePhysicality = playingLogAveragePointAndCount.averagePhysicality;
+    saveTuneDto.averageInteresting = playingLogAveragePointAndCount.averageInteresting;
+    saveTuneDto.countPlayingLogs = playingLogAveragePointAndCount.countPlayingLogs;
     return await this.update(tune.id, saveTuneDto);
   }
   /**

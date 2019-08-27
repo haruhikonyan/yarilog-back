@@ -5,6 +5,7 @@ export class SaveTuneDto {
   averageDifficulty: number | undefined;
   averagePhysicality: number | undefined;
   averageInteresting: number | undefined;
+  countPlayingLogs: number | undefined;
   author: string | undefined;
   composer: Object = {};
 }
