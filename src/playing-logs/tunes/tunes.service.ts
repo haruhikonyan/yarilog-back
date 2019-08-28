@@ -1,4 +1,4 @@
-import { Injectable, Inject, forwardRef } from '@nestjs/common';
+import { Injectable, Inject, forwardRef, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DeepPartial, SelectQueryBuilder } from 'typeorm';
 
@@ -67,8 +67,7 @@ export class TunesService {
     const tune = await this.findById(id);
     // 存在しなければ エラー を返す
     if (tune == null) {
-      // TODO ちゃんとしたエラー
-      throw Error();
+      throw new NotFoundException();
     }
     // 型エラー回避のための as DeepPartial<Tune>
     await this.tunesRepository.merge(tune, tuneData as DeepPartial<Tune>);

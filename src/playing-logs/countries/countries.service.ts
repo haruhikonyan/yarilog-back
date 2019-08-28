@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Country } from './countries.entity';
@@ -24,11 +24,11 @@ export class CountriesService {
     return await this.countriesRepository.save(country);
   }
 
-  async update(id: number, countryData: SaveCountryDto): Promise<Country | undefined> {
+  async update(id: number, countryData: SaveCountryDto): Promise<Country> {
     const country = await this.findById(id);
-    // 存在しなければ undefined を返す
+    // 存在しなければエラーを返す
     if (country == null) {
-      return undefined;
+      throw new NotFoundException();
     }
     await this.countriesRepository.merge(country, countryData);
     return await this.countriesRepository.save(country);

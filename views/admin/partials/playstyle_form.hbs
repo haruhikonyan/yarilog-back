@@ -1,0 +1,10 @@
+<form>
+  <div class="form-group">
+    <label for="name">演奏形態名</label>
+    <input type="text" class="form-control" id="name" name="name" placeholder="オーケストラ" value="{{ playstyle.name }}">
+  </div>
+  <button type="submit" formaction="{{formaction}}" formmethod="POST" class="btn btn-primary">保存</button>
+  {{#if showContinueButton}}
+    <button type="submit" formaction="{{formaction}}?isContinue=true" formmethod="POST" class="btn btn-primary">保存して作成を続ける</button>
+  {{/if}}
+</form>

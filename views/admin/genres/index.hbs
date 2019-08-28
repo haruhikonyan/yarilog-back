@@ -1,0 +1,23 @@
+<h1>{{ title }}</h1>
+<a href="/admin/genres/new" class="btn btn-primary" role="button" aria-disabled="true">新規作成</a>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">ジャンル名</th>
+      <th scope="col">操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each genres}}
+      <tr>
+        <th scope="row">{{ id }}</th>
+        <td>{{ name }}</td>
+        <td>
+          <a href="/admin/genres/{{ id }}/edit" class="btn btn-secondary" role="button" aria-disabled="true">編集</a>
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
