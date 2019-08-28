@@ -42,9 +42,20 @@ export class AdminController {
       return composer.countries.some((countrySelector: Country) => countrySelector.id === country.id) ? 'selected' : null;
     })
     hbs.registerHelper('isSelectedComposer', (composer: Composer, tune: Tune) => {
-      // tune がなければ null を返す(new の時)
+      // composer がなければ null を返す(new の時)
       if (!tune.composer) { return null }
       return composer.id === tune.composer.id ? 'selected' : null;
+    })
+
+    hbs.registerHelper('isSelectedGenre', (genre: Genre, tune: Tune) => {
+      // genres がなければ null を返す(何も紐づいてない時)
+      if (!tune.genres) { return null }
+      return tune.genres.some((genreSelector: Genre) => genreSelector.id === genre.id) ? 'selected' : null;
+    })
+    hbs.registerHelper('isSelectedPlaystyle', (playstyle: Playstyle, tune: Tune) => {
+      // playstyle がなければ null を返す(new の時)
+      if (!tune.playstyle) { return null }
+      return playstyle.id === tune.playstyle.id ? 'selected' : null;
     })
   }
   @Get()
@@ -134,18 +145,26 @@ export class AdminController {
   async newTune() {
     const tune: SaveTuneDto = new SaveTuneDto();
     const composers: Composer[] = await this.composersService.findAll();
-    return { tune: tune, composers: composers, title: '曲新規作成', formaction: '/admin/tunes/', showContinueButton: true };
+    const playstyles: Playstyle[] = await this.playstylesService.findAll();
+    const genres: Genre[] = await this.genresService.findAll();
+    return { tune, composers, playstyles, genres, title: '曲新規作成', formaction: '/admin/tunes/', showContinueButton: true };
   }
   @Get("tunes/:id/edit")
   @Render('admin/tunes/editor')
   async editTune(@Param('id') id: number) {
     const tune: Tune | undefined = await this.tunesService.findById(id);
     const composers: Composer[] = await this.composersService.findAll();
-    return { tune: tune, composers: composers, title: `${tune!.title}編集`, formaction: `/admin/tunes/${id}?_method=PUT`}
+    const playstyles: Playstyle[] = await this.playstylesService.findAll();
+    const genres: Genre[] = await this.genresService.findAll();
+    return { tune, composers, playstyles, genres, title: `${tune!.title}編集`, formaction: `/admin/tunes/${id}?_method=PUT`}
   }
   @Post("tunes")
   async createTune(@Res() res: Response, @Body() tuneData: SaveTuneDto, @Query('isContinue') isContinue: string) {
     tuneData.composer = { id: tuneData.composerId }
+    tuneData.playstyle = { id: tuneData.playstyleId }
+    tuneData.genres = (tuneData.genreIds).map((genreId: string) => {
+      return {id: Number(genreId)}
+    });
     // ここのエンドポイントには admin 以外ありえない
     tuneData.author = 'admin';
     await this.tunesService.create(tuneData);
@@ -155,8 +174,15 @@ export class AdminController {
   @Put("tunes/:id")
   @Render('admin/tunes')
   async updateTune(@Param('id') id: number, @Body() tuneData: SaveTuneDto) {
+    tuneData.id = Number(id);
     tuneData.composer = { id: tuneData.composerId }
-    await this.tunesService.update(id, tuneData);
+    tuneData.playstyle = { id: tuneData.playstyleId }
+    tuneData.genres = Array.isArray(tuneData.genreIds) ? 
+    tuneData.genres = tuneData.genreIds.map((genreId: string) => {
+        return {id: Number(genreId)}
+      })
+      : [];
+    await this.tunesService.update(tuneData);
   }
 
   @Get("instruments")

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Composer } from './composers.entity';
 import { Repository } from 'typeorm';
@@ -25,11 +25,11 @@ export class ComposersService {
   }
 
   // many to many を保存するには preload を使わなきゃなので id は取らない(composerData には id を含むこと)
-  async update(composerData: SaveComposerDto): Promise<Composer | undefined> {
+  async update(composerData: SaveComposerDto): Promise<Composer> {
     const composer = await this.composerRepository.preload(composerData);
-    // 存在しなければ undefined を返す
+    // 存在しなければエラー出す
     if (composer == null) {
-      return undefined;
+      throw new NotFoundException();
     }
     return await this.composerRepository.save(composer);
   }
