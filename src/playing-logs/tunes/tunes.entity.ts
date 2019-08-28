@@ -1,6 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable } from 'typeorm';
 import { PlayingLog } from '../playing-logs.entity';
 import { Composer } from '../composers/composers.entity';
+import { Playstyle } from '../playstyles/playstyles.entity';
+import { Genre } from '../genres/genres.entity';
 
 /**
  * 楽曲
@@ -49,4 +51,17 @@ export class Tune {
    */
   @ManyToOne(type => Composer, composer => composer.tunes)
   composer!: Composer;
+
+  /**
+   * 楽曲は一つの演奏形態を持つ
+   */
+  @ManyToOne(type => Playstyle, playstyle => playstyle.tunes)
+  playstyle!: Playstyle
+
+  /**
+   * 楽曲は複数のジャンルを持つ
+   */
+  @ManyToMany(type => Genre, genre => genre.tunes)
+  @JoinTable()
+  genres!: Genre[];
 }
