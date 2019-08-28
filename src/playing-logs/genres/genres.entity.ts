@@ -17,6 +17,5 @@ export class Genre {
    * ジャンルは複数の楽曲を持つ
    */
   @ManyToMany(type => Tune, tune => tune.genres)
-  @JoinTable()
   tunes!: Tune[];
 }
