@@ -33,4 +33,11 @@ export class ComposersService {
     }
     return await this.composerRepository.save(composer);
   }
+
+  async findAllByPlaystyleId(playstyleId: string): Promise<Composer[]> {
+    return await this.composerRepository.createQueryBuilder("composer")
+      .innerJoin("composer.tunes", "tune")
+      .innerJoin("tune.playstyle", "playstyle", "playstyle.id = :id", { id: playstyleId })
+      .getMany();
+  }
 }

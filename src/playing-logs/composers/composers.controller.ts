@@ -22,4 +22,9 @@ export class ComposersController {
       console.log(composerData);
       return await this.composersService.create(composerData);
     }
+
+    @Get('playstyles/:id')
+    async findAllByPlaystyleId(@Param('id') playstyleId: string): Promise<Composer[]> {
+      return await this.composersService.findAllByPlaystyleId(playstyleId);
+    }
 }
