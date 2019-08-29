@@ -61,6 +61,7 @@ export class PlayingLogsService {
   // playingLogs を join された他モデルからも使用される
   searchWord<T>(sqb: SelectQueryBuilder<T>, word: string): SelectQueryBuilder<T> {
     return sqb.andWhere(new Brackets(qb => {
+      // TODO SQL インジェクション起きそうだからどうにかする
       qb.where(`playingLog.impressionOfInteresting LIKE '%${word}%'`)
         .orWhere(`playingLog.impressionOfDifficulty LIKE '%${word}%'`)
         .orWhere(`playingLog.reflectionForNext LIKE '%${word}%'`)
