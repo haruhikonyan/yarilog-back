@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, Index } from 'typeorm';
 import { PlayingLog } from '../playing-logs.entity';
 import { Composer } from '../composers/composers.entity';
 import { Playstyle } from '../playstyles/playstyles.entity';
@@ -8,6 +8,7 @@ import { Genre } from '../genres/genres.entity';
  * 楽曲
  */
 @Entity()
+@Index(["title", "playstyle", "composer"], { unique: true })
 export class Tune {
   @PrimaryGeneratedColumn()
   id!: number;
