@@ -1,4 +1,4 @@
-import { Injectable, Inject, forwardRef } from '@nestjs/common';
+import { Injectable, Inject, forwardRef, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DeepPartial, SelectQueryBuilder } from 'typeorm';
 
@@ -17,27 +17,31 @@ export class TunesService {
 	) {}
 
 	async findAll(): Promise<Tune[]> {
-		return await this.tunesRepository.find({relations: ['composer']});
+		return await this.tunesRepository.find({relations: ['composer', 'playstyle', 'genres']});
 	}
 
   async findById(id: number | string): Promise<Tune | undefined> {
-    return await this.tunesRepository.findOne(id, {relations: ['composer']});
+    return await this.tunesRepository.findOne(id, {relations: ['composer', 'playstyle', 'genres']});
   }
 
   async create(tuneData: SaveTuneDto): Promise<Tune> {
-    const country = await this.tunesRepository.create(tuneData as DeepPartial<Tune>);
-    return await this.tunesRepository.save(country);
+    const tune = await this.tunesRepository.create(tuneData as DeepPartial<Tune>);
+    return await this.tunesRepository.save(tune);
   }
 
   async findAllByComposerId(composerId: string): Promise<Tune[]> {
     return await this.tunesRepository.createQueryBuilder("tune")
-      .innerJoinAndSelect("tune.composer", "composer", "composer.id = :id", { id: composerId })
+      .leftJoinAndSelect("tune.composer", "composer", "composer.id = :id", { id: composerId })
+      .leftJoinAndSelect("tune.playstyle", "playstyle")
+      .leftJoinAndSelect("tune.genres", "genre")
       .getMany();
   }
 
   async search(searchWord: string, instrumentId: string | null = null, limit: number = 20, offset: number = 0, playingLogLimit: number = 5): Promise<TunesWithCount> {
     let sqb: SelectQueryBuilder<Tune> = this.tunesRepository.createQueryBuilder("tune")
       .leftJoinAndSelect("tune.playingLogs", "playingLog", "playingLog.isDraft = :isDraft", { isDraft: false })
+      .leftJoinAndSelect("tune.playstyle", "playstyle")
+      .leftJoinAndSelect("tune.genres", "genre")
       .innerJoinAndSelect("playingLog.user", "user")
       .innerJoinAndSelect("playingLog.instrument", "instrument")
       .innerJoinAndSelect("tune.composer", "composer")
@@ -62,16 +66,13 @@ export class TunesService {
       }
       return tunesWithCount;
   }
-
-  async update(id: number, tuneData: SaveTuneDto): Promise<Tune> {
-    const tune = await this.findById(id);
+  // many to many を保存するには preload を使わなきゃなので id は取らない(tuneData には id を含むこと)
+  async update(tuneData: SaveTuneDto): Promise<Tune> {
+    const tune = await this.tunesRepository.preload(tuneData);
     // 存在しなければ エラー を返す
     if (tune == null) {
-      // TODO ちゃんとしたエラー
-      throw Error();
+      throw new NotFoundException();
     }
-    // 型エラー回避のための as DeepPartial<Tune>
-    await this.tunesRepository.merge(tune, tuneData as DeepPartial<Tune>);
     return await this.tunesRepository.save(tune);
   }
 
@@ -87,11 +88,12 @@ export class TunesService {
     }
     const playingLogAveragePointAndCount = this.playingLogService.aggrAveragePoint(pointsPlayingLogs);
     const saveTuneDto = new SaveTuneDto();
+    saveTuneDto.id = tune.id;
     saveTuneDto.averageDifficulty = playingLogAveragePointAndCount.averageDifficulty;
     saveTuneDto.averagePhysicality = playingLogAveragePointAndCount.averagePhysicality;
     saveTuneDto.averageInteresting = playingLogAveragePointAndCount.averageInteresting;
     saveTuneDto.countPlayingLogs = playingLogAveragePointAndCount.countPlayingLogs;
-    return await this.update(tune.id, saveTuneDto);
+    return await this.update(saveTuneDto);
   }
   /**
    * すべての曲に対して、演奏記録のポイントの平均を計算し、保存する

@@ -16,13 +16,19 @@ import { InstrumentsController } from './instruments/instruments.controller';
 import { InstrumentsService } from './instruments/instruments.service';
 import { Instrument } from './instruments/instruments.entity';
 import { AuthModule } from '../auth/auth.module';
+import { PlaystylesController } from './playstyles/playstyles.controller';
+import { PlaystylesService } from './playstyles/playstyles.service';
+import { GenresService } from './genres/genres.service';
+import { GenresController } from './genres/genres.controller';
+import { Genre } from './genres/genres.entity';
+import { Playstyle } from './playstyles/playstyles.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([PlayingLog, Country, Composer, Tune, Instrument]),
+    TypeOrmModule.forFeature([PlayingLog, Country, Composer, Tune, Instrument, Genre, Playstyle]),
     AuthModule
 ],
-  controllers: [PlayingLogsController, CountriesController, ComposersController, TunesController, InstrumentsController],
-  providers: [PlayingLogsService, CountriesService, ComposersService, TunesService, InstrumentsService]
+  controllers: [PlayingLogsController, CountriesController, ComposersController, TunesController, InstrumentsController, PlaystylesController, GenresController],
+  providers: [PlayingLogsService, CountriesService, ComposersService, TunesService, InstrumentsService, PlaystylesService, GenresService]
 })
 export class PlayingLogsModule {}

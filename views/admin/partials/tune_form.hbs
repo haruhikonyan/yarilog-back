@@ -12,6 +12,22 @@
     <input type="text" class="form-control" id="title" name="title" placeholder="交響曲第1番 ニ長調「巨人」" value="{{ tune.title }}">
   </div>
   <div class="form-group">
+    <label for="playstyle">演奏形態</label>
+    <select class="form-control" id="playstyle" name='playstyleId'>
+      {{#each playstyles}}
+        <option value="{{ id }}" {{isSelectedPlaystyle this ../tune}}>{{ name }}</option>
+      {{/each}}
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="genres">ジャンル</label>
+    <select multiple class="form-control" id="genres" name='genreIds[]'>
+      {{#each genres}}
+        <option value="{{ id }}" {{isSelectedGenre this ../tune }}>{{ name }}</option>
+      {{/each}}
+    </select>
+  </div>
+  <div class="form-group">
     <label for="description">詳細</label>
     <textarea class="form-control" id="description" name="description" rows="3">{{ tune.description }}</textarea>
   </div>
