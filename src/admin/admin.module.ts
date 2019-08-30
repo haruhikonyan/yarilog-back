@@ -8,8 +8,8 @@ import { ComposersService } from '../playing-logs/composers/composers.service';
 import { TunesService } from '../playing-logs/tunes/tunes.service';
 import { InstrumentsService } from '../playing-logs/instruments/instruments.service';
 import { PlayingLogsService } from '../playing-logs/playing-logs.service';
-import { PlaystylesService } from 'src/playing-logs/playstyles/playstyles.service';
-import { GenresService } from 'src/playing-logs/genres/genres.service';
+import { PlaystylesService } from '../playing-logs/playstyles/playstyles.service';
+import { GenresService } from '../playing-logs/genres/genres.service';
 
 @Module({
   imports: [

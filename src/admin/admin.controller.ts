@@ -18,12 +18,12 @@ import { TunesService } from '../playing-logs/tunes/tunes.service';
 import { Instrument } from '../playing-logs/instruments/instruments.entity';
 import { SaveInstrumentDto } from '../playing-logs/instruments/save-instrument.dto';
 import { InstrumentsService } from '../playing-logs/instruments/instruments.service';
-import { Playstyle } from 'src/playing-logs/playstyles/playstyles.entity';
-import { SavePlaystyleDto } from 'src/playing-logs/playstyles/save-playstyle.dto';
-import { PlaystylesService } from 'src/playing-logs/playstyles/playstyles.service';
-import { GenresService } from 'src/playing-logs/genres/genres.service';
-import { SaveGenreDto } from 'src/playing-logs/genres/save-genre.dto';
-import { Genre } from 'src/playing-logs/genres/genres.entity';
+import { Playstyle } from '../playing-logs/playstyles/playstyles.entity';
+import { SavePlaystyleDto } from '../playing-logs/playstyles/save-playstyle.dto';
+import { PlaystylesService } from '../playing-logs/playstyles/playstyles.service';
+import { GenresService } from '../playing-logs/genres/genres.service';
+import { SaveGenreDto } from '../playing-logs/genres/save-genre.dto';
+import { Genre } from '../playing-logs/genres/genres.entity';
 
 @Controller('admin')
 export class AdminController {
