@@ -29,10 +29,16 @@ export class TunesService {
     return await this.tunesRepository.save(tune);
   }
 
-  async findAllByComposerId(composerId: string): Promise<Tune[]> {
+  /**
+   * 作曲家と演奏形態で曲を絞り込む
+   * 主に演奏記録作成時の曲選択に使う
+   * @param composerId 
+   * @param playstyleId 
+   */
+  async findAllByComposerIdAndPlaystyleId(composerId: string, playstyleId: string): Promise<Tune[]> {
     return await this.tunesRepository.createQueryBuilder("tune")
-      .innerJoinAndSelect("tune.composer", "composer", "composer.id = :id", { id: composerId })
-      .innerJoinAndSelect("tune.playstyle", "playstyle")
+      .innerJoinAndSelect("tune.composer", "composer", "composer.id = :composerId", { composerId })
+      .innerJoinAndSelect("tune.playstyle", "playstyle", "playstyle.id = :playstyleId", { playstyleId })
       .leftJoinAndSelect("tune.genres", "genre")
       .getMany();
   }

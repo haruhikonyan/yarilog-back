@@ -29,14 +29,14 @@ export class TunesController {
     return await this.tuneService.search(searchWord, instrumentId, limit, offset, playingLogLimit);
   }
 
+  @Get('tune-selector')
+  async forTuneSelector(@Query('composerId') composerId: string, @Query('playstyleId') playstyleId: string): Promise<Tune[]> {
+    return await this.tuneService.findAllByComposerIdAndPlaystyleId(composerId, playstyleId);
+  }
+
   @Get(':id')
   async findById(@Param('id') id: string): Promise<Tune | undefined> {
     return await this.tuneService.findById(id);
-  }
-
-  @Get('composers/:id')
-  async findAllByComposerId(@Param('id') composerId: string): Promise<Tune[] | null> {
-    return await this.tuneService.findAllByComposerId(composerId);
   }
 
   @Post()
