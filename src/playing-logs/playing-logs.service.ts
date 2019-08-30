@@ -40,6 +40,8 @@ export class PlayingLogsService {
     let sqb: SelectQueryBuilder<PlayingLog> = this.playingLogRepository.createQueryBuilder("playingLog")
       .innerJoinAndSelect("playingLog.tune", "tune")
       .innerJoinAndSelect("tune.composer", "composer")
+      .innerJoinAndSelect("tune.playstyle", "playstyle")
+      .leftJoinAndSelect("tune.genres", "genre")
       .innerJoinAndSelect("composer.countries", "country")
       .innerJoinAndSelect("playingLog.user", "user")
       .innerJoinAndSelect("playingLog.instrument", "instrument")
@@ -81,6 +83,8 @@ export class PlayingLogsService {
       return await this.playingLogRepository.createQueryBuilder("playingLog")
         .innerJoinAndSelect("playingLog.tune", "tune")
         .innerJoinAndSelect("tune.composer", "composer")
+        .innerJoinAndSelect("tune.playstyle", "playstyle")
+        .leftJoinAndSelect("tune.genres", "genre")
         .innerJoinAndSelect("composer.countries", "country")
         .innerJoinAndSelect("playingLog.user", "user")
         .innerJoinAndSelect("playingLog.instrument", "instrument")
@@ -90,7 +94,7 @@ export class PlayingLogsService {
     }
     else {
       return await this.playingLogRepository.findOne({
-        relations: ['tune', 'tune.composer', 'tune.composer.countries', 'user', 'instrument'],
+        relations: ['tune', 'tune.composer', 'tune.composer.countries', 'tune.playstyle', 'tune.genres', 'user', 'instrument'],
         where: {id: id, isDraft: false}
       });
     }
@@ -100,6 +104,8 @@ export class PlayingLogsService {
     return await this.playingLogRepository.createQueryBuilder("playingLog")
       .innerJoinAndSelect("playingLog.tune", "tune")
       .innerJoinAndSelect("tune.composer", "composer", "composer.id = :id", { id: composerId })
+      .innerJoinAndSelect("tune.playstyle", "playstyle")
+      .leftJoinAndSelect("tune.genres", "genre")
       .innerJoinAndSelect("composer.countries", "country")
       .innerJoinAndSelect("playingLog.user", "user")
       .innerJoinAndSelect("playingLog.instrument", "instrument")
@@ -114,6 +120,8 @@ export class PlayingLogsService {
     return await this.playingLogRepository.createQueryBuilder("playingLog")
       .innerJoinAndSelect("playingLog.tune", "tune")
       .innerJoinAndSelect("tune.composer", "composer")
+      .innerJoinAndSelect("tune.playstyle", "playstyle")
+      .leftJoinAndSelect("tune.genres", "genre")
       .innerJoinAndSelect("composer.countries", "country", "country.id = :id", { id: countryId })
       .innerJoinAndSelect("playingLog.user", "user")
       .innerJoinAndSelect("playingLog.instrument", "instrument")
@@ -128,6 +136,8 @@ export class PlayingLogsService {
     return await this.playingLogRepository.createQueryBuilder("playingLog")
       .innerJoinAndSelect("playingLog.tune", "tune")
       .innerJoinAndSelect("tune.composer", "composer")
+      .innerJoinAndSelect("tune.playstyle", "playstyle")
+      .leftJoinAndSelect("tune.genres", "genre")
       .innerJoinAndSelect("composer.countries", "country")
       .innerJoinAndSelect("playingLog.user", "user")
       .innerJoinAndSelect("playingLog.instrument", "instrument", "instrument.id = :id", { id: instrumentId })
@@ -142,6 +152,8 @@ export class PlayingLogsService {
     return await this.playingLogRepository.createQueryBuilder("playingLog")
       .innerJoinAndSelect("playingLog.tune", "tune", "tune.id = :id", { id: tuneId })
       .innerJoinAndSelect("tune.composer", "composer")
+      .innerJoinAndSelect("tune.playstyle", "playstyle")
+      .leftJoinAndSelect("tune.genres", "genre")
       .innerJoinAndSelect("composer.countries", "country")
       .innerJoinAndSelect("playingLog.user", "user")
       .innerJoinAndSelect("playingLog.instrument", "instrument")
@@ -186,6 +198,8 @@ export class PlayingLogsService {
     const sqb = this.playingLogRepository.createQueryBuilder("playingLog")
       .innerJoinAndSelect("playingLog.tune", "tune")
       .innerJoinAndSelect("tune.composer", "composer")
+      .innerJoinAndSelect("tune.playstyle", "playstyle")
+      .leftJoinAndSelect("tune.genres", "genre")
       .innerJoinAndSelect("composer.countries", "country")
       .innerJoinAndSelect("playingLog.user", "user", "user.id = :id", { id: userId })
       .innerJoinAndSelect("playingLog.instrument", "instrument")
