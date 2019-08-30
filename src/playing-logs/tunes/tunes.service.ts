@@ -31,16 +31,16 @@ export class TunesService {
 
   async findAllByComposerId(composerId: string): Promise<Tune[]> {
     return await this.tunesRepository.createQueryBuilder("tune")
-      .leftJoinAndSelect("tune.composer", "composer", "composer.id = :id", { id: composerId })
-      .leftJoinAndSelect("tune.playstyle", "playstyle")
+      .innerJoinAndSelect("tune.composer", "composer", "composer.id = :id", { id: composerId })
+      .innerJoinAndSelect("tune.playstyle", "playstyle")
       .leftJoinAndSelect("tune.genres", "genre")
       .getMany();
   }
 
   async search(searchWord: string, instrumentId: string | null = null, limit: number = 20, offset: number = 0, playingLogLimit: number = 5): Promise<TunesWithCount> {
     let sqb: SelectQueryBuilder<Tune> = this.tunesRepository.createQueryBuilder("tune")
-      .leftJoinAndSelect("tune.playingLogs", "playingLog", "playingLog.isDraft = :isDraft", { isDraft: false })
-      .leftJoinAndSelect("tune.playstyle", "playstyle")
+      .innerJoinAndSelect("tune.playingLogs", "playingLog", "playingLog.isDraft = :isDraft", { isDraft: false })
+      .innerJoinAndSelect("tune.playstyle", "playstyle")
       .leftJoinAndSelect("tune.genres", "genre")
       .innerJoinAndSelect("playingLog.user", "user")
       .innerJoinAndSelect("playingLog.instrument", "instrument")
