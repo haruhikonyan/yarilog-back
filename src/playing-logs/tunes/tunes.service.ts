@@ -51,8 +51,6 @@ export class TunesService {
       .innerJoinAndSelect("playingLog.user", "user")
       .innerJoinAndSelect("playingLog.instrument", "instrument")
       .innerJoinAndSelect("tune.composer", "composer")
-      .limit(limit)
-      .offset(offset)
 
       // 区切られてるであろう検索文字列をパースしてその分 and 検索
       this.playingLogService.searchWordParser(searchWord).forEach(w => {
@@ -64,6 +62,14 @@ export class TunesService {
       }
       // 検索結果総数と結果オブジェクト生成
       const tunesWithCount = new TunesWithCount(await sqb.getManyAndCount());
+      // limit が設定されていたら絞り込む
+      if (limit != 0) {
+        // 実態は params で受け取ったため string なので足し算するので number に変換
+        // TODO 全体的に生合成を取る 
+        limit = Number(limit);
+        offset = Number(offset);
+        tunesWithCount.tunes = tunesWithCount.tunes.slice(offset, offset + limit);
+      }
       // 曲1件あたりの演奏記録を絞る(0の場合は絞り込まない)
       if (playingLogLimit != 0) {
         tunesWithCount.tunes.forEach(t => {
