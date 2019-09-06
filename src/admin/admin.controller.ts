@@ -1,4 +1,4 @@
-import { Get, Controller, Render, Res, Body, Post, Param, Put, Query } from '@nestjs/common';
+import { Get, Controller, Render, Res, Body, Post, Param, Put, Query, Redirect } from '@nestjs/common';
 import { Response } from 'express';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/users.entity';
@@ -88,7 +88,7 @@ export class AdminController {
     res.redirect(redirectPath);
   }
   @Put("countries/:id")
-  @Render('admin/countries')
+  @Redirect('/admin/countries')
   async updateCountry(@Param('id') id: number, @Body() countryData: SaveCountryDto) {
     await this.countriesService.update(id, countryData);
   }
@@ -123,7 +123,7 @@ export class AdminController {
     res.redirect(redirectPath);
   }
   @Put("composers/:id")
-  @Render('admin/composers')
+  @Redirect('/admin/composers')
   async updateComposer(@Param('id') id: string, @Body() composerData: SaveComposerDto) {
     composerData.id = Number(id);
     composerData.countries = Array.isArray(composerData.countryIds) ? 
@@ -172,7 +172,7 @@ export class AdminController {
     res.redirect(redirectPath);
   }
   @Put("tunes/:id")
-  @Render('admin/tunes')
+  @Redirect('/admin/tunes')
   async updateTune(@Param('id') id: number, @Body() tuneData: SaveTuneDto) {
     tuneData.id = Number(id);
     tuneData.composer = { id: tuneData.composerId }
@@ -210,7 +210,7 @@ export class AdminController {
     res.redirect(redirectPath);
   }
   @Put("instruments/:id")
-  @Render('admin/instruments')
+  @Redirect('/admin/instruments')
   async updateInstrument(@Param('id') id: number, @Body() instrumentData: SaveInstrumentDto) {
     await this.instrumentsService.update(id, instrumentData);
   }
@@ -239,7 +239,7 @@ export class AdminController {
     res.redirect(redirectPath);
   }
   @Put("playstyles/:id")
-  @Render('admin/playstyles')
+  @Redirect('/admin/playstyles')
   async updatePlaystyle(@Param('id') id: number, @Body() playstyleData: SavePlaystyleDto) {
     await this.playstylesService.update(id, playstyleData);
   }
@@ -269,7 +269,7 @@ export class AdminController {
     res.redirect(redirectPath);
   }
   @Put("genres/:id")
-  @Render('admin/genres')
+  @Redirect('/admin/genres')
   async updateGenre(@Param('id') id: number, @Body() genreData: SaveGenreDto) {
     await this.genresService.update(id, genreData);
   }

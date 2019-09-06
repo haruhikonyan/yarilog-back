@@ -8,5 +8,5 @@ module.exports = {
   "entities": [process.env.TYPEORM_ENTITIES],
   "charset": "utf8mb4",
   "synchronize": true,
-  // "logging": ["query", "error"]
+  "logging": ["query", "error"]
 }
