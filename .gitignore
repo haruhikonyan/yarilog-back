@@ -4,7 +4,6 @@ node_modules/
 # IDE
 /.idea
 /.awcache
-/.vscode
 
 # bundle
 packages/**/*.d.ts
@@ -18,11 +17,6 @@ yarn-error.log
 /**/npm-debug.log
 /packages/**/.npmignore
 /packages/**/LICENSE
-
-# example
-/quick-start
-/example_dist
-/example
 
 # tests
 /test

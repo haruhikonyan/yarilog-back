@@ -1,10 +1,9 @@
-FROM node:10.15.1-alpine
+FROM node:10.15.1
 ENV LANG C.UTF-8
 
 WORKDIR /yarilog-back
 COPY . /yarilog-back
-RUN apk --no-cache add --virtual builds-deps build-base python && \
-  echo "PWD: $PWD" && \
+RUN echo "PWD: $PWD" && \
   echo "ls: $(ls -la)" && \
   echo "PATH: $(echo $PATH)" && \
   echo "node version: $(node -v)" && \
