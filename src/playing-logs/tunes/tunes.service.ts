@@ -9,19 +9,19 @@ import { TunesWithCount } from './TunesWithCount';
 
 @Injectable()
 export class TunesService {
-	constructor(
-		@InjectRepository(Tune)
-		private readonly tunesRepository: Repository<Tune>,
+  constructor(
+    @InjectRepository(Tune)
+    private readonly tunesRepository: Repository<Tune>,
     @Inject(forwardRef(() => PlayingLogsService))
     private readonly playingLogService: PlayingLogsService,
-	) {}
+  ) { }
 
-	async findAll(): Promise<Tune[]> {
-		return await this.tunesRepository.find({relations: ['composer', 'playstyle', 'genres']});
-	}
+  async findAll(): Promise<Tune[]> {
+    return await this.tunesRepository.find({ relations: ['composer', 'playstyle', 'genres'] });
+  }
 
   async findById(id: number | string): Promise<Tune | undefined> {
-    return await this.tunesRepository.findOne(id, {relations: ['composer', 'playstyle', 'genres']});
+    return await this.tunesRepository.findOne(id, { relations: ['composer', 'playstyle', 'genres'] });
   }
 
   async create(tuneData: SaveTuneDto): Promise<Tune> {
@@ -43,7 +43,7 @@ export class TunesService {
       .getMany();
   }
 
-  async search(searchWord: string, instrumentId: string | null = null, limit: number = 20, offset: number = 0, playingLogLimit: number = 5): Promise<TunesWithCount> {
+  async search(searchWord: string, instrumentId: string | null = null, composerId: string | null = null, limit: number = 20, offset: number = 0, playingLogLimit: number = 5): Promise<TunesWithCount> {
     let sqb: SelectQueryBuilder<Tune> = this.tunesRepository.createQueryBuilder("tune")
       .innerJoinAndSelect("tune.playingLogs", "playingLog", "playingLog.isDraft = :isDraft", { isDraft: false })
       .innerJoinAndSelect("tune.playstyle", "playstyle")
@@ -52,31 +52,36 @@ export class TunesService {
       .innerJoinAndSelect("playingLog.instrument", "instrument")
       .innerJoinAndSelect("tune.composer", "composer")
 
-      // 区切られてるであろう検索文字列をパースしてその分 and 検索
-      this.playingLogService.searchWordParser(searchWord).forEach(w => {
-        sqb = this.playingLogService.searchWord<Tune>(sqb, w);
-      });
-      // instrumentId があれば楽器で絞り込む
-      if (instrumentId) {
-        sqb = sqb.andWhere("instrument.id = :instrumentId", { instrumentId: instrumentId })
-      }
-      // 検索結果総数と結果オブジェクト生成
-      const tunesWithCount = new TunesWithCount(await sqb.getManyAndCount());
-      // limit が設定されていたら絞り込む
-      if (limit != 0) {
-        // 実態は params で受け取ったため string なので足し算するので number に変換
-        // TODO 全体的に生合成を取る 
-        limit = Number(limit);
-        offset = Number(offset);
-        tunesWithCount.tunes = tunesWithCount.tunes.slice(offset, offset + limit);
-      }
-      // 曲1件あたりの演奏記録を絞る(0の場合は絞り込まない)
-      if (playingLogLimit != 0) {
-        tunesWithCount.tunes.forEach(t => {
-          t.playingLogs = t.playingLogs.slice(0, playingLogLimit)
-        })
-      }
-      return tunesWithCount;
+    // 区切られてるであろう検索文字列をパースしてその分 and 検索
+    this.playingLogService.searchWordParser(searchWord).forEach(w => {
+      sqb = this.playingLogService.searchWord<Tune>(sqb, w);
+    });
+    // instrumentId があれば楽器で絞り込む
+    if (instrumentId) {
+      sqb = sqb.andWhere("instrument.id = :instrumentId", { instrumentId: instrumentId })
+    }
+    console.log(composerId);
+    // instrumentId があれば楽器で絞り込む
+    if (composerId) {
+      sqb = sqb.andWhere("composer.id = :composerId", { composerId: composerId })
+    }
+    // 検索結果総数と結果オブジェクト生成
+    const tunesWithCount = new TunesWithCount(await sqb.getManyAndCount());
+    // limit が設定されていたら絞り込む
+    if (limit != 0) {
+      // 実態は params で受け取ったため string なので足し算するので number に変換
+      // TODO 全体的に生合成を取る 
+      limit = Number(limit);
+      offset = Number(offset);
+      tunesWithCount.tunes = tunesWithCount.tunes.slice(offset, offset + limit);
+    }
+    // 曲1件あたりの演奏記録を絞る(0の場合は絞り込まない)
+    if (playingLogLimit != 0) {
+      tunesWithCount.tunes.forEach(t => {
+        t.playingLogs = t.playingLogs.slice(0, playingLogLimit)
+      })
+    }
+    return tunesWithCount;
   }
   // many to many を保存するには preload を使わなきゃなので id は取らない(tuneData には id を含むこと)
   async update(tuneData: SaveTuneDto): Promise<Tune> {
@@ -95,7 +100,7 @@ export class TunesService {
   async aggrAveragePointAndSave(tune: Tune): Promise<Tune> {
     const pointsPlayingLogs = await this.playingLogService.findAllPoints(tune.id);
     // 紐づく演奏記録が無ければ何もせず Tune を返す
-    if(pointsPlayingLogs.length == 0) {
+    if (pointsPlayingLogs.length == 0) {
       return tune;
     }
     const playingLogAveragePointAndCount = this.playingLogService.aggrAveragePoint(pointsPlayingLogs);

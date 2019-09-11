@@ -11,7 +11,7 @@ export class TunesController {
   constructor(
     private readonly tuneService: TunesService,
     private readonly authService: AuthService,
-  ) {}
+  ) { }
 
   @Get()
   async findAll(): Promise<Tune[]> {
@@ -22,11 +22,12 @@ export class TunesController {
   async search(
     @Query('searchWord') searchWord: string,
     @Query('instrumentId') instrumentId: string,
+    @Query('composerId') composerId: string,
     @Query('limit') limit: number,
     @Query('offset') offset: number,
     @Query('playingLogLimit') playingLogLimit: number
   ): Promise<TunesWithCount> {
-    return await this.tuneService.search(searchWord, instrumentId, limit, offset, playingLogLimit);
+    return await this.tuneService.search(searchWord, instrumentId, composerId, limit, offset, playingLogLimit);
   }
 
   @Get('tune-selector')
