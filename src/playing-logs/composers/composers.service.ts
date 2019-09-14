@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Composer } from './composers.entity';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 import { SaveComposerDto } from './save-composer.dto';
 
 @Injectable()
@@ -12,11 +12,13 @@ export class ComposersService {
   ) {}
 
   async findAll(): Promise<Composer[]> {
-    return await this.composerRepository.find({relations: ['countries']});
+    return await this.composerRepository.find({ relations: ['countries'] });
   }
 
   async findById(id: number | string): Promise<Composer | undefined> {
-    return await this.composerRepository.findOne(id, {relations: ['countries']});
+    return await this.composerRepository.findOne(id, {
+      relations: ['countries'],
+    });
   }
 
   async create(composerData: SaveComposerDto): Promise<Composer> {
@@ -35,9 +37,18 @@ export class ComposersService {
   }
 
   async findAllByPlaystyleId(playstyleId: string): Promise<Composer[]> {
-    return await this.composerRepository.createQueryBuilder("composer")
-      .innerJoin("composer.tunes", "tune")
-      .innerJoin("tune.playstyle", "playstyle", "playstyle.id = :id", { id: playstyleId })
+    return await this.composerRepository
+      .createQueryBuilder('composer')
+      .innerJoin('composer.tunes', 'tune')
+      .innerJoin('tune.playstyle', 'playstyle', 'playstyle.id = :id', {
+        id: playstyleId,
+      })
       .getMany();
+  }
+
+  async search(searchWord: string): Promise<Composer[]> {
+    return await this.composerRepository.find({
+      fullName: Like(`%${searchWord}%`),
+    });
   }
 }
