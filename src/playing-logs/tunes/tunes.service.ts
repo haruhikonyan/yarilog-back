@@ -1,4 +1,9 @@
-import { Injectable, Inject, forwardRef, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  forwardRef,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DeepPartial, SelectQueryBuilder } from 'typeorm';
 
@@ -14,43 +19,78 @@ export class TunesService {
     private readonly tunesRepository: Repository<Tune>,
     @Inject(forwardRef(() => PlayingLogsService))
     private readonly playingLogService: PlayingLogsService,
-  ) { }
+  ) {}
 
   async findAll(): Promise<Tune[]> {
-    return await this.tunesRepository.find({ relations: ['composer', 'playstyle', 'genres'] });
+    return await this.tunesRepository.find({
+      relations: ['composer', 'playstyle', 'genres'],
+    });
   }
 
   async findById(id: number | string): Promise<Tune | undefined> {
-    return await this.tunesRepository.findOne(id, { relations: ['composer', 'playstyle', 'genres'] });
+    return await this.tunesRepository.findOne(id, {
+      relations: ['composer', 'playstyle', 'genres'],
+    });
   }
 
   async create(tuneData: SaveTuneDto): Promise<Tune> {
-    const tune = await this.tunesRepository.create(tuneData as DeepPartial<Tune>);
+    const tune = await this.tunesRepository.create(tuneData as DeepPartial<
+      Tune
+    >);
     return await this.tunesRepository.save(tune);
   }
 
   /**
    * 作曲家と演奏形態で曲を絞り込む
    * 主に演奏記録作成時の曲選択に使う
-   * @param composerId 
-   * @param playstyleId 
+   * @param composerId
+   * @param playstyleId
    */
-  async findAllByComposerIdAndPlaystyleId(composerId: string, playstyleId: string): Promise<Tune[]> {
-    return await this.tunesRepository.createQueryBuilder("tune")
-      .innerJoinAndSelect("tune.composer", "composer", "composer.id = :composerId", { composerId })
-      .innerJoinAndSelect("tune.playstyle", "playstyle", "playstyle.id = :playstyleId", { playstyleId })
-      .leftJoinAndSelect("tune.genres", "genre")
+  async findAllByComposerIdAndPlaystyleId(
+    composerId: string,
+    playstyleId: string,
+  ): Promise<Tune[]> {
+    return await this.tunesRepository
+      .createQueryBuilder('tune')
+      .innerJoinAndSelect(
+        'tune.composer',
+        'composer',
+        'composer.id = :composerId',
+        { composerId },
+      )
+      .innerJoinAndSelect(
+        'tune.playstyle',
+        'playstyle',
+        'playstyle.id = :playstyleId',
+        { playstyleId },
+      )
+      .leftJoinAndSelect('tune.genres', 'genre')
       .getMany();
   }
 
-  async search(searchWord: string, instrumentId: string | null = null, composerId: string | null = null, limit: number = 20, offset: number = 0, playingLogLimit: number = 5): Promise<TunesWithCount> {
-    let sqb: SelectQueryBuilder<Tune> = this.tunesRepository.createQueryBuilder("tune")
-      .innerJoinAndSelect("tune.playingLogs", "playingLog", "playingLog.isDraft = :isDraft", { isDraft: false })
-      .innerJoinAndSelect("tune.playstyle", "playstyle")
-      .leftJoinAndSelect("tune.genres", "genre")
-      .innerJoinAndSelect("playingLog.user", "user")
-      .innerJoinAndSelect("playingLog.instrument", "instrument")
-      .innerJoinAndSelect("tune.composer", "composer")
+  async search(
+    searchWord: string,
+    instrumentId: string | null = null,
+    composerId: string | null = null,
+    playstyleId: string | null = null,
+    genreId: string | null = null,
+    limit: number = 20,
+    offset: number = 0,
+    playingLogLimit: number = 5,
+  ): Promise<TunesWithCount> {
+    let sqb: SelectQueryBuilder<Tune> = this.tunesRepository
+      .createQueryBuilder('tune')
+      .innerJoinAndSelect(
+        'tune.playingLogs',
+        'playingLog',
+        'playingLog.isDraft = :isDraft',
+        { isDraft: false },
+      )
+      .innerJoinAndSelect('tune.playstyle', 'playstyle')
+      .leftJoinAndSelect('tune.genres', 'genre')
+      .innerJoinAndSelect('playingLog.user', 'user')
+      .innerJoinAndSelect('playingLog.instrument', 'instrument')
+      .innerJoinAndSelect('tune.composer', 'composer');
 
     // 区切られてるであろう検索文字列をパースしてその分 and 検索
     this.playingLogService.searchWordParser(searchWord).forEach(w => {
@@ -58,19 +98,35 @@ export class TunesService {
     });
     // instrumentId があれば楽器で絞り込む
     if (instrumentId) {
-      sqb = sqb.andWhere("instrument.id = :instrumentId", { instrumentId: instrumentId })
+      sqb = sqb.andWhere('instrument.id = :instrumentId', {
+        instrumentId: instrumentId,
+      });
     }
-    console.log(composerId);
     // instrumentId があれば楽器で絞り込む
     if (composerId) {
-      sqb = sqb.andWhere("composer.id = :composerId", { composerId: composerId })
+      sqb = sqb.andWhere('composer.id = :composerId', {
+        composerId: composerId,
+      });
+    }
+    // playstyleId があれば演奏形態で絞り込む
+    if (playstyleId) {
+      sqb = sqb.andWhere('playstyle.id = :playstyleId', {
+        playstyleId: playstyleId,
+      });
+    }
+    // TODO 複数のジャンルで絞り込めたらよい？
+    // genreId があればジャンルで絞り込む
+    if (genreId) {
+      sqb = sqb.andWhere('genre.id = :genreId', {
+        genreId: genreId,
+      });
     }
     // 検索結果総数と結果オブジェクト生成
     const tunesWithCount = new TunesWithCount(await sqb.getManyAndCount());
     // limit が設定されていたら絞り込む
     if (limit != 0) {
       // 実態は params で受け取ったため string なので足し算するので number に変換
-      // TODO 全体的に生合成を取る 
+      // TODO 全体的に生合成を取る
       limit = Number(limit);
       offset = Number(offset);
       tunesWithCount.tunes = tunesWithCount.tunes.slice(offset, offset + limit);
@@ -78,8 +134,8 @@ export class TunesService {
     // 曲1件あたりの演奏記録を絞る(0の場合は絞り込まない)
     if (playingLogLimit != 0) {
       tunesWithCount.tunes.forEach(t => {
-        t.playingLogs = t.playingLogs.slice(0, playingLogLimit)
-      })
+        t.playingLogs = t.playingLogs.slice(0, playingLogLimit);
+      });
     }
     return tunesWithCount;
   }
@@ -98,18 +154,26 @@ export class TunesService {
    * @param tune
    */
   async aggrAveragePointAndSave(tune: Tune): Promise<Tune> {
-    const pointsPlayingLogs = await this.playingLogService.findAllPoints(tune.id);
+    const pointsPlayingLogs = await this.playingLogService.findAllPoints(
+      tune.id,
+    );
     // 紐づく演奏記録が無ければ何もせず Tune を返す
     if (pointsPlayingLogs.length == 0) {
       return tune;
     }
-    const playingLogAveragePointAndCount = this.playingLogService.aggrAveragePoint(pointsPlayingLogs);
+    const playingLogAveragePointAndCount = this.playingLogService.aggrAveragePoint(
+      pointsPlayingLogs,
+    );
     const saveTuneDto = new SaveTuneDto();
     saveTuneDto.id = tune.id;
-    saveTuneDto.averageDifficulty = playingLogAveragePointAndCount.averageDifficulty;
-    saveTuneDto.averagePhysicality = playingLogAveragePointAndCount.averagePhysicality;
-    saveTuneDto.averageInteresting = playingLogAveragePointAndCount.averageInteresting;
-    saveTuneDto.countPlayingLogs = playingLogAveragePointAndCount.countPlayingLogs;
+    saveTuneDto.averageDifficulty =
+      playingLogAveragePointAndCount.averageDifficulty;
+    saveTuneDto.averagePhysicality =
+      playingLogAveragePointAndCount.averagePhysicality;
+    saveTuneDto.averageInteresting =
+      playingLogAveragePointAndCount.averageInteresting;
+    saveTuneDto.countPlayingLogs =
+      playingLogAveragePointAndCount.countPlayingLogs;
     return await this.update(saveTuneDto);
   }
   /**
@@ -117,6 +181,6 @@ export class TunesService {
    */
   async allAgrAveragePointAndSave(): Promise<Tune[]> {
     const tunes: Tune[] = await this.findAll();
-    return await Promise.all(tunes.map((t) => this.aggrAveragePointAndSave(t)));
+    return await Promise.all(tunes.map(t => this.aggrAveragePointAndSave(t)));
   }
 }
