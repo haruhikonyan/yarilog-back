@@ -1,15 +1,21 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Tune } from './tunes/tunes.entity';
 import { User } from '../users/users.entity';
 import { Instrument } from './instruments/instruments.entity';
 
-
 export enum PlayerLevel {
-  BEGINNER = "初心者",
-  INTERMEDIATE = "中級者",
-  SENIOR = "上級者",
-  UNIVERSITY_OF_MUSIC = "音大生",
-  PRO = "プロ"
+  BEGINNER = '初心者',
+  INTERMEDIATE = '中級者',
+  SENIOR = '上級者',
+  UNIVERSITY_OF_MUSIC = '音大生',
+  PRO = 'プロ',
 }
 
 /**
@@ -35,14 +41,16 @@ export class PlayingLog {
 
   // 自分の演奏レベル
   @Column({
-    type: "enum",
+    type: 'enum',
     enum: PlayerLevel,
-    default: PlayerLevel.BEGINNER
+    default: PlayerLevel.BEGINNER,
   })
   playerLevel!: PlayerLevel;
 
   // 担当パート
-  @ManyToOne(type => Instrument, instrument => instrument.playingLogs)
+  @ManyToOne(type => Instrument, instrument => instrument.playingLogs, {
+    nullable: false,
+  })
   instrument!: Instrument;
 
   // ポジション 1stとかバンダとか
@@ -74,20 +82,24 @@ export class PlayingLog {
   // 非公開のメモ
   @Column({ type: 'text', nullable: true, select: false })
   secretMemo: string | null = null;
-  
+
   //　下書きフラグ
-  @Column({default: false})
+  @Column({ default: false })
   isDraft: boolean = false;
 
   /**
    * 演奏記録は一つの楽曲を持つ
    */
-  @ManyToOne(type => Tune, tune => tune.playingLogs)
+  @ManyToOne(type => Tune, tune => tune.playingLogs, {
+    nullable: false,
+  })
   tune!: Tune;
 
   /**
    * 演奏記録は一人のユーザを持つ
    */
-  @ManyToOne(type => User, user => user.playingLogs)
+  @ManyToOne(type => User, user => user.playingLogs, {
+    nullable: false,
+  })
   user!: User;
 }

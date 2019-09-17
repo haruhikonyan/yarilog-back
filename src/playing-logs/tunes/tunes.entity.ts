@@ -1,4 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, Index } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToMany,
+  JoinTable,
+  Index,
+} from 'typeorm';
 import { PlayingLog } from '../playing-logs.entity';
 import { Composer } from '../composers/composers.entity';
 import { Playstyle } from '../playstyles/playstyles.entity';
@@ -8,7 +19,7 @@ import { Genre } from '../genres/genres.entity';
  * 楽曲
  */
 @Entity()
-@Index(["title", "playstyle", "composer"], { unique: true })
+@Index(['title', 'playstyle', 'composer'], { unique: true })
 export class Tune {
   @PrimaryGeneratedColumn()
   id!: number;
@@ -50,14 +61,18 @@ export class Tune {
   /**
    * 楽曲は一人の作曲家を持つ
    */
-  @ManyToOne(type => Composer, composer => composer.tunes)
+  @ManyToOne(type => Composer, composer => composer.tunes, {
+    nullable: false,
+  })
   composer!: Composer;
 
   /**
    * 楽曲は一つの演奏形態を持つ
    */
-  @ManyToOne(type => Playstyle, playstyle => playstyle.tunes)
-  playstyle!: Playstyle
+  @ManyToOne(type => Playstyle, playstyle => playstyle.tunes, {
+    nullable: false,
+  })
+  playstyle!: Playstyle;
 
   /**
    * 楽曲は複数のジャンルを持つ
