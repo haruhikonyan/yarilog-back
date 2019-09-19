@@ -1,4 +1,4 @@
-FROM node:10.15.1
+FROM node:12.10.0
 ENV LANG C.UTF-8
 
 WORKDIR /yarilog-back
