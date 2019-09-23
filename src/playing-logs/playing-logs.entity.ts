@@ -31,6 +31,10 @@ export class PlayingLog {
   @UpdateDateColumn()
   readonly updatedAt!: Date;
 
+  // 編曲者
+  @Column({ type: 'text', nullable: true })
+  arranger: string | null = null;
+
   // 演奏日
   @Column({ type: 'date', nullable: true })
   playDate: Date | null = null;
@@ -58,14 +62,14 @@ export class PlayingLog {
   position: string | null = null;
 
   // 難易度 0~5 小数点第１位
-  @Column('double')
-  difficulty!: number;
+  @Column({ type: 'double', nullable: true })
+  difficulty: number | null = null;
   // 体力 0~5 小数点第１位
-  @Column('double')
-  physicality!: number;
+  @Column({ type: 'double', nullable: true })
+  physicality: number | null = null;
   // 面白さ 0~5 小数点第１位
-  @Column('double')
-  interesting!: number;
+  @Column({ type: 'double', nullable: true })
+  interesting: number | null = null;
 
   // 面白かったところ
   @Column({ type: 'text', nullable: true })
