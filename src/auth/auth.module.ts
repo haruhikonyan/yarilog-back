@@ -8,6 +8,9 @@ import { UsersService } from '../users/users.service';
 import { AuthController } from './auth.controller';
 import { User } from '../users/users.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { TwitterStrategy } from './twitter.strategy';
+import { ExtarnalAccountsService } from './extarnal-accounts/extarnal-accounts.service';
+import { ExternalAccount } from './extarnal-accounts/extarnal-accounts.entity';
 
 @Module({
   imports: [
@@ -19,9 +22,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       },
     }),
     UsersModule,
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, ExternalAccount]),
   ],
-  providers: [AuthService, JwtStrategy, UsersService],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    TwitterStrategy,
+    UsersService,
+    ExtarnalAccountsService,
+  ],
   exports: [PassportModule, AuthService],
   controllers: [AuthController],
 })

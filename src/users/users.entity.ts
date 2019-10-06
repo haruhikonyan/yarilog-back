@@ -1,5 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToOne,
+} from 'typeorm';
 import { PlayingLog } from '../playing-logs/playing-logs.entity';
+import { ExternalAccount } from '../auth/extarnal-accounts/extarnal-accounts.entity';
 
 @Entity()
 export class User {
@@ -12,31 +21,38 @@ export class User {
   readonly updatedAt!: Date;
 
   @Column({
+    type: 'varchar',
     length: 30,
     unique: true,
-    select: false
+    select: false,
+    nullable: true,
   })
-  username!: string;
+  username: string | null = null;
 
   @Column({
+    type: 'varchar',
     length: 50,
     unique: true,
-    select: false
+    select: false,
+    nullable: true,
   })
-  mailAddress!: string;
+  mailAddress: string | null = null;
 
-  @Column({select: false})
-  password!: string;
+  @Column({ type: 'varchar', select: false, nullable: true })
+  password: string | null = null;
 
-  @Column({length: 50})
+  @Column({ length: 50 })
   nickname!: string;
 
   @Column({
     type: 'text',
-    nullable: true
+    nullable: true,
   })
   description: string | null = null;
 
   @OneToMany(type => PlayingLog, playingLog => playingLog.user)
   playingLogs!: PlayingLog[];
+
+  @OneToOne(type => ExternalAccount, externalAccount => externalAccount.user)
+  externalAccount!: ExternalAccount;
 }
