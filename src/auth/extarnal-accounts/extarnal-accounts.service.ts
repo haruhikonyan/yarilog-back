@@ -23,22 +23,18 @@ export class ExtarnalAccountsService {
         accountId: authLoginObject.id,
         providerType: authLoginObject.providerType,
       },
-      relations: ['users'],
+      relations: ['user'],
     });
   }
 
-  async createFromOauthLogin(
-    authLoginObject: AuthLoginObject,
-    nickname: string,
-    mailAddress: string,
-  ) {
+  async createFromOauthLogin(authLoginObject: AuthLoginObject) {
     const newExternalAccount = new SaveExtarnalAccountDto();
     newExternalAccount.accountId = authLoginObject.id;
     newExternalAccount.providerType = authLoginObject.providerType;
     newExternalAccount.user = new SaveUserDto();
-    newExternalAccount.user.nickname = nickname;
-    newExternalAccount.user.mailAddress = mailAddress;
+    newExternalAccount.user.nickname = authLoginObject.nickname;
+    newExternalAccount.user.mailAddress = authLoginObject.mailAddress;
 
-    this.externalAccountsRepository.save(newExternalAccount);
+    return this.externalAccountsRepository.save(newExternalAccount);
   }
 }

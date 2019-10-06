@@ -34,11 +34,10 @@ export class AuthController {
 
   @Get('twitter/callback')
   @UseGuards(AuthGuard('twitter'))
-  googleLoginCallback(@Req() req: any) {
-    console.log(req);
-    const jwt: string = req.user.jwt;
-    if (jwt) {
-      return `<html><body><script>window.opener.postMessage('${jwt}', 'http://localhost:4200')</script></body></html>`;
+  googleLoginCallback(@Req() req: any, @Res() res: any) {
+    const jwtToken: string = req.user.jwtToken;
+    if (jwtToken) {
+      res.redirect(`${process.env.FRONT_URL}/oauth/login?token=${jwtToken}`);
     } else {
       return 'There was a problem signing in...';
     }

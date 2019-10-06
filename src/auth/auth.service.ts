@@ -21,6 +21,8 @@ export interface LoginObject {
 export interface AuthLoginObject {
   id: string;
   providerType: ProviderType;
+  nickname: string;
+  mailAddress: string | null;
 }
 
 @Injectable()
@@ -50,8 +52,12 @@ export class AuthService {
     ) {
       return null;
     }
-    const payload: JwtPayload = { userId: user.id };
-    return { token: this.jwtService.sign(payload), userId: user.id };
+    return { token: this.createJwtToken(user.id), userId: user.id };
+  }
+
+  createJwtToken(userId: string) {
+    const payload: JwtPayload = { userId };
+    return this.jwtService.sign(payload);
   }
 
   async findOrCreateOauthUser(authLoginObject: AuthLoginObject) {
@@ -64,10 +70,10 @@ export class AuthService {
       return externalAccount.user;
     }
     // 該当のユーザがいない場合は新規作成
-    const newUser = new User();
-    return await this.extarnalAccountsService.findByAuthLoginObject(
+    const extarnalAccount = await this.extarnalAccountsService.createFromOauthLogin(
       authLoginObject,
     );
+    return extarnalAccount.user;
     // // user がいてもパスワードが一致しなければ null を返して 401 にする
     // if (!(await bcrypt.compare(loginObject.password, user.password))) {
     //   return null;

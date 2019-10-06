@@ -24,7 +24,6 @@ export class ComposersController {
 
   @Post()
   async create(@Body() composerData: SaveComposerDto): Promise<Composer> {
-    console.log(composerData);
     return await this.composersService.create(composerData);
   }
 

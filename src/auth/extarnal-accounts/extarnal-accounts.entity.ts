@@ -36,7 +36,10 @@ export class ExternalAccount {
   })
   providerType!: ProviderType;
 
-  @OneToOne(type => User, user => user.externalAccount, { nullable: false })
+  @OneToOne(type => User, user => user.externalAccount, {
+    nullable: false,
+    cascade: true,
+  })
   @JoinColumn()
   user!: User;
 }
