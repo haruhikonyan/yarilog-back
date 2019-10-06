@@ -3,7 +3,7 @@
 import { Strategy } from 'passport-twitter';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { AuthService, LoginResultObject } from './auth.service';
 import { ProviderType } from './extarnal-accounts/extarnal-accounts.entity';
 
 @Injectable()
@@ -16,7 +16,11 @@ export class TwitterStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(_token: any, _tokenSecret: any, profile: any): Promise<any> {
+  async validate(
+    _token: any,
+    _tokenSecret: any,
+    profile: any,
+  ): Promise<LoginResultObject> {
     const user = await this.authService.findOrCreateOauthUser({
       id: profile.id,
       providerType: ProviderType.TWITTER,
@@ -26,6 +30,6 @@ export class TwitterStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new UnauthorizedException();
     }
-    return { jwtToken: this.authService.createJwtToken(user.id) };
+    return { token: this.authService.createJwtToken(user.id), userId: user.id };
   }
 }
