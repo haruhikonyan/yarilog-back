@@ -74,12 +74,6 @@ export class AuthService {
       authLoginObject,
     );
     return extarnalAccount.user;
-    // // user がいてもパスワードが一致しなければ null を返して 401 にする
-    // if (!(await bcrypt.compare(loginObject.password, user.password))) {
-    //   return null;
-    // }
-    // const payload: JwtPayload = { userId: user.id };
-    // return { token: this.jwtService.sign(payload), userId: user.id };
   }
 
   async validateUser(payload: JwtPayload): Promise<User | undefined> {

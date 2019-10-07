@@ -32,6 +32,7 @@ export class UsersService {
         .createQueryBuilder('user')
         .addSelect(['user.username', 'user.mailAddress'])
         .where({ id })
+        .innerJoinAndSelect('user.externalAccount', 'externalAccount')
         .getOne();
     } else {
       return await this.usersRepository.findOne(id);

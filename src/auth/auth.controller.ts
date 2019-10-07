@@ -38,7 +38,7 @@ export class AuthController {
     const { token, userId } = req.user;
     const redirectPath =
       token && userId
-        ? `${process.env.FRONT_URL}/oauth/login?token=${token}&userId=${userId}`
+        ? `${process.env.FRONT_URL}/login/oauth?token=${token}&userId=${userId}`
         : `${process.env.FRONT_URL}/login`;
 
     res.redirect(redirectPath);

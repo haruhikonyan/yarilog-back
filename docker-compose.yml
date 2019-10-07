@@ -20,8 +20,9 @@ services:
       DB_USERNAME: root
       DB_PASSWORD: root
       TYPEORM_ENTITIES: src/**/*.entity{.ts,.js}
-      TWITTER_API_KEY: U5yO9uPVIQ8KNKnbuAVyuMz1m
-      TWITTER_API_SECRET: dFEqmi9j9p3KJFfdARNzVnB2Cmi4VBEcOeEFlDJjvHgrWkr3gU
+      TWITTER_API_KEY:
+      TWITTER_API_SECRET:
+      FRONT_URL: http://localhost:3000
       BACK_URL: http://localhost:8080
   db:
     image: mysql:8.0.17
