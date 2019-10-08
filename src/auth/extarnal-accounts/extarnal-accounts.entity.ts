@@ -27,7 +27,7 @@ export class ExternalAccount {
   @UpdateDateColumn()
   readonly updatedAt!: Date;
 
-  @Column()
+  @Column({ select: false })
   accountId!: string;
 
   @Column({

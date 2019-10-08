@@ -30,9 +30,9 @@ export class UsersService {
     if (isMine) {
       return await this.usersRepository
         .createQueryBuilder('user')
+        .leftJoinAndSelect('user.externalAccount', 'externalAccount')
         .addSelect(['user.username', 'user.mailAddress'])
         .where({ id })
-        .innerJoinAndSelect('user.externalAccount', 'externalAccount')
         .getOne();
     } else {
       return await this.usersRepository.findOne(id);
