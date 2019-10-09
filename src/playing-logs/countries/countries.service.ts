@@ -6,14 +6,14 @@ import { SaveCountryDto } from './save-country.dto';
 
 @Injectable()
 export class CountriesService {
-	constructor(
-		@InjectRepository(Country)
-		private readonly countriesRepository: Repository<Country>,
-	) {}
+  constructor(
+    @InjectRepository(Country)
+    private readonly countriesRepository: Repository<Country>,
+  ) {}
 
-	async findAll(): Promise<Country[]> {
-		return await this.countriesRepository.find();
-	}
+  async findAll(): Promise<Country[]> {
+    return await this.countriesRepository.find();
+  }
 
   async findById(id: number | string): Promise<Country | undefined> {
     return await this.countriesRepository.findOne(id);
@@ -33,5 +33,4 @@ export class CountriesService {
     await this.countriesRepository.merge(country, countryData);
     return await this.countriesRepository.save(country);
   }
-
 }

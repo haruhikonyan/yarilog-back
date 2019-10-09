@@ -3,12 +3,12 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { AppModule } from './app.module';
 import * as methodOverride from 'method-override';
+// @ts-ignore: Could not find a declaration file for module
+import * as session from 'express-session';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(
-    AppModule,
-  );
-  
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('hbs');
@@ -16,10 +16,12 @@ async function bootstrap() {
   app.set('view options', { layout: 'admin/layout' });
   app.enableCors({
     origin: '*',
-    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+    allowedHeaders:
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization',
   });
   // override with POST having ?_method=DELETE
-  app.use(methodOverride('_method'))
+  app.use(methodOverride('_method'));
+  app.use(session({ secret: 'nest is awesome' }));
 
   await app.listen(3000);
 }
