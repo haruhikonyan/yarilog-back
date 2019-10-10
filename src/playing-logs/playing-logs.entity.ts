@@ -35,6 +35,10 @@ export class PlayingLog {
   @Column({ type: 'text', nullable: true })
   arranger: string | null = null;
 
+  // 演奏シーン(定期演奏会中プロ、コンクール自由曲とか)
+  @Column({ type: 'text', nullable: true })
+  scene: string | null = null;
+
   // 演奏日
   @Column({ type: 'date', nullable: true })
   playDate: Date | null = null;
@@ -87,7 +91,7 @@ export class PlayingLog {
   @Column({ type: 'text', nullable: true, select: false })
   secretMemo: string | null = null;
 
-  //　下書きフラグ
+  // 下書きフラグ
   @Column({ default: false })
   isDraft: boolean = false;
 

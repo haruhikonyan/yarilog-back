@@ -67,7 +67,7 @@ export class PlayingLogsService {
     // instrumentId があれば楽器で絞り込む
     if (instrumentId) {
       sqb = sqb.andWhere('instrument.id = :instrumentId', {
-        instrumentId: instrumentId,
+        instrumentId,
       });
     }
     return new PlayingLogsWithCount(await sqb.getManyAndCount());
@@ -85,6 +85,9 @@ export class PlayingLogsService {
           .orWhere(`playingLog.impressionOfDifficulty LIKE '%${word}%'`)
           .orWhere(`playingLog.reflectionForNext LIKE '%${word}%'`)
           .orWhere(`playingLog.otherPartInpression LIKE '%${word}%'`)
+          .orWhere(`playingLog.position LIKE '%${word}%'`)
+          .orWhere(`playingLog.scene LIKE '%${word}%'`)
+          .orWhere(`playingLog.arranger LIKE '%${word}%'`)
           .orWhere(`tune.title LIKE '%${word}%'`)
           .orWhere(`composer.fullName LIKE '%${word}%'`)
           .orWhere(`instrument.name LIKE '%${word}%'`);
@@ -111,7 +114,7 @@ export class PlayingLogsService {
         .innerJoinAndSelect('playingLog.user', 'user')
         .innerJoinAndSelect('playingLog.instrument', 'instrument')
         .addSelect('playingLog.secretMemo')
-        .where({ id: id })
+        .where({ id })
         .getOne();
     } else {
       return await this.playingLogRepository.findOne({
@@ -124,7 +127,7 @@ export class PlayingLogsService {
           'user',
           'instrument',
         ],
-        where: { id: id, isDraft: false },
+        where: { id, isDraft: false },
       });
     }
   }
