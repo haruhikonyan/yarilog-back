@@ -3,9 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ExternalAccount, ProviderType } from './extarnal-accounts.entity';
 import { AuthLoginObject } from '../auth.service';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../../users/users.service';
 import { SaveExtarnalAccountDto } from './save-extarnal-account.dto';
-import { SaveUserDto } from 'src/users/save-user.dto';
+import { SaveUserDto } from '../../users/save-user.dto';
 
 @Injectable()
 export class ExtarnalAccountsService {
