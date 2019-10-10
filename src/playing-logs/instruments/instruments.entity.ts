@@ -15,6 +15,9 @@ export class Instrument {
   @Column()
   shortName!: string;
 
+  @Column()
+  sortOrder!: number;
+
   /**
    * 楽器は1つの演奏記録に紐づく
    */

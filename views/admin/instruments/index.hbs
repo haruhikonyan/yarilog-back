@@ -7,19 +7,21 @@
       <th scope="col">id</th>
       <th scope="col">楽器名</th>
       <th scope="col">略記</th>
+      <th scope="col">並び順</th>
       <th scope="col">操作</th>
     </tr>
   </thead>
   <tbody>
     {{#each instruments}}
-      <tr>
-        <th scope="row">{{ id }}</th>
-        <td>{{ name }}</td>
-        <td>{{ shortName }}</td>
-        <td>
-          <a href="/admin/instruments/{{ id }}/edit" class="btn btn-secondary" role="button" aria-disabled="true">編集</a>
-        </td>
-      </tr>
+    <tr>
+      <th scope="row">{{ id }}</th>
+      <td>{{ name }}</td>
+      <td>{{ shortName }}</td>
+      <td>{{ sortOrder }}</td>
+      <td>
+        <a href="/admin/instruments/{{ id }}/edit" class="btn btn-secondary" role="button" aria-disabled="true">編集</a>
+      </td>
+    </tr>
     {{/each}}
   </tbody>
 </table>

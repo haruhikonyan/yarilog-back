@@ -6,14 +6,16 @@ import { SaveInstrumentDto } from './save-instrument.dto';
 
 @Injectable()
 export class InstrumentsService {
-	constructor(
-		@InjectRepository(Instrument)
-		private readonly instrumentsRepository: Repository<Instrument>,
+  constructor(
+    @InjectRepository(Instrument)
+    private readonly instrumentsRepository: Repository<Instrument>,
   ) {}
 
-	async findAll(): Promise<Instrument[]> {
-		return await this.instrumentsRepository.find();
-	}
+  async findAll(): Promise<Instrument[]> {
+    return await this.instrumentsRepository.find({
+      order: { sortOrder: 'ASC' },
+    });
+  }
 
   async findById(id: number | string): Promise<Instrument | undefined> {
     return await this.instrumentsRepository.findOne(id);
@@ -24,7 +26,10 @@ export class InstrumentsService {
     return await this.instrumentsRepository.save(instrument);
   }
 
-  async update(id: number, instrumentData: SaveInstrumentDto): Promise<Instrument | undefined> {
+  async update(
+    id: number,
+    instrumentData: SaveInstrumentDto,
+  ): Promise<Instrument | undefined> {
     const instrument = await this.findById(id);
     // 存在しなければ undefined を返す
     if (instrument == null) {
@@ -33,5 +38,4 @@ export class InstrumentsService {
     await this.instrumentsRepository.merge(instrument, instrumentData);
     return await this.instrumentsRepository.save(instrument);
   }
-
 }
