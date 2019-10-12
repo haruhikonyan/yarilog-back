@@ -14,6 +14,7 @@ export enum ProviderType {
   TWITTER = 'twitter',
   FACEBOOK = 'facebook',
   GOOGLE = 'google',
+  LINE = 'line',
 }
 
 @Entity()

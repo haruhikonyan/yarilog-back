@@ -26,6 +26,8 @@ services:
       FACEBOOK_APP_SECRET: change_me
       GOOGLE_CONSUMER_KEY: change_me
       GOOGLE_CONSUMER_SECRET: change_me
+      LINE_CHANNEL_ID: change_me
+      LINE_CHANNEL_SECRET: change_me
       FRONT_URL: http://localhost:3000
       BACK_URL: http://localhost:8080
   db:

@@ -13,6 +13,7 @@ import { ExtarnalAccountsService } from './extarnal-accounts/extarnal-accounts.s
 import { ExternalAccount } from './extarnal-accounts/extarnal-accounts.entity';
 import { FacebookStrategy } from './facebook.strategy';
 import { GoogleStrategy } from './google.strategy';
+import { LineStrategy } from './line.strategy';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { GoogleStrategy } from './google.strategy';
     TwitterStrategy,
     FacebookStrategy,
     GoogleStrategy,
+    LineStrategy,
     UsersService,
     ExtarnalAccountsService,
   ],

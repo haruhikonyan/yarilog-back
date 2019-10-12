@@ -79,6 +79,24 @@ export class AuthController {
 
     res.redirect(redirectPath);
   }
+
+  @Get('line')
+  @UseGuards(AuthGuard('line'))
+  lineLogin() {
+    // initiates the Facebook OAuth2 login flow
+  }
+
+  @Get('line/callback')
+  @UseGuards(AuthGuard('line'))
+  lineLoginCallback(@Req() req: any, @Res() res: any) {
+    const { token, userId } = req.user;
+    const redirectPath =
+      token && userId
+        ? `${process.env.FRONT_URL}/login/oauth?token=${token}&userId=${userId}`
+        : `${process.env.FRONT_URL}/login`;
+
+    res.redirect(redirectPath);
+  }
   @Get('me')
   @UseGuards(AuthGuard())
   findAll(@Request() req: any) {
