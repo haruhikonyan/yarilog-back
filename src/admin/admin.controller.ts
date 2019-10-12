@@ -157,7 +157,7 @@ export class AdminController {
     const composer: SaveComposerDto = new SaveComposerDto();
     const countries: Country[] = await this.countriesService.findAll();
     return {
-      composer
+      composer,
       countries,
       title: '作曲家新規作成',
       formaction: '/admin/composers/',
