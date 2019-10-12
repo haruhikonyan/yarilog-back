@@ -11,6 +11,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TwitterStrategy } from './twitter.strategy';
 import { ExtarnalAccountsService } from './extarnal-accounts/extarnal-accounts.service';
 import { ExternalAccount } from './extarnal-accounts/extarnal-accounts.entity';
+import { FacebookStrategy } from './facebook.strategy';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ExternalAccount } from './extarnal-accounts/extarnal-accounts.entity';
     AuthService,
     JwtStrategy,
     TwitterStrategy,
+    FacebookStrategy,
     UsersService,
     ExtarnalAccountsService,
   ],

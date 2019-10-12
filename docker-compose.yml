@@ -20,8 +20,10 @@ services:
       DB_USERNAME: root
       DB_PASSWORD: root
       TYPEORM_ENTITIES: src/**/*.entity{.ts,.js}
-      TWITTER_API_KEY:
-      TWITTER_API_SECRET:
+      TWITTER_API_KEY: change_me
+      TWITTER_API_SECRET: change_me
+      FACEBOOK_APP_ID: change_me
+      FACEBOOK_APP_SECRET: change_me
       FRONT_URL: http://localhost:3000
       BACK_URL: http://localhost:8080
   db:

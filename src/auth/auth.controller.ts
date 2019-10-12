@@ -29,12 +29,30 @@ export class AuthController {
   @Get('twitter')
   @UseGuards(AuthGuard('twitter'))
   twitterLogin() {
-    // initiates the Google OAuth2 login flow
+    // initiates the Twitter OAuth2 login flow
   }
 
   @Get('twitter/callback')
   @UseGuards(AuthGuard('twitter'))
-  googleLoginCallback(@Req() req: any, @Res() res: any) {
+  twitterLoginCallback(@Req() req: any, @Res() res: any) {
+    const { token, userId } = req.user;
+    const redirectPath =
+      token && userId
+        ? `${process.env.FRONT_URL}/login/oauth?token=${token}&userId=${userId}`
+        : `${process.env.FRONT_URL}/login`;
+
+    res.redirect(redirectPath);
+  }
+
+  @Get('facebook')
+  @UseGuards(AuthGuard('facebook'))
+  facebookLogin() {
+    // initiates the Facebook OAuth2 login flow
+  }
+
+  @Get('facebook/callback')
+  @UseGuards(AuthGuard('facebook'))
+  facebookLoginCallback(@Req() req: any, @Res() res: any) {
     const { token, userId } = req.user;
     const redirectPath =
       token && userId
