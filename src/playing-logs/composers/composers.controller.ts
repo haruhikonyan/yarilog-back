@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Query,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { Composer } from './composers.entity';
 import { ComposersService } from './composers.service';
 import { SaveComposerDto } from './save-composer.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('composers')
 export class ComposersController {
@@ -23,7 +33,12 @@ export class ComposersController {
   }
 
   @Post()
-  async create(@Body() composerData: SaveComposerDto): Promise<Composer> {
+  @UseGuards(AuthGuard())
+  async create(
+    @Body() composerData: SaveComposerDto,
+    @Request() req: any,
+  ): Promise<Composer> {
+    composerData.author = req.user.id;
     return await this.composersService.create(composerData);
   }
 

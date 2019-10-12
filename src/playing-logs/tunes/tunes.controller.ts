@@ -6,6 +6,7 @@ import {
   Param,
   Request,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { TunesService } from './tunes.service';
 import { Tune } from './tunes.entity';
@@ -13,6 +14,7 @@ import { SaveTuneDto } from './save-tune.dto';
 import { User } from '../../users/users.entity';
 import { AuthService } from '../../auth/auth.service';
 import { TunesWithCount } from './TunesWithCount';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('tunes')
 export class TunesController {
@@ -66,16 +68,12 @@ export class TunesController {
   }
 
   @Post()
+  @UseGuards(AuthGuard())
   async create(
     @Body() tuneData: SaveTuneDto,
     @Request() req: any,
   ): Promise<Tune> {
-    const me:
-      | User
-      | undefined = await this.authService.getMeByAuthorizationHeaderToken(
-      req.headers['authorization'],
-    );
-    tuneData.author = me ? me.id : 'guest';
+    tuneData.author = req.user.id;
     return await this.tuneService.create(tuneData);
   }
 }

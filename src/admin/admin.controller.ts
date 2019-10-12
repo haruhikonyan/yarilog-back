@@ -100,14 +100,14 @@ export class AdminController {
   @Render('admin/countries')
   async countries() {
     const countries: Country[] = await this.countriesService.findAll();
-    return { countries: countries, title: '国一覧' };
+    return { countries, title: '国一覧' };
   }
   @Get('countries/new')
   @Render('admin/countries/editor')
   async newCountry() {
     const country: SaveCountryDto = new SaveCountryDto();
     return {
-      country: country,
+      country,
       title: '国新規作成',
       formaction: '/admin/countries/',
       showContinueButton: true,
@@ -120,7 +120,7 @@ export class AdminController {
       id,
     );
     return {
-      country: country,
+      country,
       title: `${country!.name}編集`,
       formaction: `/admin/countries/${id}?_method=PUT`,
     };
@@ -149,7 +149,7 @@ export class AdminController {
   @Render('admin/composers')
   async composers() {
     const composers: Composer[] = await this.composersService.findAll();
-    return { composers: composers, title: '作曲家一覧' };
+    return { composers, title: '作曲家一覧' };
   }
   @Get('composers/new')
   @Render('admin/composers/editor')
@@ -157,8 +157,8 @@ export class AdminController {
     const composer: SaveComposerDto = new SaveComposerDto();
     const countries: Country[] = await this.countriesService.findAll();
     return {
-      composer: composer,
-      countries: countries,
+      composer
+      countries,
       title: '作曲家新規作成',
       formaction: '/admin/composers/',
       showContinueButton: true,
@@ -172,8 +172,8 @@ export class AdminController {
     );
     const countries: Country[] = await this.countriesService.findAll();
     return {
-      composer: composer,
-      countries: countries,
+      composer,
+      countries,
       title: `${composer!.displayName}編集`,
       formaction: `/admin/composers/${id}?_method=PUT`,
     };
@@ -189,6 +189,8 @@ export class AdminController {
         return { id: Number(countryId) };
       },
     );
+    // ここのエンドポイントには admin 以外ありえない
+    composerData.author = 'admin';
     await this.composersService.create(composerData);
     const redirectPath: string =
       isContinue === 'true' ? '/admin/composers/new' : '.';
@@ -215,7 +217,7 @@ export class AdminController {
   @Render('admin/tunes')
   async tunes() {
     const tunes: Tune[] = await this.tunesService.findAll();
-    return { tunes: tunes, title: '曲一覧' };
+    return { tunes, title: '曲一覧' };
   }
   @Get('tunes/new')
   @Render('admin/tunes/editor')
@@ -288,14 +290,14 @@ export class AdminController {
   @Render('admin/instruments')
   async instruments() {
     const instruments: Instrument[] = await this.instrumentsService.findAll();
-    return { instruments: instruments, title: '楽器一覧' };
+    return { instruments, title: '楽器一覧' };
   }
   @Get('instruments/new')
   @Render('admin/instruments/editor')
   async newInstrument() {
     const instrument: SaveInstrumentDto = new SaveInstrumentDto();
     return {
-      instrument: instrument,
+      instrument,
       title: '楽器新規作成',
       formaction: '/admin/instruments/',
       showContinueButton: true,
@@ -308,7 +310,7 @@ export class AdminController {
       | Instrument
       | undefined = await this.instrumentsService.findById(id);
     return {
-      instrument: instrument,
+      instrument,
       title: `${instrument!.name}編集`,
       formaction: `/admin/instruments/${id}?_method=PUT`,
     };
@@ -336,14 +338,14 @@ export class AdminController {
   @Render('admin/playstyles')
   async playstyles() {
     const playstyles: Playstyle[] = await this.playstylesService.findAll();
-    return { playstyles: playstyles, title: '演奏形態一覧' };
+    return { playstyles, title: '演奏形態一覧' };
   }
   @Get('playstyles/new')
   @Render('admin/playstyles/editor')
   async newPlaystyle() {
     const playstyle: SavePlaystyleDto = new SavePlaystyleDto();
     return {
-      playstyle: playstyle,
+      Playstyle,
       title: '演奏形態新規作成',
       formaction: '/admin/playstyles/',
       showContinueButton: true,
@@ -356,7 +358,7 @@ export class AdminController {
       | Playstyle
       | undefined = await this.playstylesService.findById(id);
     return {
-      playstyle: playstyle,
+      playstyle,
       title: `${playstyle!.name}編集`,
       formaction: `/admin/playstyles/${id}?_method=PUT`,
     };
@@ -385,14 +387,14 @@ export class AdminController {
   @Render('admin/genres')
   async genres() {
     const genres: Genre[] = await this.genresService.findAll();
-    return { genres: genres, title: 'ジャンル一覧' };
+    return { genres, title: 'ジャンル一覧' };
   }
   @Get('genres/new')
   @Render('admin/genres/editor')
   async newGenre() {
     const genre: SaveGenreDto = new SaveGenreDto();
     return {
-      genre: genre,
+      genre,
       title: 'ジャンル新規作成',
       formaction: '/admin/genres/',
       showContinueButton: true,
@@ -403,7 +405,7 @@ export class AdminController {
   async editGenre(@Param('id') id: number) {
     const genre: Genre | undefined = await this.genresService.findById(id);
     return {
-      genre: genre,
+      genre,
       title: `${genre!.name}編集`,
       formaction: `/admin/genres/${id}?_method=PUT`,
     };
@@ -429,7 +431,7 @@ export class AdminController {
   @Render('admin/users')
   async users() {
     const users: User[] = await this.usersService.findAll(true);
-    return { users: users, title: 'ユーザ一覧' };
+    return { users, title: 'ユーザ一覧' };
   }
   @Get('aggrAveragePoint/tunes/all')
   async aggrAveragePointAllTunes(@Res() res: Response) {

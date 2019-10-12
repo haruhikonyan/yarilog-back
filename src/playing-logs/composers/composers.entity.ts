@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
 import { Tune } from '../tunes/tunes.entity';
 import { Country } from '../countries/countries.entity';
 
@@ -18,6 +25,9 @@ export class Composer {
 
   @Column({ type: 'text', nullable: true })
   description: string | null = null;
+
+  @Column()
+  author!: string;
 
   /**
    * 作曲家には複数の楽曲が紐づく]
