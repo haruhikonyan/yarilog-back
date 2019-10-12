@@ -12,6 +12,7 @@ import { TwitterStrategy } from './twitter.strategy';
 import { ExtarnalAccountsService } from './extarnal-accounts/extarnal-accounts.service';
 import { ExternalAccount } from './extarnal-accounts/extarnal-accounts.entity';
 import { FacebookStrategy } from './facebook.strategy';
+import { GoogleStrategy } from './google.strategy';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { FacebookStrategy } from './facebook.strategy';
     JwtStrategy,
     TwitterStrategy,
     FacebookStrategy,
+    GoogleStrategy,
     UsersService,
     ExtarnalAccountsService,
   ],
