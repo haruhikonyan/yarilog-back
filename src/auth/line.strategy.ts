@@ -13,19 +13,19 @@ export class LineStrategy extends PassportStrategy(Strategy) {
       channelID: process.env.LINE_CHANNEL_ID,
       channelSecret: process.env.LINE_CHANNEL_SECRET,
       callbackURL: `${process.env.BACK_URL}/auth/line/callback`, // 認証成功時の戻り先URL
-      scope: ['profile', 'openid', 'email'],
+      scope: ['profile', 'openid'],
     });
   }
 
   async validate(
     _accessToken: any,
     _refreshToken: any,
-    params: any,
+    profile: any,
   ): Promise<LoginResultObject> {
     const user = await this.authService.findOrCreateOauthUser({
-      id: params.id,
+      id: profile.id,
       providerType: ProviderType.LINE,
-      nickname: params.displayName,
+      nickname: profile.displayName,
       mailAddress: null,
     });
     if (!user) {
