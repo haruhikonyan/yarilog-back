@@ -30,6 +30,8 @@ export class PlayingLogsService {
         'tune',
         'tune.composer',
         'tune.composer.countries',
+        'tune.playstyle',
+        'tune.genres',
         'user',
         'instrument',
       ],
