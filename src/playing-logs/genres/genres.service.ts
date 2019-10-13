@@ -1,19 +1,19 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 import { Genre } from './genres.entity';
 import { SaveGenreDto } from './save-genre.dto';
 
 @Injectable()
 export class GenresService {
-	constructor(
-		@InjectRepository(Genre)
-		private readonly genresRepository: Repository<Genre>,
-	) {}
+  constructor(
+    @InjectRepository(Genre)
+    private readonly genresRepository: Repository<Genre>,
+  ) {}
 
-	async findAll(): Promise<Genre[]> {
-		return await this.genresRepository.find();
-	}
+  async findAll(): Promise<Genre[]> {
+    return await this.genresRepository.find();
+  }
 
   async findById(id: number | string): Promise<Genre | undefined> {
     return await this.genresRepository.findOne(id);
@@ -32,4 +32,11 @@ export class GenresService {
     }
     await this.genresRepository.merge(genre, genreData);
     return await this.genresRepository.save(genre);
-  }}
+  }
+
+  async search(searchWord: string): Promise<Genre[]> {
+    return await this.genresRepository.find({
+      name: Like(`%${searchWord}%`),
+    });
+  }
+}
