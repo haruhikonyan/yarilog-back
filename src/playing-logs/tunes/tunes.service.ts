@@ -99,32 +99,33 @@ export class TunesService {
     // instrumentId があれば楽器で絞り込む
     if (instrumentId) {
       sqb = sqb.andWhere('instrument.id = :instrumentId', {
-        instrumentId: instrumentId,
+        instrumentId,
       });
     }
     // instrumentId があれば楽器で絞り込む
     if (composerId) {
       sqb = sqb.andWhere('composer.id = :composerId', {
-        composerId: composerId,
+        composerId,
       });
     }
     // playstyleId があれば演奏形態で絞り込む
     if (playstyleId) {
       sqb = sqb.andWhere('playstyle.id = :playstyleId', {
-        playstyleId: playstyleId,
+        playstyleId,
       });
     }
     // TODO 複数のジャンルで絞り込めたらよい？
+    // TODO 絞り込むと全部のジャンルが返ってこなくなってしまう
     // genreId があればジャンルで絞り込む
     if (genreId) {
       sqb = sqb.andWhere('genre.id = :genreId', {
-        genreId: genreId,
+        genreId,
       });
     }
     // 検索結果総数と結果オブジェクト生成
     const tunesWithCount = new TunesWithCount(await sqb.getManyAndCount());
     // limit が設定されていたら絞り込む
-    if (limit != 0) {
+    if (limit !== 0) {
       // 実態は params で受け取ったため string なので足し算するので number に変換
       // TODO 全体的に生合成を取る
       limit = Number(limit);
@@ -132,7 +133,7 @@ export class TunesService {
       tunesWithCount.tunes = tunesWithCount.tunes.slice(offset, offset + limit);
     }
     // 曲1件あたりの演奏記録を絞る(0の場合は絞り込まない)
-    if (playingLogLimit != 0) {
+    if (playingLogLimit !== 0) {
       tunesWithCount.tunes.forEach(t => {
         t.playingLogs = t.playingLogs.slice(0, playingLogLimit);
       });
@@ -158,7 +159,7 @@ export class TunesService {
       tune.id,
     );
     // 紐づく演奏記録が無ければ何もせず Tune を返す
-    if (pointsPlayingLogs.length == 0) {
+    if (pointsPlayingLogs.length === 0) {
       return tune;
     }
     const playingLogAveragePointAndCount = this.playingLogService.aggrAveragePoint(
