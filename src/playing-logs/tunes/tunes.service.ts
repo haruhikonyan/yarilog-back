@@ -90,7 +90,8 @@ export class TunesService {
       .leftJoinAndSelect('tune.genres', 'genre')
       .innerJoinAndSelect('playingLog.user', 'user')
       .innerJoinAndSelect('playingLog.instrument', 'instrument')
-      .innerJoinAndSelect('tune.composer', 'composer');
+      .innerJoinAndSelect('tune.composer', 'composer')
+      .leftJoinAndSelect('composer.countries', 'country');
 
     // 区切られてるであろう検索文字列をパースしてその分 and 検索
     this.playingLogService.searchWordParser(searchWord).forEach(w => {

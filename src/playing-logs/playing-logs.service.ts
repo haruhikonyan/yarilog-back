@@ -82,7 +82,6 @@ export class PlayingLogsService {
   ): SelectQueryBuilder<T> {
     return sqb.andWhere(
       new Brackets(qb => {
-        // TODO 国とジャンルを全文検索に入れ込む
         // TODO SQL インジェクション起きそうだからどうにかする
         qb.where(`playingLog.impressionOfInteresting LIKE '%${word}%'`)
           .orWhere(`playingLog.impressionOfDifficulty LIKE '%${word}%'`)
@@ -93,7 +92,9 @@ export class PlayingLogsService {
           .orWhere(`playingLog.arranger LIKE '%${word}%'`)
           .orWhere(`tune.title LIKE '%${word}%'`)
           .orWhere(`composer.fullName LIKE '%${word}%'`)
-          .orWhere(`instrument.name LIKE '%${word}%'`);
+          .orWhere(`instrument.name LIKE '%${word}%'`)
+          .orWhere(`genre.name LIKE '%${word}%'`)
+          .orWhere(`country.name LIKE '%${word}%'`);
       }),
     );
   }
