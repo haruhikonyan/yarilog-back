@@ -140,7 +140,7 @@ export class TunesService {
     return tunesWithCount;
   }
   // many to many を保存するには preload を使わなきゃなので id は取らない(tuneData には id を含むこと)
-  async update(tuneData: SaveTuneDto): Promise<Tune> {
+  async update(tuneData: SaveTuneDto | Tune): Promise<Tune> {
     const tune = await this.tunesRepository.preload(tuneData);
     // 存在しなければ エラー を返す
     if (tune == null) {

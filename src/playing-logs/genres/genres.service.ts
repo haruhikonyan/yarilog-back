@@ -19,6 +19,12 @@ export class GenresService {
     return await this.genresRepository.findOne(id);
   }
 
+  async findByNameOrCreate(name: string): Promise<Genre> {
+    const genre = await this.genresRepository.findOne({ where: { name } });
+    // genre が無ければ新しく作って返す
+    return genre || (await this.create({ name }));
+  }
+
   async create(genreData: SaveGenreDto): Promise<Genre> {
     const genre = await this.genresRepository.create(genreData);
     return await this.genresRepository.save(genre);

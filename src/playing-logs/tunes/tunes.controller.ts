@@ -7,20 +7,21 @@ import {
   Request,
   Query,
   UseGuards,
+  Put,
+  NotFoundException,
 } from '@nestjs/common';
 import { TunesService } from './tunes.service';
 import { Tune } from './tunes.entity';
 import { SaveTuneDto } from './save-tune.dto';
-import { User } from '../../users/users.entity';
-import { AuthService } from '../../auth/auth.service';
 import { TunesWithCount } from './TunesWithCount';
 import { AuthGuard } from '@nestjs/passport';
+import { GenresService } from '../genres/genres.service';
 
 @Controller('tunes')
 export class TunesController {
   constructor(
     private readonly tuneService: TunesService,
-    private readonly authService: AuthService,
+    private readonly genreService: GenresService,
   ) {}
 
   @Get()
@@ -65,6 +66,21 @@ export class TunesController {
   @Get(':id')
   async findById(@Param('id') id: string): Promise<Tune | undefined> {
     return await this.tuneService.findById(id);
+  }
+
+  @Put(':id/genre')
+  @UseGuards(AuthGuard())
+  async addGenre(
+    @Param('id') id: string,
+    @Body('genreName') genreName: string,
+  ): Promise<Tune | undefined> {
+    const tune = await this.tuneService.findById(id);
+    if (!tune) {
+      throw new NotFoundException();
+    }
+    const genre = await this.genreService.findByNameOrCreate(genreName);
+    tune.genres.push(genre);
+    return this.tuneService.update(tune);
   }
 
   @Post()
