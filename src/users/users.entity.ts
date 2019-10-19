@@ -52,7 +52,7 @@ export class User {
 
   // 同意した規約の id
   @Column({ default: 0 })
-  concentTermsId!: number;
+  consentTermsId!: number;
 
   @OneToMany(type => PlayingLog, playingLog => playingLog.user)
   playingLogs!: PlayingLog[];

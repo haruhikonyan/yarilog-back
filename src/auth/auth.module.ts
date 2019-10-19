@@ -14,6 +14,9 @@ import { ExternalAccount } from './extarnal-accounts/extarnal-accounts.entity';
 import { FacebookStrategy } from './facebook.strategy';
 import { GoogleStrategy } from './google.strategy';
 import { LineStrategy } from './line.strategy';
+import { TermsModule } from '../terms/terms.module';
+import { TermsService } from '../terms/terms.service';
+import { Terms } from '../terms/terms.entity';
 
 @Module({
   imports: [
@@ -25,7 +28,8 @@ import { LineStrategy } from './line.strategy';
       },
     }),
     UsersModule,
-    TypeOrmModule.forFeature([User, ExternalAccount]),
+    TermsModule,
+    TypeOrmModule.forFeature([User, ExternalAccount, Terms]),
   ],
   providers: [
     AuthService,
@@ -35,6 +39,7 @@ import { LineStrategy } from './line.strategy';
     GoogleStrategy,
     LineStrategy,
     UsersService,
+    TermsService,
     ExtarnalAccountsService,
   ],
   exports: [PassportModule, AuthService],

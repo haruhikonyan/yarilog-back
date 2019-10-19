@@ -6,10 +6,12 @@ import { User } from '../users/users.entity';
 import * as bcrypt from 'bcrypt';
 import { ExtarnalAccountsService } from './extarnal-accounts/extarnal-accounts.service';
 import { ProviderType } from './extarnal-accounts/extarnal-accounts.entity';
+import { TermsService } from '../terms/terms.service';
 
 export interface LoginResultObject {
   token: string;
   userId: string;
+  agreeTos: boolean;
 }
 
 export interface LoginObject {
@@ -29,6 +31,7 @@ export interface AuthLoginObject {
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
+    private readonly termsService: TermsService,
     private readonly jwtService: JwtService,
     private readonly extarnalAccountsService: ExtarnalAccountsService,
   ) {}
@@ -52,7 +55,9 @@ export class AuthService {
     ) {
       return null;
     }
-    return { token: this.createJwtToken(user.id), userId: user.id };
+    const latestTerms = await this.termsService.getLatest();
+    const agreeTos = user.consentTermsId === latestTerms!.id;
+    return { token: this.createJwtToken(user.id), userId: user.id, agreeTos };
   }
 
   createJwtToken(userId: string) {
