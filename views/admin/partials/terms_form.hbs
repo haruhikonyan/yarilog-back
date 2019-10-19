@@ -1,0 +1,11 @@
+<form>
+  <div class="form-group">
+    <label for="tos">利用規約</label>
+    <textarea class="form-control" id="tos" name="tos" rows="5">{{terms.tos }}</textarea>
+  </div>
+  <div class="form-group">
+    <label for="privacyPolicy">プライバシーポリシー</label>
+    <textarea class="form-control" id="privacyPolicy" name="privacyPolicy" rows="5">{{terms.privacyPolicy }}</textarea>
+  </div>
+  <button type="submit" formaction="{{formaction}}" formmethod="POST" class="btn btn-primary">保存</button>
+</form>

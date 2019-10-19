@@ -1,0 +1,33 @@
+<style type="text/css">
+  .yrl-terms-value {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+</style>
+
+<h1>{{ title }}</h1>
+<a href="/admin/terms/new" class="btn btn-primary" role="button" aria-disabled="true">新規作成</a>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">利用規約</th>
+      <th scope="col">プライバシーポリシー</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each termsList}}
+    <tr>
+      <th scope="row">{{ id }}</th>
+      <td class="yrl-terms-value">{{ tos }}</td>
+      <td class="yrl-terms-value">{{ privacyPolicy }}</td>
+      <td>
+        <a href="/admin/terms/{{ id }}/edit" class="btn btn-secondary" role="button" aria-disabled="true">編集</a>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>

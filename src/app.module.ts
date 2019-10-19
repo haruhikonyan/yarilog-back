@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { PlayingLogsModule } from './playing-logs/playing-logs.module';
 import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './admin/admin.module';
+import { TermsModule } from './terms/terms.module';
 
 
 @Module({
@@ -14,7 +15,8 @@ import { AdminModule } from './admin/admin.module';
     UsersModule,
     PlayingLogsModule,
     AuthModule,
-    AdminModule
+    AdminModule,
+    TermsModule
   ],
   controllers: [AppController],
   providers: [AppService],

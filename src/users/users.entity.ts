@@ -50,6 +50,10 @@ export class User {
   })
   description: string | null = null;
 
+  // 同意した規約の id
+  @Column({ default: 0 })
+  concentTermsId!: number;
+
   @OneToMany(type => PlayingLog, playingLog => playingLog.user)
   playingLogs!: PlayingLog[];
 

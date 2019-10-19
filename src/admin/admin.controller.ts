@@ -35,6 +35,9 @@ import { PlaystylesService } from '../playing-logs/playstyles/playstyles.service
 import { GenresService } from '../playing-logs/genres/genres.service';
 import { SaveGenreDto } from '../playing-logs/genres/save-genre.dto';
 import { Genre } from '../playing-logs/genres/genres.entity';
+import { Terms } from '../terms/terms.entity';
+import { TermsService } from '../terms/terms.service';
+import { SaveTermsDto } from '../terms/save-terms.dto';
 
 @Controller('admin')
 export class AdminController {
@@ -46,6 +49,7 @@ export class AdminController {
     private readonly instrumentsService: InstrumentsService,
     private readonly playstylesService: PlaystylesService,
     private readonly genresService: GenresService,
+    private readonly termsService: TermsService,
   ) {
     hbs.registerPartials(join(__dirname, '../..', 'views/admin/partials'));
     hbs.registerHelper(
@@ -425,6 +429,42 @@ export class AdminController {
   @Redirect('/admin/genres')
   async updateGenre(@Param('id') id: number, @Body() genreData: SaveGenreDto) {
     await this.genresService.update(id, genreData);
+  }
+  @Get('terms')
+  @Render('admin/terms')
+  async terms() {
+    const termsList: Terms[] = await this.termsService.findAll();
+    return { termsList, title: '規約一覧' };
+  }
+  @Get('terms/new')
+  @Render('admin/terms/editor')
+  async newTerms() {
+    const terms: SaveTermsDto = new SaveTermsDto();
+    return {
+      terms,
+      title: '規約新規作成',
+      formaction: '/admin/terms/',
+    };
+  }
+  @Get('terms/:id/edit')
+  @Render('admin/terms/editor')
+  async editTerms(@Param('id') id: number) {
+    const terms: Terms | undefined = await this.termsService.findById(id);
+    return {
+      terms,
+      title: `ver ${terms!.id} 編集`,
+      formaction: `/admin/terms/${id}?_method=PUT`,
+    };
+  }
+  @Post('terms')
+  async createTerms(@Res() res: Response, @Body() genreData: SaveTermsDto) {
+    await this.termsService.create(genreData);
+    res.redirect('.');
+  }
+  @Put('terms/:id')
+  @Redirect('/admin/terms')
+  async updateTerms(@Param('id') id: number, @Body() termsData: SaveTermsDto) {
+    await this.termsService.update(id, termsData);
   }
 
   @Get('users')

@@ -19,11 +19,25 @@ import { Instrument } from '../playing-logs/instruments/instruments.entity';
 import { Genre } from '../playing-logs/genres/genres.entity';
 import { Playstyle } from '../playing-logs/playstyles/playstyles.entity';
 import { PlayingLog } from '../playing-logs/playing-logs.entity';
+import { TermsService } from '../terms/terms.service';
+import { Terms } from '../terms/terms.entity';
+import { TermsModule } from '../terms/terms.module';
 @Module({
   imports: [
     UsersModule,
-    TypeOrmModule.forFeature([User, Country, Composer, Tune, Instrument, Genre, Playstyle, PlayingLog]),
+    TypeOrmModule.forFeature([
+      User,
+      Country,
+      Composer,
+      Tune,
+      Instrument,
+      Genre,
+      Playstyle,
+      PlayingLog,
+      Terms,
+    ]),
     PlayingLogsModule,
+    TermsModule,
   ],
   controllers: [AdminController],
   providers: [
@@ -35,6 +49,7 @@ import { PlayingLog } from '../playing-logs/playing-logs.entity';
     PlayingLogsService,
     PlaystylesService,
     GenresService,
+    TermsService,
   ],
 })
 export class AdminModule {}
