@@ -35,10 +35,12 @@ export class AuthController {
   @Get('twitter/callback')
   @UseGuards(AuthGuard('twitter'))
   twitterLoginCallback(@Req() req: any, @Res() res: any) {
-    const { token, userId } = req.user;
+    const { token, userId, consentTos } = req.user as LoginResultObject;
     const redirectPath =
       token && userId
-        ? `${process.env.FRONT_URL}/login/oauth?token=${token}&userId=${userId}`
+        ? `${
+            process.env.FRONT_URL
+          }/login/oauth?token=${token}&userId=${userId}&consentTos=${consentTos}`
         : `${process.env.FRONT_URL}/login`;
 
     res.redirect(redirectPath);
@@ -53,10 +55,12 @@ export class AuthController {
   @Get('facebook/callback')
   @UseGuards(AuthGuard('facebook'))
   facebookLoginCallback(@Req() req: any, @Res() res: any) {
-    const { token, userId } = req.user;
+    const { token, userId, consentTos } = req.user as LoginResultObject;
     const redirectPath =
       token && userId
-        ? `${process.env.FRONT_URL}/login/oauth?token=${token}&userId=${userId}`
+        ? `${
+            process.env.FRONT_URL
+          }/login/oauth?token=${token}&userId=${userId}&consentTos=${consentTos}`
         : `${process.env.FRONT_URL}/login`;
 
     res.redirect(redirectPath);
@@ -71,10 +75,12 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   googleLoginCallback(@Req() req: any, @Res() res: any) {
-    const { token, userId } = req.user;
+    const { token, userId, consentTos } = req.user as LoginResultObject;
     const redirectPath =
       token && userId
-        ? `${process.env.FRONT_URL}/login/oauth?token=${token}&userId=${userId}`
+        ? `${
+            process.env.FRONT_URL
+          }/login/oauth?token=${token}&userId=${userId}&consentTos=${consentTos}`
         : `${process.env.FRONT_URL}/login`;
 
     res.redirect(redirectPath);
@@ -89,10 +95,12 @@ export class AuthController {
   @Get('line/callback')
   @UseGuards(AuthGuard('line'))
   lineLoginCallback(@Req() req: any, @Res() res: any) {
-    const { token, userId } = req.user;
+    const { token, userId, consentTos } = req.user as LoginResultObject;
     const redirectPath =
       token && userId
-        ? `${process.env.FRONT_URL}/login/oauth?token=${token}&userId=${userId}`
+        ? `${
+            process.env.FRONT_URL
+          }/login/oauth?token=${token}&userId=${userId}&consentTos=${consentTos}`
         : `${process.env.FRONT_URL}/login`;
 
     res.redirect(redirectPath);

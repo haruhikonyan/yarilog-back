@@ -1,7 +1,16 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './users.entity';
 import * as bcrypt from 'bcrypt';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
 export class UsersController {
@@ -22,5 +31,16 @@ export class UsersController {
   async create(@Body() userData: User): Promise<User> {
     userData.password = await bcrypt.hash(userData.password, 5);
     return await this.usersService.save(userData);
+  }
+
+  @Post()
+  @UseGuards(AuthGuard('jwt'))
+  async consentTerms(
+    @Body() concentTermsId: number,
+    @Request() req: any,
+  ): Promise<void> {
+    const me: User = req.user;
+    me.consentTermsId = concentTermsId;
+    await this.usersService.save(me);
   }
 }

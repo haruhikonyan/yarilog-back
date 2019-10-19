@@ -19,8 +19,9 @@ export class TermsService {
     return await this.termsRepository.findOne(id);
   }
 
-  async getLatest(): Promise<Terms | undefined> {
-    return await this.termsRepository.findOne({ order: { id: 'DESC' } });
+  async getLatest(): Promise<Terms> {
+    const terms = await this.termsRepository.findOne({ order: { id: 'DESC' } });
+    return terms!;
   }
 
   async create(termsData: SaveTermsDto): Promise<Terms> {

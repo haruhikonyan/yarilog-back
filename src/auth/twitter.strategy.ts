@@ -30,6 +30,6 @@ export class TwitterStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new UnauthorizedException();
     }
-    return { token: this.authService.createJwtToken(user.id), userId: user.id };
+    return this.authService.createLoginResultObject(user);
   }
 }

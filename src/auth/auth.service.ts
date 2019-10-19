@@ -11,7 +11,7 @@ import { TermsService } from '../terms/terms.service';
 export interface LoginResultObject {
   token: string;
   userId: string;
-  agreeTos: boolean;
+  consentTos: boolean;
 }
 
 export interface LoginObject {
@@ -36,6 +36,7 @@ export class AuthService {
     private readonly extarnalAccountsService: ExtarnalAccountsService,
   ) {}
 
+  // TODO local.strategy にする
   async login(loginObject: LoginObject): Promise<LoginResultObject | null> {
     const user:
       | User
@@ -55,14 +56,18 @@ export class AuthService {
     ) {
       return null;
     }
-    const latestTerms = await this.termsService.getLatest();
-    const agreeTos = user.consentTermsId === latestTerms!.id;
-    return { token: this.createJwtToken(user.id), userId: user.id, agreeTos };
+    return this.createLoginResultObject(user);
   }
 
   createJwtToken(userId: string) {
     const payload: JwtPayload = { userId };
     return this.jwtService.sign(payload);
+  }
+
+  async createLoginResultObject(user: User): Promise<LoginResultObject> {
+    const latestTerms = await this.termsService.getLatest();
+    const consentTos = user.consentTermsId === latestTerms.id;
+    return { token: this.createJwtToken(user.id), userId: user.id, consentTos };
   }
 
   async findOrCreateOauthUser(authLoginObject: AuthLoginObject) {
