@@ -33,10 +33,10 @@ export class UsersController {
     return await this.usersService.save(userData);
   }
 
-  @Post()
+  @Post('consent-terms')
   @UseGuards(AuthGuard('jwt'))
   async consentTerms(
-    @Body() concentTermsId: number,
+    @Body('concentTermsId') concentTermsId: number,
     @Request() req: any,
   ): Promise<void> {
     const me: User = req.user;
