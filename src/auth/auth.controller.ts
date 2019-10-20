@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService, LoginResultObject, LoginObject } from './auth.service';
+import { User } from 'src/users/users.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -24,6 +25,13 @@ export class AuthController {
       throw new HttpException('feild login', HttpStatus.UNAUTHORIZED);
     }
     return loginResultObject;
+  }
+
+  @Get('auth-object')
+  @UseGuards(AuthGuard('jwt'))
+  async authObjextByJwt(@Request() req: any): Promise<LoginResultObject> {
+    const me: User = req.user;
+    return this.authService.createLoginResultObject(me);
   }
 
   @Get('twitter')
