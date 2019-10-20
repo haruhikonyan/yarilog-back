@@ -33,6 +33,39 @@ export class UsersController {
     return await this.usersService.save(userData);
   }
 
+  @Post('mail-address')
+  @UseGuards(AuthGuard('jwt'))
+  async updateMaillAddress(
+    @Body('mailAddress') mailAddress: string,
+    @Request() req: any,
+  ): Promise<User> {
+    const me: User = req.user;
+    me.mailAddress = mailAddress;
+    return this.usersService.save(me);
+  }
+
+  @Post('nickname')
+  @UseGuards(AuthGuard('jwt'))
+  async updateNickname(
+    @Body('nickname') nickname: string,
+    @Request() req: any,
+  ): Promise<User> {
+    const me: User = req.user;
+    me.nickname = nickname;
+    return this.usersService.save(me);
+  }
+
+  @Post('description')
+  @UseGuards(AuthGuard('jwt'))
+  async updateDescription(
+    @Body('description') description: string,
+    @Request() req: any,
+  ): Promise<User> {
+    const me: User = req.user;
+    me.description = description;
+    return this.usersService.save(me);
+  }
+
   @Post('consent-terms')
   @UseGuards(AuthGuard('jwt'))
   async consentTerms(
