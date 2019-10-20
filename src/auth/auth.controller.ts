@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService, LoginResultObject, LoginObject } from './auth.service';
-import { User } from 'src/users/users.entity';
+import { User } from '../users/users.entity';
 
 @Controller('auth')
 export class AuthController {
