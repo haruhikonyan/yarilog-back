@@ -46,6 +46,7 @@ export class PlayingLogsService {
   async findAllBySearchWord(
     searchWord: string,
     instrumentId: string | null = null,
+    tuneId: string | null = null,
     limit: number = 20,
     offset: number = 0,
   ): Promise<PlayingLogsWithCount> {
@@ -70,6 +71,12 @@ export class PlayingLogsService {
     if (instrumentId) {
       sqb = sqb.andWhere('instrument.id = :instrumentId', {
         instrumentId,
+      });
+    }
+    // tuneId があれば曲で絞り込む
+    if (tuneId) {
+      sqb = sqb.andWhere('tune.id = :tuneId', {
+        tuneId,
       });
     }
     return new PlayingLogsWithCount(await sqb.getManyAndCount());
