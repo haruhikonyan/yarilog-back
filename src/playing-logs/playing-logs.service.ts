@@ -319,7 +319,11 @@ export class PlayingLogsService {
     if (isMine) {
       return await sqb.addSelect('playingLog.secretMemo').getMany();
     } else {
-      return await sqb.where({ isDraft: false }).getMany();
+      return await sqb
+        .andWhere('playingLog.isDraft = :isDraft', {
+          isDraft: false,
+        })
+        .getMany();
     }
   }
 
