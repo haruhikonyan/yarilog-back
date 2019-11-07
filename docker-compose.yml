@@ -21,6 +21,8 @@ services:
       DB_PASSWORD: root
       TYPEORM_ENTITIES: src/**/*.entity{.ts,.js}
       JWT_SECRET: secretKey
+      SESSION_SECRET: secretKey
+
       # TWITTER_API_KEY: change_me
       # TWITTER_API_SECRET: change_me
       # FACEBOOK_APP_ID: change_me
