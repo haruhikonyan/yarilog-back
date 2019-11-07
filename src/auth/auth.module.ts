@@ -22,7 +22,7 @@ import { Terms } from '../terms/terms.entity';
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
-      secretOrPrivateKey: 'secretKey',
+      secretOrPrivateKey: process.env.JWT_SECRET,
       signOptions: {
         expiresIn: '30 days',
       },

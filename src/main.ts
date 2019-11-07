@@ -21,7 +21,13 @@ async function bootstrap() {
   });
   // override with POST having ?_method=DELETE
   app.use(methodOverride('_method'));
-  app.use(session({ secret: 'nest is awesome' }));
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: true,
+    }),
+  );
 
   await app.listen(3000);
 }
