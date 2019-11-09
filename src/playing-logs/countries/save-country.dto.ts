@@ -1,4 +1,4 @@
 export class SaveCountryDto {
-  readonly name!: string;
-  readonly description: string | null = null;
+  name!: string;
+  description: string | null = null;
 }

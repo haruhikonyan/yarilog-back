@@ -1,9 +1,9 @@
 export class SaveComposerDto {
   id: number | undefined;
-  readonly displayName!: string;
-  readonly fullName!: string;
-  readonly description: string | null = null;
-  readonly countryIds: string[] = [];
+  displayName!: string;
+  fullName!: string;
+  description: string | null = null;
+  countryIds: string[] = [];
   author: string | undefined;
   countries: object[] = [];
 }

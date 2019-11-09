@@ -200,6 +200,60 @@ export class AdminController {
       isContinue === 'true' ? '/admin/composers/new' : '.';
     res.redirect(redirectPath);
   }
+  @Post('composers/bulk')
+  @Redirect('/admin/composers', 301)
+  async bulkCreateComposer(@Body('bulk') bulkComposerData: string) {
+    // 改行コードで split してからそれぞれ , で split
+    const composerDataArray = bulkComposerData
+      .split(/\r?\n/g)
+      .map(composer => composer.split(','));
+
+    const countries = await this.countriesService.findAll();
+
+    composerDataArray.forEach(async composerData => {
+      const saveComposerDto = new SaveComposerDto();
+      saveComposerDto.displayName = composerData[0];
+      saveComposerDto.fullName = composerData[1];
+      saveComposerDto.author = 'admin';
+      // 国が入力されていれば saveComposerDto に追加
+      // TODO 共通化というかもっとロジックどうにかしたい
+      if (composerData[2] !== '') {
+        let country = countries.find(c => c.name === composerData[2]);
+        // 国が無ければ新規作成
+        if (!country) {
+          const saveCountryDto = new SaveCountryDto();
+          saveCountryDto.name = composerData[2];
+          country = await this.countriesService.create(saveCountryDto);
+          countries.push(country);
+        }
+        saveComposerDto.countries.push(country);
+      }
+      if (composerData[3] !== '') {
+        let country = countries.find(c => c.name === composerData[3]);
+        // 国が無ければ新規作成
+        if (!country) {
+          const saveCountryDto = new SaveCountryDto();
+          saveCountryDto.name = composerData[3];
+          country = await this.countriesService.create(saveCountryDto);
+          countries.push(country);
+        }
+        saveComposerDto.countries.push(country);
+      }
+      if (composerData[4] !== '') {
+        let country = countries.find(c => c.name === composerData[4]);
+        // 国が無ければ新規作成
+        if (!country) {
+          const saveCountryDto = new SaveCountryDto();
+          saveCountryDto.name = composerData[4];
+          country = await this.countriesService.create(saveCountryDto);
+          countries.push(country);
+        }
+        saveComposerDto.countries.push(country);
+      }
+      await this.composersService.create(saveComposerDto);
+    });
+  }
+
   @Put('composers/:id')
   @Redirect('/admin/composers')
   async updateComposer(
