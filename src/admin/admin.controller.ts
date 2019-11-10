@@ -200,6 +200,11 @@ export class AdminController {
       isContinue === 'true' ? '/admin/composers/new' : '.';
     res.redirect(redirectPath);
   }
+  /**
+   * bulkComposerData より作曲家を一括登録する
+   * 作曲家の重複はエラーが出る
+   * @param bulkComposerData 表示名,フルネーム,国1,国2,国3
+   */
   @Post('composers/bulk')
   @Redirect('/admin/composers', 301)
   async bulkCreateComposer(@Body('bulk') bulkComposerData: string) {
@@ -210,48 +215,57 @@ export class AdminController {
 
     const countries = await this.countriesService.findAll();
 
-    composerDataArray.forEach(async composerData => {
+    for await (const composerData of composerDataArray) {
       const saveComposerDto = new SaveComposerDto();
       saveComposerDto.displayName = composerData[0];
       saveComposerDto.fullName = composerData[1];
       saveComposerDto.author = 'admin';
-      // 国が入力されていれば saveComposerDto に追加
-      // TODO 共通化というかもっとロジックどうにかしたい
-      if (composerData[2] !== '') {
-        let country = countries.find(c => c.name === composerData[2]);
-        // 国が無ければ新規作成
-        if (!country) {
-          const saveCountryDto = new SaveCountryDto();
-          saveCountryDto.name = composerData[2];
-          country = await this.countriesService.create(saveCountryDto);
-          countries.push(country);
-        }
-        saveComposerDto.countries.push(country);
-      }
-      if (composerData[3] !== '') {
-        let country = countries.find(c => c.name === composerData[3]);
-        // 国が無ければ新規作成
-        if (!country) {
-          const saveCountryDto = new SaveCountryDto();
-          saveCountryDto.name = composerData[3];
-          country = await this.countriesService.create(saveCountryDto);
-          countries.push(country);
-        }
-        saveComposerDto.countries.push(country);
-      }
-      if (composerData[4] !== '') {
-        let country = countries.find(c => c.name === composerData[4]);
-        // 国が無ければ新規作成
-        if (!country) {
-          const saveCountryDto = new SaveCountryDto();
-          saveCountryDto.name = composerData[4];
-          country = await this.countriesService.create(saveCountryDto);
-          countries.push(country);
-        }
-        saveComposerDto.countries.push(country);
-      }
+
+      await this.findOrCreateAddCountry(
+        composerData[2],
+        countries,
+        saveComposerDto,
+      );
+
+      await this.findOrCreateAddCountry(
+        composerData[3],
+        countries,
+        saveComposerDto,
+      );
+      await this.findOrCreateAddCountry(
+        composerData[4],
+        countries,
+        saveComposerDto,
+      );
+
       await this.composersService.create(saveComposerDto);
-    });
+    }
+  }
+
+  /**
+   * 与えたれた国名があれば、与えられた国リストから探して返し、無ければ作って国リストに加える
+   * その後 saveComposerDto に追加する
+   * countries がうまく更新されないので追加してもされなくても返す
+   * @param countryName
+   * @param countries
+   * @param saveComposerDto
+   */
+  private async findOrCreateAddCountry(
+    countryName: string,
+    countries: Country[],
+    saveComposerDto: SaveComposerDto,
+  ): Promise<void> {
+    if (countryName !== '') {
+      let country = countries.find(c => c.name === countryName);
+      // 国が無ければ新規作成
+      if (!country) {
+        const saveCountryDto = new SaveCountryDto();
+        saveCountryDto.name = countryName;
+        country = await this.countriesService.create(saveCountryDto);
+        countries.push(country);
+      }
+      saveComposerDto.countries.push(country);
+    }
   }
 
   @Put('composers/:id')
