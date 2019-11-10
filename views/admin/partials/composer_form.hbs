@@ -1,17 +1,19 @@
 <form>
   <div class="form-group">
     <label for="displayName">名前</label>
-    <input type="text" class="form-control" id="displayName" name="displayName" placeholder="ベートーヴェン" value="{{ composer.displayName }}">
+    <input type="text" class="form-control" id="displayName" name="displayName" placeholder="ベートーヴェン"
+      value="{{ composer.displayName }}">
   </div>
   <div class="form-group">
     <label for="fullName">フルネーム</label>
-    <input type="text" class="form-control" id="fullName" name="fullName" placeholder="ルードヴィヒ・ヴァン・ベートーヴェン" value="{{ composer.fullName }}">
+    <input type="text" class="form-control" id="fullName" name="fullName" placeholder="ルードヴィヒ・ヴァン・ベートーヴェン"
+      value="{{ composer.fullName }}">
   </div>
   <div class="form-group">
     <label for="countries">出身国</label>
     <select multiple class="form-control" id="countries" name='countryIds[]'>
       {{#each countries}}
-        <option value="{{ id }}" {{isSelectedCountrty this ../composer }}>{{ name }}</option>
+      <option value="{{ id }}" {{isSelectedCountrty this ../composer }}>{{ name }}</option>
       {{/each}}
     </select>
   </div>
@@ -21,6 +23,15 @@
   </div>
   <button type="submit" formaction="{{formaction}}" formmethod="POST" class="btn btn-primary">保存</button>
   {{#if showContinueButton}}
-    <button type="submit" formaction="{{formaction}}?isContinue=true" formmethod="POST" class="btn btn-primary">保存して作成を続ける</button>
+  <button type="submit" formaction="{{formaction}}?isContinue=true" formmethod="POST"
+    class="btn btn-primary">保存して作成を続ける</button>
   {{/if}}
+</form>
+
+<h2>一括入力</h2>
+<form>
+  <div class="form-group">
+    <textarea class="form-control" id="bulk" name="bulk" rows="5"></textarea>
+  </div>
+  <button type="submit" formaction="/admin/composers/bulk" formmethod="POST" class="btn btn-primary">一括登録</button>
 </form>

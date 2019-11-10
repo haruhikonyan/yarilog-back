@@ -1,9 +1,9 @@
 export class SaveTuneDto {
   id: number | undefined;
-  readonly title!: string;
-  readonly description!: string;
-  readonly composerId!: string;
-  readonly playstyleId!: string;
+  title!: string;
+  description!: string;
+  composerId!: string;
+  playstyleId!: string;
   averageDifficulty: number | undefined;
   averagePhysicality: number | undefined;
   averageInteresting: number | undefined;
@@ -11,6 +11,6 @@ export class SaveTuneDto {
   author: string | undefined;
   composer: Object = {};
   playstyle: Object = {};
-  readonly genreIds: string[] = [];
+  genreIds: string[] = [];
   genres: object[] = [];
 }
