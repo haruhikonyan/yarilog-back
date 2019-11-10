@@ -245,7 +245,6 @@ export class AdminController {
   /**
    * 与えたれた国名があれば、与えられた国リストから探して返し、無ければ作って国リストに加える
    * その後 saveComposerDto に追加する
-   * countries がうまく更新されないので追加してもされなくても返す
    * @param countryName
    * @param countries
    * @param saveComposerDto
@@ -343,6 +342,70 @@ export class AdminController {
     const redirectPath: string =
       isContinue === 'true' ? '/admin/tunes/new' : '.';
     res.redirect(redirectPath);
+  }
+  /**
+   * bulkComposerData より作曲家を一括登録する
+   * 作曲家の重複はエラーが出る
+   * @param bulkTuneData 作曲家表示名,タイトル,演奏形態,ジャンル1,ジャンル2,ジャンル3,ジャンル4,ジャンル5,ジャンル6,ジャンル7
+   */
+  @Post('tunes/bulk')
+  @Redirect('/admin/tunes', 301)
+  async bulkCreateTune(@Body('bulk') bulkTuneData: string) {
+    // 改行コードで split してからそれぞれ , で split
+    const tuneDataArray = bulkTuneData
+      .split(/\r?\n/g)
+      .map(tune => tune.split(','));
+
+    const composers = await this.composersService.findAll();
+    const plyastyles = await this.playstylesService.findAll();
+    const genres = await this.genresService.findAll();
+
+    for await (const tuneData of tuneDataArray) {
+      const saveTuneDto = new SaveTuneDto();
+      // 作曲家は存在することとする
+      saveTuneDto.composer = composers.find(
+        c => c.displayName === tuneData[0],
+      )!;
+      saveTuneDto.title = tuneData[1];
+      // 演奏形態も存在することとする
+      saveTuneDto.playstyle = plyastyles.find(p => p.name === tuneData[2])!;
+      saveTuneDto.author = 'admin';
+
+      await this.findOrCreateAddGenre(tuneData[3], genres, saveTuneDto);
+      await this.findOrCreateAddGenre(tuneData[4], genres, saveTuneDto);
+      await this.findOrCreateAddGenre(tuneData[5], genres, saveTuneDto);
+      await this.findOrCreateAddGenre(tuneData[6], genres, saveTuneDto);
+      await this.findOrCreateAddGenre(tuneData[7], genres, saveTuneDto);
+      await this.findOrCreateAddGenre(tuneData[8], genres, saveTuneDto);
+      await this.findOrCreateAddGenre(tuneData[9], genres, saveTuneDto);
+
+      await this.tunesService.create(saveTuneDto);
+    }
+  }
+
+  /**
+   * 与えたれたジャンル名があれば、与えられたジャンルリストから探して返し、無ければ作ってジャンルリストに加える
+   * その後 saveTuneDto に追加する
+   * @param genreName
+   * @param genres
+   * @param saveTuneDto
+   */
+  private async findOrCreateAddGenre(
+    genreName: string,
+    genres: Genre[],
+    saveTuneDto: SaveTuneDto,
+  ): Promise<void> {
+    if (genreName !== '') {
+      let genre = genres.find(g => g.name === genreName);
+      // 国が無ければ新規作成
+      if (!genre) {
+        const saveGenreDto = new SaveGenreDto();
+        saveGenreDto.name = genreName;
+        genre = await this.genresService.create(saveGenreDto);
+        genres.push(genre);
+      }
+      saveTuneDto.genres.push(genre);
+    }
   }
   @Put('tunes/:id')
   @Redirect('/admin/tunes')

@@ -3,19 +3,20 @@
     <label for="composer">作曲者</label>
     <select class="form-control" id="composer" name='composerId'>
       {{#each composers}}
-        <option value="{{ id }}" {{isSelectedComposer this ../tune}}>{{ fullName }}</option>
+      <option value="{{ id }}" {{isSelectedComposer this ../tune}}>{{ fullName }}</option>
       {{/each}}
     </select>
   </div>
   <div class="form-group">
     <label for="title">曲名</label>
-    <input type="text" class="form-control" id="title" name="title" placeholder="交響曲第1番 ニ長調「巨人」" value="{{ tune.title }}">
+    <input type="text" class="form-control" id="title" name="title" placeholder="交響曲第1番 ニ長調「巨人」"
+      value="{{ tune.title }}">
   </div>
   <div class="form-group">
     <label for="playstyle">演奏形態</label>
     <select class="form-control" id="playstyle" name='playstyleId'>
       {{#each playstyles}}
-        <option value="{{ id }}" {{isSelectedPlaystyle this ../tune}}>{{ name }}</option>
+      <option value="{{ id }}" {{isSelectedPlaystyle this ../tune}}>{{ name }}</option>
       {{/each}}
     </select>
   </div>
@@ -23,7 +24,7 @@
     <label for="genres">ジャンル</label>
     <select multiple class="form-control" id="genres" name='genreIds[]'>
       {{#each genres}}
-        <option value="{{ id }}" {{isSelectedGenre this ../tune }}>{{ name }}</option>
+      <option value="{{ id }}" {{isSelectedGenre this ../tune }}>{{ name }}</option>
       {{/each}}
     </select>
   </div>
@@ -33,6 +34,15 @@
   </div>
   <button type="submit" formaction="{{formaction}}" formmethod="POST" class="btn btn-primary">保存</button>
   {{#if showContinueButton}}
-    <button type="submit" formaction="{{formaction}}?isContinue=true" formmethod="POST" class="btn btn-primary">保存して作成を続ける</button>
+  <button type="submit" formaction="{{formaction}}?isContinue=true" formmethod="POST"
+    class="btn btn-primary">保存して作成を続ける</button>
   {{/if}}
+</form>
+
+<h2>一括入力</h2>
+<form>
+  <div class="form-group">
+    <textarea class="form-control" id="bulk" name="bulk" rows="5"></textarea>
+  </div>
+  <button type="submit" formaction="/admin/tunes/bulk" formmethod="POST" class="btn btn-primary">一括登録</button>
 </form>
