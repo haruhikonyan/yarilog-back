@@ -1,11 +1,13 @@
 <h1>{{ title }}</h1>
 <a href="/admin/tunes/new" class="btn btn-primary" role="button" aria-disabled="true">新規作成</a>
 <span class="dropdown">
-  <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+    aria-haspopup="true" aria-expanded="false">
     曲に紐づく演奏記録のポイント集計
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a href="/admin/aggrAveragePoint/tunes/all" class="btn btn-danger" role="button" aria-disabled="true">実行(重い処理なのでむやみやたらに実行しないように)</a>
+    <a href="/admin/aggrAveragePoint/tunes/all" class="btn btn-danger" role="button"
+      aria-disabled="true">実行(重い処理なのでむやみやたらに実行しないように)</a>
   </div>
 </span>
 
@@ -13,31 +15,21 @@
   <thead>
     <tr>
       <th scope="col">id</th>
-      <th scope="col">作曲者</th>
-      <th scope="col">曲名</th>
-      <th scope="col">演奏形態</th>
-      <th scope="col">ジャンル</th>
-      <th scope="col">詳細</th>
+      <th scope="col">名前</th>
+      <th scope="col">フルネーム</th>
       <th scope="col">操作</th>
     </tr>
   </thead>
   <tbody>
-    {{#each tunes}}
-      <tr>
-        <th scope="row">{{ id }}</th>
-        <td>{{ composer.fullName }}</td>
-        <td>{{ title }}</td>
-        <td>{{ playstyle.name }}</td>
-        <td>
-          {{#each genres}}
-            {{name}}, 
-          {{/each}}
-        </td>
-        <td>{{ description }}</td>
-        <td>
-          <a href="/admin/tunes/{{ id }}/edit" class="btn btn-secondary" role="button" aria-disabled="true">編集</a>
-        </td>
-      </tr>
+    {{#each composers}}
+    <tr>
+      <th scope="row">{{ id }}</th>
+      <td>{{ displayName }}</td>
+      <td>{{ fullName }}</td>
+      <td>
+        <a href="/admin/composers/{{ id }}/tunes" class="btn btn-secondary" role="button" aria-disabled="true">曲一覧</a>
+      </td>
+    </tr>
     {{/each}}
   </tbody>
 </table>

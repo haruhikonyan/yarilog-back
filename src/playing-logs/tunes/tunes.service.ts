@@ -41,6 +41,24 @@ export class TunesService {
   }
 
   /**
+   * 作曲家で曲を絞り込む
+   * @param composerId
+   */
+  async findAllByComposerId(composerId: string): Promise<Tune[]> {
+    return await this.tunesRepository
+      .createQueryBuilder('tune')
+      .innerJoinAndSelect(
+        'tune.composer',
+        'composer',
+        'composer.id = :composerId',
+        { composerId },
+      )
+      .innerJoinAndSelect('tune.playstyle', 'playstyle')
+      .leftJoinAndSelect('tune.genres', 'genre')
+      .getMany();
+  }
+
+  /**
    * 作曲家と演奏形態で曲を絞り込む
    * 主に演奏記録作成時の曲選択に使う
    * @param composerId

@@ -241,7 +241,6 @@ export class AdminController {
       await this.composersService.create(saveComposerDto);
     }
   }
-
   /**
    * 与えたれた国名があれば、与えられた国リストから探して返し、無ければ作って国リストに加える
    * その後 saveComposerDto に追加する
@@ -266,7 +265,6 @@ export class AdminController {
       saveComposerDto.countries.push(country);
     }
   }
-
   @Put('composers/:id')
   @Redirect('/admin/composers')
   async updateComposer(
@@ -283,17 +281,30 @@ export class AdminController {
       : [];
     await this.composersService.update(composerData);
   }
+  @Get('composers/:id/tunes')
+  @Render('admin/composers/tunes')
+  async composersTunes(@Param('id') id: string) {
+    const composer = await this.composersService.findById(id);
+    const tunes = await this.tunesService.findAllByComposerId(id);
+    return {
+      tunes,
+      composerId: composer!.id,
+      title: `${composer!.displayName}曲一覧`,
+      formaction: `/admin/composers/${id}?_method=PUT`,
+    };
+  }
 
   @Get('tunes')
   @Render('admin/tunes')
   async tunes() {
-    const tunes: Tune[] = await this.tunesService.findAll();
-    return { tunes, title: '曲一覧' };
+    const composers: Composer[] = await this.composersService.findAll();
+    return { composers, title: '曲一覧？' };
   }
   @Get('tunes/new')
   @Render('admin/tunes/editor')
-  async newTune() {
+  async newTune(@Query('composerId') composerId: string) {
     const tune: SaveTuneDto = new SaveTuneDto();
+    tune.composer = { id: composerId };
     const composers: Composer[] = await this.composersService.findAll();
     const playstyles: Playstyle[] = await this.playstylesService.findAll();
     const genres: Genre[] = await this.genresService.findAll();
