@@ -186,6 +186,7 @@ export class TunesService {
     );
     const saveTuneDto = new SaveTuneDto();
     saveTuneDto.id = tune.id;
+    saveTuneDto.genres = tune.genres;
     saveTuneDto.averageDifficulty =
       playingLogAveragePointAndCount.averageDifficulty;
     saveTuneDto.averagePhysicality =
