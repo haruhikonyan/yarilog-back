@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
 import { Tune } from '../tunes/tunes.entity';
 
 /**
@@ -12,6 +12,9 @@ export class Genre {
 
   @Column({ unique: true })
   name!: string;
+
+  @Column({ default: false })
+  isTopPageLinked!: boolean;
 
   /**
    * ジャンルは複数の楽曲を持つ

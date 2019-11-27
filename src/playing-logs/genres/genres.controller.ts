@@ -9,4 +9,14 @@ export class GenresController {
   async search(@Query('searchWord') searchWord: string): Promise<Genre[]> {
     return await this.genreService.search(searchWord);
   }
+
+  @Get()
+  async findAll(): Promise<Genre[]> {
+    return await this.genreService.findAll();
+  }
+
+  @Get('top-page-linked')
+  async findAllTopPageLinked(): Promise<Genre[]> {
+    return this.genreService.findAllTopPageLinked();
+  }
 }

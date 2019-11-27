@@ -25,6 +25,10 @@ export class GenresService {
     return genre || (await this.create({ name }));
   }
 
+  async findAllTopPageLinked(): Promise<Genre[]> {
+    return this.genresRepository.find({ where: { isTopPageLinked: true } });
+  }
+
   async create(genreData: SaveGenreDto): Promise<Genre> {
     const genre = await this.genresRepository.create(genreData);
     return await this.genresRepository.save(genre);

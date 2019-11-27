@@ -32,6 +32,11 @@ export class ComposersController {
     return await this.composersService.findById(id);
   }
 
+  @Get('top-page-linked')
+  async findAllTopPageLinked(): Promise<Composer[]> {
+    return this.composersService.findAllTopPageLinked();
+  }
+
   @Post()
   @UseGuards(AuthGuard())
   async create(

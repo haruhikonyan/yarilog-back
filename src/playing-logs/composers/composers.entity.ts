@@ -17,6 +17,9 @@ export class Composer {
   @PrimaryGeneratedColumn()
   id!: number;
 
+  @Column({ default: false })
+  isTopPageLinked!: boolean;
+
   @Column({ length: 50 })
   displayName!: string;
 

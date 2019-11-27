@@ -21,6 +21,9 @@ export class ComposersService {
     });
   }
 
+  async findAllTopPageLinked(): Promise<Composer[]> {
+    return this.composerRepository.find({ where: { isTopPageLinked: true } });
+  }
   async create(composerData: SaveComposerDto): Promise<Composer> {
     const composer = await this.composerRepository.create(composerData);
     return await this.composerRepository.save(composer);
