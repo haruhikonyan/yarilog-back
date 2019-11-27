@@ -27,14 +27,14 @@ export class ComposersController {
     return await this.composersService.search(searchWord);
   }
 
-  @Get(':id')
-  async findById(@Param('id') id: string): Promise<Composer | undefined> {
-    return await this.composersService.findById(id);
-  }
-
   @Get('top-page-linked')
   async findAllTopPageLinked(): Promise<Composer[]> {
     return this.composersService.findAllTopPageLinked();
+  }
+
+  @Get(':id')
+  async findById(@Param('id') id: string): Promise<Composer | undefined> {
+    return await this.composersService.findById(id);
   }
 
   @Post()
