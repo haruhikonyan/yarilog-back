@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Composer } from './composers.entity';
-import { Repository, Like } from 'typeorm';
+import { Repository, Like, Not } from 'typeorm';
 import { SaveComposerDto } from './save-composer.dto';
 
 @Injectable()
@@ -13,6 +13,10 @@ export class ComposersService {
 
   async findAll(): Promise<Composer[]> {
     return await this.composerRepository.find({ relations: ['countries'] });
+  }
+
+  async unapproved(): Promise<Composer[]> {
+    return await this.composerRepository.find({ author: Not('admin') });
   }
 
   async findById(id: number | string): Promise<Composer | undefined> {

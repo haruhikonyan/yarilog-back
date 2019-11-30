@@ -155,6 +155,14 @@ export class AdminController {
     const composers: Composer[] = await this.composersService.findAll();
     return { composers, title: '作曲家一覧' };
   }
+
+  @Get('composers/unapproved')
+  @Render('admin/composers/unapproved')
+  async unapprovedComposers() {
+    const composers: Composer[] = await this.composersService.unapproved();
+    return { composers, title: '未承認作曲家一覧' };
+  }
+
   @Get('composers/new')
   @Render('admin/composers/editor')
   async newComposer() {
@@ -299,6 +307,12 @@ export class AdminController {
   async tunes() {
     const composers: Composer[] = await this.composersService.findAll();
     return { composers, title: '曲一覧？' };
+  }
+  @Get('tunes/unapproved')
+  @Render('admin/tunes/unapproved')
+  async unapprovedTune() {
+    const tunes: Tune[] = await this.tunesService.unapproved();
+    return { tunes, title: '未承認曲一覧' };
   }
   @Get('tunes/new')
   @Render('admin/tunes/editor')

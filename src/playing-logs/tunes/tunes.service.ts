@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DeepPartial, SelectQueryBuilder } from 'typeorm';
+import { Repository, DeepPartial, SelectQueryBuilder, Not } from 'typeorm';
 
 import { Tune } from './tunes.entity';
 import { SaveTuneDto } from './save-tune.dto';
@@ -23,6 +23,15 @@ export class TunesService {
 
   async findAll(): Promise<Tune[]> {
     return await this.tunesRepository.find({
+      relations: ['composer', 'playstyle', 'genres'],
+    });
+  }
+
+  async unapproved(): Promise<Tune[]> {
+    return await this.tunesRepository.find({
+      where: {
+        author: Not('admin'),
+      },
       relations: ['composer', 'playstyle', 'genres'],
     });
   }

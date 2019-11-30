@@ -10,6 +10,7 @@
         <th scope="col">演奏形態</th>
         <th scope="col">ジャンル</th>
         <th scope="col">詳細</th>
+        <th scope="col">作成者</th>
         <th scope="col">操作</th>
       </tr>
     </thead>
@@ -25,6 +26,7 @@
           {{/each}}
         </td>
         <td>{{ description }}</td>
+        <td>{{ author }}</td>
         <td>
           <a href="/admin/tunes/{{ id }}/edit" class="btn btn-secondary" role="button" aria-disabled="true">編集</a>
         </td>
