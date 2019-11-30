@@ -1,6 +1,11 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, SelectQueryBuilder, Brackets } from 'typeorm';
+import {
+  Repository,
+  SelectQueryBuilder,
+  Brackets,
+  FindManyOptions,
+} from 'typeorm';
 import meanBy = require('lodash.meanby');
 
 import { PlayingLog } from './playing-logs.entity';
@@ -300,31 +305,27 @@ export class PlayingLogsService {
     limit: number = 20,
     offset: number = 0,
   ): Promise<PlayingLog[]> {
-    const sqb = this.playingLogRepository
-      .createQueryBuilder('playingLog')
-      .innerJoinAndSelect('playingLog.tune', 'tune')
-      .innerJoinAndSelect('tune.composer', 'composer')
-      .innerJoinAndSelect('tune.playstyle', 'playstyle')
-      .leftJoinAndSelect('tune.genres', 'genre')
-      .innerJoinAndSelect('composer.countries', 'country')
-      .innerJoinAndSelect('playingLog.user', 'user', 'user.id = :id', {
-        id: userId,
-      })
-      .innerJoinAndSelect('playingLog.instrument', 'instrument')
-      // 人で見る場合は更新順にしてみる
-      .orderBy('playingLog.updatedAt', 'DESC')
-      .limit(limit)
-      .offset(offset);
-
-    if (isMine) {
-      return await sqb.addSelect('playingLog.secretMemo').getMany();
-    } else {
-      return await sqb
-        .andWhere('playingLog.isDraft = :isDraft', {
-          isDraft: false,
-        })
-        .getMany();
+    const searchCondition: any = {
+      relations: [
+        'tune',
+        'tune.composer',
+        'tune.composer.countries',
+        'tune.playstyle',
+        'tune.genres',
+        'user',
+        'instrument',
+      ],
+      where: { user: userId },
+      order: { updatedAt: 'DESC' },
+      skip: offset,
+      take: limit,
+    };
+    // 自分自身でなければ下書き以外を出す
+    if (!isMine) {
+      searchCondition.where.isDraft = false;
     }
+    // TODO 自分自身であれば secretMemo 追加 select する(現状必要ない)
+    return await this.playingLogRepository.find(searchCondition);
   }
 
   /**

@@ -136,6 +136,8 @@ export class PlayingLogsController {
   @Get('users/:id')
   async findAllByUserId(
     @Param('id') userId: string,
+    @Query('limit') limit: number,
+    @Query('offset') offset: number,
     @Request() req: any,
   ): Promise<PlayingLog[]> {
     const me:
@@ -145,7 +147,12 @@ export class PlayingLogsController {
     );
 
     const isMine: boolean = me != null && me.id === userId;
-    return await this.playingLogService.findAllByUserId(userId, isMine);
+    return await this.playingLogService.findAllByUserId(
+      userId,
+      isMine,
+      limit,
+      offset,
+    );
   }
 
   @Post()
