@@ -7,7 +7,7 @@ import { PlayingLogsModule } from './playing-logs/playing-logs.module';
 import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './admin/admin.module';
 import { TermsModule } from './terms/terms.module';
-
+import { InquiriesModule } from './inquiries/inquiries.module';
 
 @Module({
   imports: [
@@ -16,7 +16,8 @@ import { TermsModule } from './terms/terms.module';
     PlayingLogsModule,
     AuthModule,
     AdminModule,
-    TermsModule
+    TermsModule,
+    InquiriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

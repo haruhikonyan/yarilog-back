@@ -33,7 +33,7 @@ export class Composer {
   author!: string;
 
   /**
-   * 作曲家には複数の楽曲が紐づく]
+   * 作曲家には複数の楽曲が紐づく
    */
   @OneToMany(type => Tune, tune => tune.composer)
   tunes!: Tune[];
