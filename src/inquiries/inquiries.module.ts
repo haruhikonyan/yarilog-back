@@ -3,9 +3,13 @@ import { InquiriesService } from './inquiries.service';
 import { InquiriesController } from './inquiries.controller';
 import { InquiryTypesController } from './inquiry-types/inquiry-types.controller';
 import { InquiryTypesService } from './inquiry-types/inquiry-types.service';
+import { Inquiry } from './inquiries.entity';
+import { InquiryType } from './inquiry-types/inquiry-types.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([Inquiry, InquiryType])],
   providers: [InquiriesService, InquiryTypesService],
-  controllers: [InquiriesController, InquiryTypesController]
+  controllers: [InquiriesController, InquiryTypesController],
 })
 export class InquiriesModule {}

@@ -13,7 +13,7 @@ export class Inquiry {
   content!: string;
 
   @Column()
-  mailAddress!: boolean;
+  mailAddress!: string;
   @Column({ default: false })
   isVerified!: boolean;
   @Column({ nullable: false })

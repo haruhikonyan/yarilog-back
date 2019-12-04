@@ -43,9 +43,7 @@ export class TunesService {
   }
 
   async create(tuneData: SaveTuneDto): Promise<Tune> {
-    const tune = await this.tunesRepository.create(tuneData as DeepPartial<
-      Tune
-    >);
+    const tune = await this.tunesRepository.create(tuneData);
     return await this.tunesRepository.save(tune);
   }
 
