@@ -16,11 +16,6 @@ import { AuthGuard } from '@nestjs/passport';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get()
-  async findAll(): Promise<User[]> {
-    return await this.usersService.findAll(false);
-  }
-
   @Get(':id')
   async findById(@Param('id') id: string): Promise<User | undefined> {
     // 自分自身の取得は auth#me を使うので isMine は false 固定
