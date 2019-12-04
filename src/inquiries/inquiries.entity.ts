@@ -16,7 +16,7 @@ export class Inquiry {
   mailAddress!: string;
   @Column({ default: false })
   isVerified!: boolean;
-  @Column({ nullable: false })
+  @Column({ nullable: false, default: 'guest' })
   author!: string;
 
   /**
