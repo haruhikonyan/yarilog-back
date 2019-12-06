@@ -6,14 +6,16 @@ import { SavePlaystyleDto } from './save-playstyle.dto';
 
 @Injectable()
 export class PlaystylesService {
-	constructor(
-		@InjectRepository(Playstyle)
-		private readonly playstylesRepository: Repository<Playstyle>,
-	) {}
+  constructor(
+    @InjectRepository(Playstyle)
+    private readonly playstylesRepository: Repository<Playstyle>,
+  ) {}
 
-	async findAll(): Promise<Playstyle[]> {
-		return await this.playstylesRepository.find();
-	}
+  async findAll(): Promise<Playstyle[]> {
+    return await this.playstylesRepository.find({
+      order: { sortOrder: 'ASC' },
+    });
+  }
 
   async findById(id: number | string): Promise<Playstyle | undefined> {
     return await this.playstylesRepository.findOne(id);
@@ -24,7 +26,10 @@ export class PlaystylesService {
     return await this.playstylesRepository.save(playstyle);
   }
 
-  async update(id: number, playstyleData: SavePlaystyleDto): Promise<Playstyle> {
+  async update(
+    id: number,
+    playstyleData: SavePlaystyleDto,
+  ): Promise<Playstyle> {
     const playstyle = await this.findById(id);
     // 存在しなければエラーを返す
     if (playstyle == null) {
@@ -32,4 +37,5 @@ export class PlaystylesService {
     }
     await this.playstylesRepository.merge(playstyle, playstyleData);
     return await this.playstylesRepository.save(playstyle);
-  }}
+  }
+}

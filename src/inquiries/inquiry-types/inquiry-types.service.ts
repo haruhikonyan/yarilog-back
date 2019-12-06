@@ -11,7 +11,9 @@ export class InquiryTypesService {
   ) {}
 
   async findAll(): Promise<InquiryType[]> {
-    return this.inquiryTypeRepository.find();
+    return this.inquiryTypeRepository.find({
+      order: { sortOrder: 'ASC' },
+    });
   }
 
   async findById(id: number | string): Promise<InquiryType | undefined> {

@@ -9,14 +9,14 @@ export class Inquiry {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ nullable: false })
+  @Column({ type: 'text' })
   content!: string;
 
-  @Column()
+  @Column({ nullable: true })
   mailAddress!: string;
   @Column({ default: false })
   isVerified!: boolean;
-  @Column({ nullable: false, default: 'guest' })
+  @Column({ default: 'guest' })
   author!: string;
 
   /**
