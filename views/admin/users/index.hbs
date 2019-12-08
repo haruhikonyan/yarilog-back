@@ -6,18 +6,20 @@
       <th scope="col">ユーザ名</th>
       <th scope="col">メールアドレス</th>
       <th scope="col">ニックネーム</th>
+      <th scope="col">登録日時</th>
       <th scope="col">詳細</th>
     </tr>
   </thead>
   <tbody>
     {{#each users}}
-      <tr>
-        <th scope="row">{{ id }}</th>
-        <td>{{ username }}</td>
-        <td>{{ mailAddress }}</td>
-        <td>{{ nickname }}</td>
-        <td>{{ description }}</td>
-      </tr>
+    <tr>
+      <th scope="row">{{ id }}</th>
+      <td>{{ username }}</td>
+      <td>{{ mailAddress }}</td>
+      <td>{{ nickname }}</td>
+      <td>{{ createdAt }}</td>
+      <td>{{ description }}</td>
+    </tr>
     {{/each}}
   </tbody>
 </table>
