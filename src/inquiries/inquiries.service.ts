@@ -12,7 +12,7 @@ export class InquiriesService {
   ) {}
 
   async findAll(): Promise<Inquiry[]> {
-    return this.inquiryRepository.find();
+    return this.inquiryRepository.find({ relations: ['inquiryType'] });
   }
 
   async findById(id: number | string): Promise<Inquiry | undefined> {

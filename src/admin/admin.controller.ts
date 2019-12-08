@@ -38,6 +38,8 @@ import { Genre } from '../playing-logs/genres/genres.entity';
 import { Terms } from '../terms/terms.entity';
 import { TermsService } from '../terms/terms.service';
 import { SaveTermsDto } from '../terms/save-terms.dto';
+import { Inquiry } from '../inquiries/inquiries.entity';
+import { InquiriesService } from '../inquiries/inquiries.service';
 
 @Controller('admin')
 export class AdminController {
@@ -50,6 +52,7 @@ export class AdminController {
     private readonly playstylesService: PlaystylesService,
     private readonly genresService: GenresService,
     private readonly termsService: TermsService,
+    private readonly inquiriesService: InquiriesService,
   ) {
     hbs.registerPartials(join(__dirname, '../..', 'views/admin/partials'));
     hbs.registerHelper(
@@ -621,6 +624,13 @@ export class AdminController {
   @Redirect('/admin/terms')
   async updateTerms(@Param('id') id: number, @Body() termsData: SaveTermsDto) {
     await this.termsService.update(id, termsData);
+  }
+
+  @Get('inquiries')
+  @Render('admin/inquiries')
+  async inquiries() {
+    const inquiries: Inquiry[] = await this.inquiriesService.findAll();
+    return { inquiries, title: '問い合わせ一覧' };
   }
 
   @Get('users')

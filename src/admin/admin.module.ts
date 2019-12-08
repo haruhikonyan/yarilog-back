@@ -22,6 +22,9 @@ import { PlayingLog } from '../playing-logs/playing-logs.entity';
 import { TermsService } from '../terms/terms.service';
 import { Terms } from '../terms/terms.entity';
 import { TermsModule } from '../terms/terms.module';
+import { InquiriesModule } from '../inquiries/inquiries.module';
+import { Inquiry } from '../inquiries/inquiries.entity';
+import { InquiriesService } from '../inquiries/inquiries.service';
 @Module({
   imports: [
     UsersModule,
@@ -35,9 +38,11 @@ import { TermsModule } from '../terms/terms.module';
       Playstyle,
       PlayingLog,
       Terms,
+      Inquiry,
     ]),
     PlayingLogsModule,
     TermsModule,
+    InquiriesModule,
   ],
   controllers: [AdminController],
   providers: [
@@ -50,6 +55,7 @@ import { TermsModule } from '../terms/terms.module';
     PlaystylesService,
     GenresService,
     TermsService,
+    InquiriesService,
   ],
 })
 export class AdminModule {}

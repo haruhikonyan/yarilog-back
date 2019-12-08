@@ -1,0 +1,31 @@
+<h1>{{ title }}</h1>
+<a href="/admin/inquiries" class="btn btn-primary" role="button" aria-disabled="true">全て表示(TBD)</a>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">投稿者</th>
+      <th scope="col">メール</th>
+      <th scope="col">種別</th>
+      <th scope="col">内容</th>
+      <th scope="col">解決済み</th>
+      <th scope="col">操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each inquiries}}
+    <tr>
+      <th scope="row">{{ id }}</th>
+      <td>{{ author }}</td>
+      <td>{{ mailAddress }}</td>
+      <td>{{ inquiryType.type }}</td>
+      <td>{{ content }}</td>
+      <td>{{ isVerified }}</td>
+      <td>
+        <a href="/admin/inquiries" class="btn btn-secondary" role="button" aria-disabled="true">解決済みを変更する(TBD)</a>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
