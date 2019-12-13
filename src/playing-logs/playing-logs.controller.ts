@@ -39,6 +39,7 @@ export class PlayingLogsController {
   async findAllBySearchWord(
     @Query('searchWord') searchWord: string,
     @Query('instrumentId') instrumentId: string,
+    @Query('playstyleId') playstyleId: string,
     @Query('tuneId') tuneId: string,
     @Query('limit') limit: number,
     @Query('offset') offset: number,
@@ -46,6 +47,7 @@ export class PlayingLogsController {
     return await this.playingLogService.findAllBySearchWord(
       searchWord,
       instrumentId,
+      playstyleId,
       tuneId,
       limit,
       offset,

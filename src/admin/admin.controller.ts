@@ -40,6 +40,7 @@ import { TermsService } from '../terms/terms.service';
 import { SaveTermsDto } from '../terms/save-terms.dto';
 import { Inquiry } from '../inquiries/inquiries.entity';
 import { InquiriesService } from '../inquiries/inquiries.service';
+import { PlayingLogsService } from '../playing-logs/playing-logs.service';
 
 @Controller('admin')
 export class AdminController {
@@ -53,6 +54,7 @@ export class AdminController {
     private readonly genresService: GenresService,
     private readonly termsService: TermsService,
     private readonly inquiriesService: InquiriesService,
+    private readonly playingLogService: PlayingLogsService,
   ) {
     hbs.registerPartials(join(__dirname, '../..', 'views/admin/partials'));
     hbs.registerHelper(
@@ -647,5 +649,15 @@ export class AdminController {
   // TODO 実装
   // @Get("aggrAveragePoint/tunes/:id")
   // async aggrAveragePointTune() {
+  // }
+
+  /**
+   * 曲に紐づいてる演奏形態をその曲が紐づく演奏記録にも紐づける
+   * 演奏形態を演奏記録に紐づける改修の際のみに使う
+   */
+  // @Get('migrate/playstyle')
+  // async migratePlayingLogsPlaystyle(@Res() res: Response) {
+  //   await this.playingLogService.migratePlayingLogsPlaystyle();
+  //   res.json({ status: true });
   // }
 }

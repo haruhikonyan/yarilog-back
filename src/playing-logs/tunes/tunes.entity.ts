@@ -68,9 +68,10 @@ export class Tune {
 
   /**
    * 楽曲は一つの演奏形態を持つ
+   * デフォルトの演奏形態を持つ
    */
   @ManyToOne(type => Playstyle, playstyle => playstyle.tunes, {
-    nullable: false,
+    nullable: true,
   })
   playstyle!: Playstyle;
 

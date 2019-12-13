@@ -68,6 +68,7 @@ export class TunesService {
   /**
    * 作曲家と演奏形態で曲を絞り込む
    * 主に演奏記録作成時の曲選択に使う
+   * 演奏記録に円相形態を紐づけたため今は使われてない
    * @param composerId
    * @param playstyleId
    */
@@ -111,10 +112,11 @@ export class TunesService {
         'playingLog.isDraft = :isDraft',
         { isDraft: false },
       )
-      .innerJoinAndSelect('tune.playstyle', 'playstyle')
+      .innerJoinAndSelect('tune.playstyle', 'tunePlaystyle')
       .leftJoinAndSelect('tune.genres', 'genre')
       .innerJoinAndSelect('playingLog.user', 'user')
       .innerJoinAndSelect('playingLog.instrument', 'instrument')
+      .innerJoinAndSelect('playingLog.playstyle', 'playstyle')
       .innerJoinAndSelect('tune.composer', 'composer')
       .leftJoinAndSelect('composer.countries', 'country');
 

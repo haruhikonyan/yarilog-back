@@ -52,15 +52,9 @@ export class TunesController {
     );
   }
 
-  @Get('tune-selector')
-  async forTuneSelector(
-    @Query('composerId') composerId: string,
-    @Query('playstyleId') playstyleId: string,
-  ): Promise<Tune[]> {
-    return await this.tuneService.findAllByComposerIdAndPlaystyleId(
-      composerId,
-      playstyleId,
-    );
+  @Get('composers/:id')
+  async findAllByComposerId(@Param('id') composerId: string): Promise<Tune[]> {
+    return await this.tuneService.findAllByComposerId(composerId);
   }
 
   @Get(':id')

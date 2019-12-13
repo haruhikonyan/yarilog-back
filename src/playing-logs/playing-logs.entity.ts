@@ -9,6 +9,7 @@ import {
 import { Tune } from './tunes/tunes.entity';
 import { User } from '../users/users.entity';
 import { Instrument } from './instruments/instruments.entity';
+import { Playstyle } from './playstyles/playstyles.entity';
 
 export enum PlayerLevel {
   BEGINNER = '初心者',
@@ -110,4 +111,12 @@ export class PlayingLog {
     nullable: false,
   })
   user!: User;
+
+  /**
+   * 楽曲は一つの演奏形態を指定する
+   */
+  @ManyToOne(type => Playstyle, playstyle => playstyle.playingLogs, {
+    nullable: false,
+  })
+  playstyle!: Playstyle;
 }
