@@ -12,6 +12,8 @@ export interface LoginResultObject {
   token: string;
   userId: string;
   consentTos: boolean;
+  // アナリティクスの為に、OAuth でユーザ新規作成の場合はプロバイダ名が入る
+  newUserProvider: string | null;
 }
 
 export interface LoginObject {
@@ -64,26 +66,40 @@ export class AuthService {
     return this.jwtService.sign(payload);
   }
 
-  async createLoginResultObject(user: User): Promise<LoginResultObject> {
+  async createLoginResultObject(
+    user: User,
+    newUserProvider: string | null = null,
+  ): Promise<LoginResultObject> {
     const latestTerms = await this.termsService.getLatest();
     const consentTos = user.consentTermsId === latestTerms.id;
-    return { token: this.createJwtToken(user.id), userId: user.id, consentTos };
+    console.log('newUserProvider', newUserProvider);
+    return {
+      token: this.createJwtToken(user.id),
+      userId: user.id,
+      consentTos,
+      newUserProvider,
+    };
   }
 
-  async findOrCreateOauthUser(authLoginObject: AuthLoginObject) {
+  async findOrCreateOauthUser(
+    authLoginObject: AuthLoginObject,
+  ): Promise<{
+    user: User;
+    isNewUser: boolean;
+  }> {
     const externalAccount = await this.extarnalAccountsService.findByAuthLoginObject(
       authLoginObject,
     );
 
     // すでにアカウントがあれば user をそのまま返す
     if (externalAccount) {
-      return externalAccount.user;
+      return { user: externalAccount.user, isNewUser: false };
     }
     // 該当のユーザがいない場合は新規作成
-    const extarnalAccount = await this.extarnalAccountsService.createFromOauthLogin(
+    const newExternalAccount = await this.extarnalAccountsService.createFromOauthLogin(
       authLoginObject,
     );
-    return extarnalAccount.user;
+    return { user: newExternalAccount.user, isNewUser: true };
   }
 
   async validateUser(payload: JwtPayload): Promise<User | undefined> {

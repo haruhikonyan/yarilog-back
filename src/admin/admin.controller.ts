@@ -103,7 +103,7 @@ export class AdminController {
   @Get()
   @Render('admin/index')
   root() {
-    return { title: 'yarilog管理画面' };
+    return { title: 'みゅーぐ管理画面' };
   }
   @Get('countries')
   @Render('admin/countries')
@@ -638,7 +638,13 @@ export class AdminController {
   @Get('users')
   @Render('admin/users')
   async users() {
-    const users: User[] = await this.usersService.findAll(true);
+    const usersData: User[] = await this.usersService.findAll(true);
+    const users: any[] = usersData.map(u => {
+      (u as any).registrationMedia = u.externalAccount
+        ? u.externalAccount.providerType
+        : 'own';
+      return u;
+    });
     return { users, title: 'ユーザ一覧' };
   }
   @Get('aggrAveragePoint/tunes/all')

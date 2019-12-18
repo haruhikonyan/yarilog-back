@@ -22,7 +22,7 @@ export class LineStrategy extends PassportStrategy(Strategy) {
     _refreshToken: any,
     profile: any,
   ): Promise<LoginResultObject> {
-    const user = await this.authService.findOrCreateOauthUser({
+    const { user, isNewUser } = await this.authService.findOrCreateOauthUser({
       id: profile.id,
       providerType: ProviderType.LINE,
       nickname: profile.displayName,
@@ -31,6 +31,7 @@ export class LineStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new UnauthorizedException();
     }
-    return this.authService.createLoginResultObject(user);
+    const newUserProvider = isNewUser ? 'Line' : null;
+    return this.authService.createLoginResultObject(user, newUserProvider);
   }
 }

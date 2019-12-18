@@ -404,7 +404,7 @@ export class PlayingLogsService {
    * 演奏形態を演奏記録に紐づける改修の際のみに使う
    */
   async migratePlayingLogsPlaystyle() {
-    const playingLogs = await this.findAll();
+    const playingLogs = await this.findAll(0);
     const plomiseList = playingLogs.map(async p => {
       p.playstyle = p.tune.playstyle;
       return this.update(p.id, p);

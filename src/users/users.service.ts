@@ -17,6 +17,7 @@ export class UsersService {
       return await this.usersRepository
         .createQueryBuilder('user')
         .addSelect(['user.username', 'user.mailAddress'])
+        .leftJoinAndSelect('user.externalAccount', 'externalAccount')
         .orderBy('user.createdAt', 'DESC')
         .getMany();
     } else {

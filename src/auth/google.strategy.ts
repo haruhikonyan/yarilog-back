@@ -22,7 +22,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     _refreshToken: any,
     profile: any,
   ): Promise<LoginResultObject> {
-    const user = await this.authService.findOrCreateOauthUser({
+    const { user, isNewUser } = await this.authService.findOrCreateOauthUser({
       id: profile.id,
       providerType: ProviderType.GOOGLE,
       nickname: profile.displayName,
@@ -31,6 +31,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new UnauthorizedException();
     }
-    return this.authService.createLoginResultObject(user);
+    const newUserProvider = isNewUser ? 'Google' : null;
+    return this.authService.createLoginResultObject(user, newUserProvider);
   }
 }

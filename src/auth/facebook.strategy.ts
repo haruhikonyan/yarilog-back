@@ -21,7 +21,7 @@ export class FacebookStrategy extends PassportStrategy(Strategy) {
     _refreshToken: any,
     profile: any,
   ): Promise<LoginResultObject> {
-    const user = await this.authService.findOrCreateOauthUser({
+    const { user, isNewUser } = await this.authService.findOrCreateOauthUser({
       id: profile.id,
       providerType: ProviderType.FACEBOOK,
       nickname: profile.displayName,
@@ -30,6 +30,7 @@ export class FacebookStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new UnauthorizedException();
     }
-    return this.authService.createLoginResultObject(user);
+    const newUserProvider = isNewUser ? 'Facebook' : null;
+    return this.authService.createLoginResultObject(user, newUserProvider);
   }
 }
