@@ -1,1 +1,53 @@
-みゅーぐ管理画面
+<div class="container-fluid text-center">
+  <h1 class="mb-3">みゅーぐ管理画面</h1>
+  <div class="row">
+    <div class="col-12 col-sm-4 col-md-3">
+      <div class="card mb-3">
+        <div class="card-header">
+          全ユーザ数
+        </div>
+        <h1 class="my-3">{{ allUsersCount }}</h1>
+      </div>
+    </div>
+    <div class="col-12 col-sm-4 col-md-3">
+      <div class="card mb-3">
+        <div class="card-header">
+          全演奏記録数
+        </div>
+        <h1 class="my-3">{{ allPlayingLogsCount }}</h1>
+      </div>
+    </div>
+    <div class="col-12 col-sm-4 col-md-3">
+      <div class="card mb-3">
+        <div class="card-header">
+          演奏記録のある曲数
+        </div>
+        <h1 class="my-3">{{ allHasPlayingLogTunesCount }}</h1>
+      </div>
+    </div>
+    <div class="col-12 col-sm-4 col-md-3">
+      <div class="card mb-3">
+        <div class="card-header">
+          未承認作曲家数
+        </div>
+        <h1 class="my-3">{{ unapprovedComposersCount }}</h1>
+      </div>
+    </div>
+    <div class="col-12 col-sm-4 col-md-3">
+      <div class="card mb-3">
+        <div class="card-header">
+          未承認曲数
+        </div>
+        <h1 class="my-3">{{ unapprovedTunesCount }}</h1>
+      </div>
+    </div>
+    <div class="col-12 col-sm-4 col-md-3">
+      <div class="card mb-3">
+        <div class="card-header">
+          未消化問い合わせ数
+        </div>
+        <h1 class="my-3">{{ isNotVerifiedInquiriesCount }}</h1>
+      </div>
+    </div>
+  </div>
+</div>

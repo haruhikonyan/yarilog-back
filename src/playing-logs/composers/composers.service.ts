@@ -19,6 +19,10 @@ export class ComposersService {
     return await this.composerRepository.find({ author: Not('admin') });
   }
 
+  async unapprovedComposersCount() {
+    return await this.composerRepository.count({ author: Not('admin') });
+  }
+
   async findById(id: number | string): Promise<Composer | undefined> {
     return await this.composerRepository.findOne(id, {
       relations: ['countries'],

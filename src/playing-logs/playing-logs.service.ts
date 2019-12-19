@@ -48,6 +48,10 @@ export class PlayingLogsService {
     });
   }
 
+  async countAll() {
+    return this.playingLogRepository.count();
+  }
+
   // TODO ES とか使ってちゃんと全文検索したい
   async findAllBySearchWord(
     searchWord: string,

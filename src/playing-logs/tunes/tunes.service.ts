@@ -36,6 +36,27 @@ export class TunesService {
     });
   }
 
+  async unapprovedTunesCount() {
+    return await this.tunesRepository.count({
+      where: {
+        author: Not('admin'),
+      },
+      relations: ['composer', 'playstyle', 'genres'],
+    });
+  }
+  // 下書きでは無い演奏記録が紐づいている曲数を返す
+  async allHasPlayingLogTunesCount() {
+    return this.tunesRepository
+      .createQueryBuilder('tune')
+      .innerJoinAndSelect(
+        'tune.playingLogs',
+        'playingLog',
+        'playingLog.isDraft = :isDraft',
+        { isDraft: false },
+      )
+      .getCount();
+  }
+
   async findById(id: number | string): Promise<Tune | undefined> {
     return await this.tunesRepository.findOne(id, {
       relations: ['composer', 'playstyle', 'genres'],

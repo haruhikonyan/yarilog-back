@@ -102,8 +102,27 @@ export class AdminController {
   }
   @Get()
   @Render('admin/index')
-  root() {
-    return { title: 'みゅーぐ管理画面' };
+  async root() {
+    // - 全ユーザ数
+    const allUsersCount = await this.usersService.countAll();
+    // - 全演奏記録数
+    const allPlayingLogsCount = await this.playingLogService.countAll();
+    // - 演奏記録のある曲数
+    const allHasPlayingLogTunesCount = await this.tunesService.allHasPlayingLogTunesCount();
+    // - 未承認作曲家数
+    const unapprovedComposersCount = await this.composersService.unapprovedComposersCount();
+    // - 未承認曲数
+    const unapprovedTunesCount = await this.tunesService.unapprovedTunesCount();
+    // - 未消化問い合わせ数
+    const isNotVerifiedInquiriesCount  = await this.inquiriesService.isNotVerifiedInquiriesCount();
+    return {
+      allUsersCount,
+      allPlayingLogsCount,
+      allHasPlayingLogTunesCount,
+      unapprovedComposersCount,
+      unapprovedTunesCount,
+      isNotVerifiedInquiriesCount,
+    };
   }
   @Get('countries')
   @Render('admin/countries')

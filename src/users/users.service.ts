@@ -25,6 +25,10 @@ export class UsersService {
     }
   }
 
+  async countAll() {
+    return this.usersRepository.count();
+  }
+
   async findById(
     id: string,
     isMine: boolean = false,
