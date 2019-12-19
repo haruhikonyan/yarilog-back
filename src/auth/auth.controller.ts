@@ -43,20 +43,9 @@ export class AuthController {
   @Get('twitter/callback')
   @UseGuards(AuthGuard('twitter'))
   twitterLoginCallback(@Req() req: any, @Res() res: any) {
-    const {
-      token,
-      userId,
-      consentTos,
-      newUserProvider,
-    } = req.user as LoginResultObject;
-    const redirectPath =
-      token && userId
-        ? `${
-            process.env.FRONT_URL
-          }/login/oauth?token=${token}&userId=${userId}&consentTos=${consentTos}&newUserProvider=${newUserProvider}`
-        : `${process.env.FRONT_URL}/login`;
-
-    res.redirect(redirectPath);
+    res.redirect(
+      this.oauthLoginResultRedirectPath(req.user as LoginResultObject),
+    );
   }
 
   @Get('facebook')
@@ -68,20 +57,9 @@ export class AuthController {
   @Get('facebook/callback')
   @UseGuards(AuthGuard('facebook'))
   facebookLoginCallback(@Req() req: any, @Res() res: any) {
-    const {
-      token,
-      userId,
-      consentTos,
-      newUserProvider,
-    } = req.user as LoginResultObject;
-    const redirectPath =
-      token && userId
-        ? `${
-            process.env.FRONT_URL
-          }/login/oauth?token=${token}&userId=${userId}&consentTos=${consentTos}&newUserProvider=${newUserProvider}`
-        : `${process.env.FRONT_URL}/login`;
-
-    res.redirect(redirectPath);
+    res.redirect(
+      this.oauthLoginResultRedirectPath(req.user as LoginResultObject),
+    );
   }
 
   @Get('google')
@@ -93,20 +71,9 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   googleLoginCallback(@Req() req: any, @Res() res: any) {
-    const {
-      token,
-      userId,
-      consentTos,
-      newUserProvider,
-    } = req.user as LoginResultObject;
-    const redirectPath =
-      token && userId
-        ? `${
-            process.env.FRONT_URL
-          }/login/oauth?token=${token}&userId=${userId}&consentTos=${consentTos}&newUserProvider=${newUserProvider}`
-        : `${process.env.FRONT_URL}/login`;
-
-    res.redirect(redirectPath);
+    res.redirect(
+      this.oauthLoginResultRedirectPath(req.user as LoginResultObject),
+    );
   }
 
   @Get('line')
@@ -118,21 +85,25 @@ export class AuthController {
   @Get('line/callback')
   @UseGuards(AuthGuard('line'))
   lineLoginCallback(@Req() req: any, @Res() res: any) {
-    const {
-      token,
-      userId,
-      consentTos,
-      newUserProvider,
-    } = req.user as LoginResultObject;
-    const redirectPath =
-      token && userId
-        ? `${
-            process.env.FRONT_URL
-          }/login/oauth?token=${token}&userId=${userId}&consentTos=${consentTos}&newUserProvider=${newUserProvider}`
-        : `${process.env.FRONT_URL}/login`;
-
-    res.redirect(redirectPath);
+    res.redirect(
+      this.oauthLoginResultRedirectPath(req.user as LoginResultObject),
+    );
   }
+
+  private oauthLoginResultRedirectPath(loginObject: LoginResultObject) {
+    const { token, userId, consentTos, newUserProvider } = loginObject;
+    const basePath = `${process.env.FRONT_URL}/login`;
+    if (token && userId) {
+      // oauth ログイン結果に必須なクエリ付きpath
+      const oauthLiginResultPathWithRequireQuery = `${basePath}/oauth?token=${token}&userId=${userId}&consentTos=${consentTos}`;
+      // newUserProvider があればくっつける
+      return newUserProvider
+        ? `${oauthLiginResultPathWithRequireQuery}&newUserProvider=${newUserProvider}`
+        : oauthLiginResultPathWithRequireQuery;
+    }
+    return basePath;
+  }
+
   @Get('me')
   @UseGuards(AuthGuard())
   findAll(@Request() req: any) {
