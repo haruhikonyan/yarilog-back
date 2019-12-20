@@ -8,19 +8,19 @@
       <th scope="col">ニックネーム</th>
       <th scope="col">登録日時</th>
       <th scope="col">媒体</th>
-      <th scope="col">詳細</th>
+      <th scope="col">演奏記録数</th>
     </tr>
   </thead>
   <tbody>
     {{#each users}}
     <tr>
-      <th scope="row">{{ id }}</th>
+      <th scope="row"><a href="{{ ../frontUrl }}/users/{{ id }}" target="_blank">{{ id }}</a></th>
       <td>{{ username }}</td>
       <td>{{ mailAddress }}</td>
       <td>{{ nickname }}</td>
       <td>{{ createdAt }}</td>
       <td>{{ registrationMedia }}</td>
-      <td>{{ description }}</td>
+      <td>{{ playingLogsCount }}</td>
     </tr>
     {{/each}}
   </tbody>

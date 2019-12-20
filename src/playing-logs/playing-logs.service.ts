@@ -347,6 +347,11 @@ export class PlayingLogsService {
     // TODO 自分自身であれば secretMemo 追加 select する(現状必要ない)
     return await this.playingLogRepository.find(searchCondition);
   }
+  async countActiveAllByUserId(userId: string) {
+    return this.playingLogRepository.count({
+      where: { isDraft: false, user: userId },
+    });
+  }
 
   /**
    * 与えられた演奏記録のポイントの平均を計算して返す

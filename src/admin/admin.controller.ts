@@ -54,7 +54,7 @@ export class AdminController {
     private readonly genresService: GenresService,
     private readonly termsService: TermsService,
     private readonly inquiriesService: InquiriesService,
-    private readonly playingLogService: PlayingLogsService,
+    private readonly playingLogsService: PlayingLogsService,
   ) {
     hbs.registerPartials(join(__dirname, '../..', 'views/admin/partials'));
     hbs.registerHelper(
@@ -106,7 +106,7 @@ export class AdminController {
     // - 全ユーザ数
     const allUsersCount = await this.usersService.countAll();
     // - 全演奏記録数
-    const allPlayingLogsCount = await this.playingLogService.countAll();
+    const allPlayingLogsCount = await this.playingLogsService.countAll();
     // - 演奏記録のある曲数
     const allHasPlayingLogTunesCount = await this.tunesService.allHasPlayingLogTunesCount();
     // - 未承認作曲家数
@@ -114,7 +114,7 @@ export class AdminController {
     // - 未承認曲数
     const unapprovedTunesCount = await this.tunesService.unapprovedTunesCount();
     // - 未消化問い合わせ数
-    const isNotVerifiedInquiriesCount  = await this.inquiriesService.isNotVerifiedInquiriesCount();
+    const isNotVerifiedInquiriesCount = await this.inquiriesService.isNotVerifiedInquiriesCount();
     return {
       allUsersCount,
       allPlayingLogsCount,
@@ -657,14 +657,17 @@ export class AdminController {
   @Get('users')
   @Render('admin/users')
   async users() {
-    const usersData: User[] = await this.usersService.findAll(true);
-    const users: any[] = usersData.map(u => {
+    const users: User[] = await this.usersService.findAll(true);
+
+    for await (const u of users) {
       (u as any).registrationMedia = u.externalAccount
         ? u.externalAccount.providerType
         : 'own';
-      return u;
-    });
-    return { users, title: 'ユーザ一覧' };
+      (u as any).playingLogsCount = await this.playingLogsService.countActiveAllByUserId(
+        u.id,
+      );
+    }
+    return { users, title: 'ユーザ一覧', frontUrl: process.env.FRONT_URL };
   }
   @Get('aggrAveragePoint/tunes/all')
   async aggrAveragePointAllTunes(@Res() res: Response) {
@@ -682,7 +685,7 @@ export class AdminController {
    */
   // @Get('migrate/playstyle')
   // async migratePlayingLogsPlaystyle(@Res() res: Response) {
-  //   await this.playingLogService.migratePlayingLogsPlaystyle();
+  //   await this.playingLogsService.migratePlayingLogsPlaystyle();
   //   res.json({ status: true });
   // }
 }
