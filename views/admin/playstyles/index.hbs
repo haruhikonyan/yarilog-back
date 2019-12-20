@@ -7,6 +7,7 @@
       <th scope="col">id</th>
       <th scope="col">演奏形態名</th>
       <th scope="col">並び順</th>
+      <th scope="col">詳細</th>
       <th scope="col">操作</th>
     </tr>
   </thead>
@@ -16,6 +17,7 @@
       <th scope="row">{{ id }}</th>
       <td>{{ name }}</td>
       <td>{{ sortOrder }}</td>
+      <td>{{ description }}</td>
       <td>
         <a href="/admin/playstyles/{{ id }}/edit" class="btn btn-secondary" role="button" aria-disabled="true">編集</a>
       </td>

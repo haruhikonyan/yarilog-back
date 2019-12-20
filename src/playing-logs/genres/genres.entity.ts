@@ -16,6 +16,9 @@ export class Genre {
   @Column({ default: false })
   isTopPageLinked!: boolean;
 
+  @Column({ type: 'text', nullable: true })
+  description: string | null = null;
+
   /**
    * ジャンルは複数の楽曲を持つ
    */

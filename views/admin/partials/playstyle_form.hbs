@@ -5,7 +5,11 @@
   </div>
   <div class="form-group">
     <label for="sortOrder">並び順</label>
-    <input type="number" class="form-control" id="sortOrder" name="sortOrder" value="{{ instrument.sortOrder }}">
+    <input type="number" class="form-control" id="sortOrder" name="sortOrder" value="{{ playstyle.sortOrder }}">
+  </div>
+  <div class="form-group">
+    <label for="description">詳細</label>
+    <textarea class="form-control" id="description" name="description" rows="3">{{ playstyle.description }}</textarea>
   </div>
   <button type="submit" formaction="{{formaction}}" formmethod="POST" class="btn btn-primary">保存</button>
   {{#if showContinueButton}}

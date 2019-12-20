@@ -7,6 +7,7 @@
       <th scope="col">id</th>
       <th scope="col">ジャンル名</th>
       <th scope="col">トップ表示</th>
+      <th scope="col">詳細</th>
       <th scope="col">操作</th>
     </tr>
   </thead>
@@ -16,6 +17,7 @@
       <th scope="row">{{ id }}</th>
       <td>{{ name }}</td>
       <td>{{ isTopPageLinked }}</td>
+      <td>{{ description }}</td>
       <td>
         <a href="/admin/genres/{{ id }}/edit" class="btn btn-secondary" role="button" aria-disabled="true">編集</a>
       </td>

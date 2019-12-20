@@ -18,6 +18,9 @@ export class Instrument {
   @Column()
   sortOrder!: number;
 
+  @Column({ type: 'text', nullable: true })
+  description: string | null = null;
+
   /**
    * 楽器は1つの演奏記録に紐づく
    */

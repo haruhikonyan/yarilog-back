@@ -17,6 +17,9 @@ export class Playstyle {
   @Column()
   sortOrder!: number;
 
+  @Column({ type: 'text', nullable: true })
+  description: string | null = null;
+
   /**
    * 演奏形態には複数の楽曲が紐づく
    */

@@ -3,8 +3,13 @@
     <label for="name">ジャンル名</label>
     <input type="text" class="form-control" id="name" name="name" placeholder="交響曲" value="{{ genre.name }}">
   </div>
+  <div class="form-group">
+    <label for="description">詳細</label>
+    <textarea class="form-control" id="description" name="description" rows="3">{{ genre.description }}</textarea>
+  </div>
   <button type="submit" formaction="{{formaction}}" formmethod="POST" class="btn btn-primary">保存</button>
   {{#if showContinueButton}}
-    <button type="submit" formaction="{{formaction}}?isContinue=true" formmethod="POST" class="btn btn-primary">保存して作成を続ける</button>
+  <button type="submit" formaction="{{formaction}}?isContinue=true" formmethod="POST"
+    class="btn btn-primary">保存して作成を続ける</button>
   {{/if}}
 </form>
