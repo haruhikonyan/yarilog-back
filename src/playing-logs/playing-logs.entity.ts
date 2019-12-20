@@ -36,6 +36,10 @@ export class PlayingLog {
   @Column({ type: 'text', nullable: true })
   arranger: string | null = null;
 
+  // 版や稿など
+  @Column({ type: 'text', nullable: true })
+  edition: string | null = null;
+
   // 演奏シーン(定期演奏会中プロ、コンクール自由曲とか)
   @Column({ type: 'text', nullable: true })
   scene: string | null = null;
