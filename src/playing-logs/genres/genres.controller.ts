@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, Param } from '@nestjs/common';
 import { Genre } from './genres.entity';
 import { GenresService } from './genres.service';
 
@@ -18,5 +18,10 @@ export class GenresController {
   @Get('top-page-linked')
   async findAllTopPageLinked(): Promise<Genre[]> {
     return this.genreService.findAllTopPageLinked();
+  }
+
+  @Get(':id')
+  async findById(@Param('id') id: string): Promise<Genre | undefined> {
+    return await this.genreService.findById(id);
   }
 }
