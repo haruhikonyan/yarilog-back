@@ -6,6 +6,7 @@ import {
   Param,
   UseGuards,
   Request,
+  Put,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './users.entity';
@@ -70,5 +71,13 @@ export class UsersController {
     const me: User = req.user;
     me.consentTermsId = concentTermsId;
     await this.usersService.save(me);
+  }
+
+  @Put('latest-login-at')
+  @UseGuards(AuthGuard('jwt'))
+  async updateLatestLoginAt(@Request() req: any): Promise<User> {
+    const me: User = req.user;
+    me.latestLoginAt = new Date();
+    return this.usersService.save(me);
   }
 }

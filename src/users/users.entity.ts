@@ -54,6 +54,10 @@ export class User {
   @Column({ default: 0 })
   consentTermsId!: number;
 
+  // 最終ログイン時間
+  @Column({ type: 'datetime', nullable: true })
+  latestLoginAt!: Date;
+
   @OneToMany(type => PlayingLog, playingLog => playingLog.user)
   playingLogs!: PlayingLog[];
 

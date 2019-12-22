@@ -72,7 +72,6 @@ export class AuthService {
   ): Promise<LoginResultObject> {
     const latestTerms = await this.termsService.getLatest();
     const consentTos = user.consentTermsId === latestTerms.id;
-    console.log('newUserProvider', newUserProvider);
     return {
       token: this.createJwtToken(user.id),
       userId: user.id,
