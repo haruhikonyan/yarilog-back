@@ -52,6 +52,25 @@ export class TunesController {
     );
   }
 
+  @Get('search-only-tune')
+  async searchOnlyTune(
+    @Query('searchWord') searchWord: string,
+    @Query('composerId') composerId: string,
+    @Query('playstyleId') playstyleId: string,
+    @Query('genreId') genreId: string,
+    @Query('limit') limit: number,
+    @Query('offset') offset: number,
+  ): Promise<TunesWithCount> {
+    return await this.tuneService.searchOnlyTunes(
+      searchWord,
+      composerId,
+      playstyleId,
+      genreId,
+      limit,
+      offset,
+    );
+  }
+
   @Get('composers/:id')
   async findAllByComposerId(@Param('id') composerId: string): Promise<Tune[]> {
     return await this.tuneService.findAllByComposerId(composerId);

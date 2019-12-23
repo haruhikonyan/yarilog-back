@@ -5,7 +5,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DeepPartial, SelectQueryBuilder, Not } from 'typeorm';
+import {
+  Repository,
+  DeepPartial,
+  SelectQueryBuilder,
+  Not,
+  Brackets,
+} from 'typeorm';
 
 import { Tune } from './tunes.entity';
 import { SaveTuneDto } from './save-tune.dto';
@@ -189,6 +195,76 @@ export class TunesService {
     }
     return tunesWithCount;
   }
+
+  async searchOnlyTunes(
+    searchWord: string,
+    composerId: string | null = null,
+    playstyleId: string | null = null,
+    genreId: string | null = null,
+    limit: number = 20,
+    offset: number = 0,
+  ): Promise<TunesWithCount> {
+    let sqb: SelectQueryBuilder<Tune> = this.tunesRepository
+      .createQueryBuilder('tune')
+      .innerJoinAndSelect('tune.playstyle', 'playstyle')
+      .leftJoinAndSelect('tune.genres', 'genre')
+      .innerJoinAndSelect('tune.composer', 'composer')
+      .leftJoinAndSelect('composer.countries', 'country');
+
+    // 区切られてるであろう検索文字列をパースしてその分 and 検索
+    this.playingLogService.searchWordParser(searchWord).forEach(w => {
+      sqb = this.searchWord<Tune>(sqb, w);
+    });
+    // instrumentId があれば楽器で絞り込む
+    if (composerId) {
+      sqb = sqb.andWhere('composer.id = :composerId', {
+        composerId,
+      });
+    }
+    // playstyleId があれば演奏形態で絞り込む
+    if (playstyleId) {
+      sqb = sqb.andWhere('playstyle.id = :playstyleId', {
+        playstyleId,
+      });
+    }
+    // TODO 複数のジャンルで絞り込めたらよい？
+    // TODO 絞り込むと全部のジャンルが返ってこなくなってしまう
+    // genreId があればジャンルで絞り込む
+    if (genreId) {
+      sqb = sqb.andWhere('genre.id = :genreId', {
+        genreId,
+      });
+    }
+    // 検索結果総数と結果オブジェクト生成
+    const tunesWithCount = new TunesWithCount(await sqb.getManyAndCount());
+    // limit が設定されていたら絞り込む
+    if (limit !== 0) {
+      // 実態は params で受け取ったため string なので足し算するので number に変換
+      // TODO 全体的に生合成を取る
+      limit = Number(limit);
+      offset = Number(offset);
+      tunesWithCount.tunes = tunesWithCount.tunes.slice(offset, offset + limit);
+    }
+    return tunesWithCount;
+  }
+
+  // 曲の全文検索線用のメソッド
+  searchWord<T>(
+    sqb: SelectQueryBuilder<T>,
+    word: string,
+  ): SelectQueryBuilder<T> {
+    return sqb.andWhere(
+      new Brackets(qb => {
+        // TODO SQL インジェクション起きそうだからどうにかする
+        qb.where(`tune.title LIKE '%${word}%'`)
+          .orWhere(`tune.description LIKE '%${word}%'`)
+          .orWhere(`composer.fullName LIKE '%${word}%'`)
+          .orWhere(`genre.name LIKE '%${word}%'`)
+          .orWhere(`country.name LIKE '%${word}%'`);
+      }),
+    );
+  }
+
   // many to many を保存するには preload を使わなきゃなので id は取らない(tuneData には id を含むこと)
   async update(tuneData: SaveTuneDto | Tune): Promise<Tune> {
     const tune = await this.tunesRepository.preload(tuneData);

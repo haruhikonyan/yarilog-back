@@ -116,6 +116,7 @@ export class PlayingLogsService {
           .orWhere(`playingLog.scene LIKE '%${word}%'`)
           .orWhere(`playingLog.arranger LIKE '%${word}%'`)
           .orWhere(`tune.title LIKE '%${word}%'`)
+          .orWhere(`tune.description LIKE '%${word}%'`)
           .orWhere(`composer.fullName LIKE '%${word}%'`)
           .orWhere(`instrument.name LIKE '%${word}%'`)
           .orWhere(`genre.name LIKE '%${word}%'`)
