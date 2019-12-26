@@ -52,8 +52,8 @@ export class TunesController {
     );
   }
 
-  @Get('search-only-tune')
-  async searchOnlyTune(
+  @Get('search-all-tunes')
+  async searchAllTunes(
     @Query('searchWord') searchWord: string,
     @Query('composerId') composerId: string,
     @Query('playstyleId') playstyleId: string,
@@ -61,7 +61,7 @@ export class TunesController {
     @Query('limit') limit: number,
     @Query('offset') offset: number,
   ): Promise<TunesWithCount> {
-    return await this.tuneService.searchOnlyTunes(
+    return await this.tuneService.searchAllTunes(
       searchWord,
       composerId,
       playstyleId,

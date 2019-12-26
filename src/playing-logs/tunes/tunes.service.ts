@@ -196,7 +196,7 @@ export class TunesService {
     return tunesWithCount;
   }
 
-  async searchOnlyTunes(
+  async searchAllTunes(
     searchWord: string,
     composerId: string | null = null,
     playstyleId: string | null = null,
