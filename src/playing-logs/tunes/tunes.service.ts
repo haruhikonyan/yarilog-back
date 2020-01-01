@@ -139,11 +139,11 @@ export class TunesService {
         'playingLog.isDraft = :isDraft',
         { isDraft: false },
       )
-      .innerJoinAndSelect('tune.playstyle', 'tunePlaystyle')
-      .leftJoinAndSelect('tune.genres', 'genre')
       .innerJoinAndSelect('playingLog.user', 'user')
       .innerJoinAndSelect('playingLog.instrument', 'instrument')
       .innerJoinAndSelect('playingLog.playstyle', 'playstyle')
+      .innerJoinAndSelect('tune.playstyle', 'tunePlaystyle')
+      .leftJoinAndSelect('tune.genres', 'genre')
       .innerJoinAndSelect('tune.composer', 'composer')
       .leftJoinAndSelect('composer.countries', 'country');
 
@@ -157,7 +157,7 @@ export class TunesService {
         instrumentId,
       });
     }
-    // instrumentId があれば楽器で絞り込む
+    // composerId があれば作曲家で絞り込む
     if (composerId) {
       sqb = sqb.andWhere('composer.id = :composerId', {
         composerId,
@@ -177,10 +177,12 @@ export class TunesService {
         genreId,
       });
     }
+    sqb.orderBy('playingLog.createdAt', 'DESC');
     // 検索結果総数と結果オブジェクト生成
     const tunesWithCount = new TunesWithCount(await sqb.getManyAndCount());
     // limit が設定されていたら絞り込む
     if (limit !== 0) {
+      // sqb.limit() sqb.offset メソッドを使って絞り込むと playingLogs がなぜか1つに絞られてしまうので全て取得してから手動で絞り込んでいる
       // 実態は params で受け取ったため string なので足し算するので number に変換
       // TODO 全体的に生合成を取る
       limit = Number(limit);
@@ -203,19 +205,29 @@ export class TunesService {
     genreId: string | null = null,
     limit: number = 20,
     offset: number = 0,
+    playingLogLimit: number = 5,
   ): Promise<TunesWithCount> {
     let sqb: SelectQueryBuilder<Tune> = this.tunesRepository
       .createQueryBuilder('tune')
-      .innerJoinAndSelect('tune.playstyle', 'playstyle')
+      .innerJoinAndSelect('tune.playstyle', 'tunePlaystyle')
       .leftJoinAndSelect('tune.genres', 'genre')
       .innerJoinAndSelect('tune.composer', 'composer')
-      .leftJoinAndSelect('composer.countries', 'country');
+      .leftJoinAndSelect('composer.countries', 'country')
+      .leftJoinAndSelect(
+        'tune.playingLogs',
+        'playingLog',
+        'playingLog.isDraft = :isDraft',
+        { isDraft: false },
+      )
+      .leftJoinAndSelect('playingLog.user', 'user')
+      .leftJoinAndSelect('playingLog.instrument', 'instrument')
+      .leftJoinAndSelect('playingLog.playstyle', 'playstyle');
 
     // 区切られてるであろう検索文字列をパースしてその分 and 検索
     this.playingLogService.searchWordParser(searchWord).forEach(w => {
       sqb = this.searchWord<Tune>(sqb, w);
     });
-    // instrumentId があれば楽器で絞り込む
+    // composerId があれば作曲家で絞り込む
     if (composerId) {
       sqb = sqb.andWhere('composer.id = :composerId', {
         composerId,
@@ -223,7 +235,7 @@ export class TunesService {
     }
     // playstyleId があれば演奏形態で絞り込む
     if (playstyleId) {
-      sqb = sqb.andWhere('playstyle.id = :playstyleId', {
+      sqb = sqb.andWhere('tunePlaystyle.id = :playstyleId', {
         playstyleId,
       });
     }
@@ -235,15 +247,23 @@ export class TunesService {
         genreId,
       });
     }
+    sqb.orderBy('playingLog.createdAt', 'DESC');
     // 検索結果総数と結果オブジェクト生成
     const tunesWithCount = new TunesWithCount(await sqb.getManyAndCount());
     // limit が設定されていたら絞り込む
     if (limit !== 0) {
+      // sqb.limit() sqb.offset メソッドを使って絞り込むと playingLogs がなぜか1つに絞られてしまうので全て取得してから手動で絞り込んでいる
       // 実態は params で受け取ったため string なので足し算するので number に変換
       // TODO 全体的に生合成を取る
       limit = Number(limit);
       offset = Number(offset);
       tunesWithCount.tunes = tunesWithCount.tunes.slice(offset, offset + limit);
+    }
+    // 曲1件あたりの演奏記録を絞る(0の場合は絞り込まない)
+    if (playingLogLimit !== 0) {
+      tunesWithCount.tunes.forEach(t => {
+        t.playingLogs = t.playingLogs.slice(0, playingLogLimit);
+      });
     }
     return tunesWithCount;
   }
