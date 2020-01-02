@@ -49,4 +49,11 @@ export class GenresService {
       name: Like(`%${searchWord}%`),
     });
   }
+  async findAllByExistTunes() {
+    return this.genresRepository
+      .createQueryBuilder('genre')
+      .innerJoin('genre.tunes', 'tune')
+      .select('genre.id')
+      .getMany();
+  }
 }

@@ -330,4 +330,11 @@ export class TunesService {
     const tunes: Tune[] = await this.findAll();
     return await Promise.all(tunes.map(t => this.aggrAveragePointAndSave(t)));
   }
+  async findAllByExistPlayingLogs() {
+    return this.tunesRepository
+      .createQueryBuilder('tune')
+      .innerJoin('tune.playingLogs', 'playingLog')
+      .select('tune.id')
+      .getMany();
+  }
 }

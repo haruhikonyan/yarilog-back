@@ -38,4 +38,12 @@ export class InstrumentsService {
     await this.instrumentsRepository.merge(instrument, instrumentData);
     return await this.instrumentsRepository.save(instrument);
   }
+
+  async findAllByExistPlayingLogs() {
+    return this.instrumentsRepository
+      .createQueryBuilder('instrument')
+      .innerJoin('instrument.playingLogs', 'playingLog')
+      .select('instrument.id')
+      .getMany();
+  }
 }

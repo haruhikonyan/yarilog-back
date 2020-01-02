@@ -38,4 +38,12 @@ export class PlaystylesService {
     await this.playstylesRepository.merge(playstyle, playstyleData);
     return await this.playstylesRepository.save(playstyle);
   }
+
+  async findAllByExistPlayingLogs() {
+    return this.playstylesRepository
+      .createQueryBuilder('playstyle')
+      .innerJoin('playstyle.playingLogs', 'playingLog')
+      .select('playstyle.id')
+      .getMany();
+  }
 }

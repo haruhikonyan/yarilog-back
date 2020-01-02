@@ -62,4 +62,11 @@ export class ComposersService {
       fullName: Like(`%${searchWord}%`),
     });
   }
+  async findAllByExistTunes() {
+    return this.composerRepository
+      .createQueryBuilder('composer')
+      .innerJoin('composer.tunes', 'tune')
+      .select('composer.id')
+      .getMany();
+  }
 }

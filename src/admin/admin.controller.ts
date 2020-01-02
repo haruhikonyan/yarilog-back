@@ -679,6 +679,46 @@ export class AdminController {
   // async aggrAveragePointTune() {
   // }
 
+  @Get('sitemap')
+  async sitemap() {
+    const result: string[] = [];
+    const composers = await this.composersService.findAllByExistTunes();
+    composers.forEach(c =>
+      result.push(this.createSitemapTag(c.id, 'composers', '0.9')),
+    );
+    const tunes = await this.tunesService.findAllByExistPlayingLogs();
+    tunes.forEach(t =>
+      result.push(this.createSitemapTag(t.id, 'tunes', '0.9')),
+    );
+    const instruments = await this.instrumentsService.findAllByExistPlayingLogs();
+    instruments.forEach(i =>
+      result.push(this.createSitemapTag(i.id, 'instruments', '0.8')),
+    );
+    const playstyles = await this.playstylesService.findAllByExistPlayingLogs();
+    playstyles.forEach(p =>
+      result.push(this.createSitemapTag(p.id, 'playstyles', '0.8')),
+    );
+
+    const gemres = await this.genresService.findAllByExistTunes();
+    gemres.forEach(g =>
+      result.push(this.createSitemapTag(g.id, 'genres', '0.7')),
+    );
+    return result.join('\n');
+  }
+
+  private createSitemapTag(
+    id: string | number,
+    categoryPath: string,
+    priority: string,
+  ) {
+    const startTag = '<url><loc>';
+    const middleTag = '</loc><priority>';
+    const endTag = '</priority></url>';
+    return `${startTag}${
+      process.env.FRONT_URL
+    }/${categoryPath}/${id}${middleTag}${priority}${endTag}`;
+  }
+
   /**
    * 曲に紐づいてる演奏形態をその曲が紐づく演奏記録にも紐づける
    * 演奏形態を演奏記録に紐づける改修の際のみに使う
