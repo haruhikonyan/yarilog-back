@@ -71,6 +71,11 @@ export class TunesController {
     );
   }
 
+  @Get('all-has-playing-log-tunes-count')
+  async allHasPlayingLogTunesCount(): Promise<number> {
+    return this.tuneService.allHasPlayingLogTunesCount();
+  }
+
   @Get('composers/:id')
   async findAllByComposerId(@Param('id') composerId: string): Promise<Tune[]> {
     return await this.tuneService.findAllByComposerId(composerId);

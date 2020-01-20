@@ -54,6 +54,11 @@ export class PlayingLogsController {
     );
   }
 
+  @Get('count-all')
+  async countAll(): Promise<number> {
+    return await this.playingLogService.countAll();
+  }
+
   @Get(':id')
   async findById(
     @Param('id') id: string,

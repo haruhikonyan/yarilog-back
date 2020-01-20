@@ -698,11 +698,11 @@ export class AdminController {
     playstyles.forEach(p =>
       result.push(this.createSitemapTag(p.id, 'playstyles', '0.8')),
     );
-
     const gemres = await this.genresService.findAllByExistTunes();
     gemres.forEach(g =>
       result.push(this.createSitemapTag(g.id, 'genres', '0.7')),
     );
+    // TODO userページとかも
     return result.join('\n');
   }
 
