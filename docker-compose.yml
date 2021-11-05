@@ -31,14 +31,6 @@ services:
       # GOOGLE_CONSUMER_SECRET: change_me
       # LINE_CHANNEL_ID: change_me
       # LINE_CHANNEL_SECRET: change_me
-      TWITTER_API_KEY: TM06pBENCrUVtQwd7JFkjj1ak
-      TWITTER_API_SECRET: LluwtMJFtT0sSj7EZYL8JnOQH5YEWL9rv02CiLnQbj5QiihSfz
-      FACEBOOK_APP_ID: 448871639066898
-      FACEBOOK_APP_SECRET: 50f49d3f9815cf7d6404188f06b7e616
-      GOOGLE_CONSUMER_KEY: 475831304446-etc9d6djm71vbgm2smnvkl8brh5cv0gf.apps.googleusercontent.com
-      GOOGLE_CONSUMER_SECRET: Fkq_FcynXfHEt8tssBJjALaU
-      LINE_CHANNEL_ID: 1653330967
-      LINE_CHANNEL_SECRET: ea2d77621f0cb4d7923722d433d4d8ab
       FRONT_URL: http://localhost:3000
       BACK_URL: http://localhost:8080
   db:
